@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,7 @@ Route::get('/agenda', function () { return view('agenda'); })->name('agendas.ind
 Route::get('/agenda/{slug}', function ($slug) { return view('agenda-detail', ['slug' => $slug]); })->name('agendas.show');
 
 // Downloads Route
-Route::get('/download', function () { return view('download'); })->name('downloads.index');
+Route::get('/download', [DownloadController::class, 'index'])->name('downloads.index');
 
 // Pages Route
 Route::get('/halaman/{slug}', function ($slug) { return view('page-detail', ['slug' => $slug]); })->name('pages.show');

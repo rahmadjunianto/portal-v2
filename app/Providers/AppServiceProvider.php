@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\MenuService;
 use App\ViewComposers\MenuViewComposer;
+use App\ViewComposers\SettingsViewComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.*', MenuViewComposer::class);
         View::composer('partials.*', MenuViewComposer::class);
         View::composer('components.layout', MenuViewComposer::class);
+
+        // Settings available to all views
+        View::composer('*', SettingsViewComposer::class);
     }
 }
