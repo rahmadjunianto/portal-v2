@@ -40,7 +40,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => public_path('storage'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -67,14 +67,13 @@ return [
     | Symbolic Links
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the symbolic links that will be created when the
-    | `storage:link` Artisan command is executed. The array keys should be
-    | the locations of the links and the values should be their targets.
+    | DISABLED: Using direct storage path instead of symlink for shared hosting
+    | No symbolic links are created. Files are stored directly in public/storage
     |
     */
 
-    'links' => [
-        public_path('storage') => storage_path('app/public'),
-    ],
+    // 'links' => [
+    //     public_path('storage') => storage_path('app/public'),
+    // ],
 
 ];
