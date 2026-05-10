@@ -136,8 +136,41 @@
         </div>
 
         <!-- Pagination -->
-        <div class="px-4 py-3 bg-gray-50 border-t">
-            {{ $conversations->links() }}
+        <div class="px-4 py-3 bg-gray-50 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="text-sm text-gray-600">
+                Menampilkan {{ $conversations->firstItem() ?? 0 }} - {{ $conversations->lastItem() ?? 0 }}
+                dari {{ $conversations->total() }} data
+            </div>
+            <div class="flex items-center gap-1">
+                {{-- Previous Page Link --}}
+                @if ($conversations->onFirstPage())
+                    <span class="px-3 py-1 text-sm text-gray-400 cursor-not-allowed">‹</span>
+                @else
+                    <a href="{{ $conversations->previousPageUrl() }}"
+                       class="px-3 py-1 text-sm text-emerald-600 hover:bg-emerald-50 rounded">‹</a>
+                @endif
+
+                {{-- Pagination Elements --}}
+                @foreach ($conversations->getUrlRange(1, $conversations->lastPage()) as $page => $url)
+                    @if ($page == $conversations->currentPage())
+                        <span class="px-3 py-1 text-sm bg-emerald-600 text-white rounded">{{ $page }}</span>
+                    @elseif ($page == 1 || $page == $conversations->lastPage() ||
+                             abs($page - $conversations->currentPage()) <= 2)
+                        <a href="{{ $url }}"
+                           class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">{{ $page }}</a>
+                    @elseif ($page == $conversations->currentPage() - 3 || $page == $conversations->currentPage() + 3)
+                        <span class="px-2 py-1 text-gray-400">...</span>
+                    @endif
+                @endforeach
+
+                {{-- Next Page Link --}}
+                @if ($conversations->hasMorePages())
+                    <a href="{{ $conversations->nextPageUrl() }}"
+                       class="px-3 py-1 text-sm text-emerald-600 hover:bg-emerald-50 rounded">›</a>
+                @else
+                    <span class="px-3 py-1 text-sm text-gray-400 cursor-not-allowed">›</span>
+                @endif
+            </div>
         </div>
     </div>
 </div>

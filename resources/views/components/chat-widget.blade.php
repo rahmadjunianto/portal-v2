@@ -144,16 +144,27 @@
             <div x-show="!userInfoSubmitted" class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                 <p class="text-xs text-amber-700 mb-2 font-medium">⚠️ Wajib diisi sebelum chat:</p>
                 <div class="grid grid-cols-1 gap-2">
-                    <input type="text" x-model="userInfo.name" placeholder="Nama lengkap *" required
-                           class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    <input type="email" x-model="userInfo.email" placeholder="Email *" required
-                           class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    <input type="tel" x-model="userInfo.phone" placeholder="No. WhatsApp *" required
-                           class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <div>
+                        <input type="text" x-model="userInfo.name" placeholder="Nama lengkap *"
+                               class="px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
+                               :class="nameError ? 'border-red-500 bg-red-50' : 'border-gray-300'">
+                        <p x-show="nameError" x-text="nameError" class="text-xs text-red-500 mt-1"></p>
+                    </div>
+                    <div>
+                        <input type="email" x-model="userInfo.email" placeholder="Email *"
+                               class="px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
+                               :class="emailError ? 'border-red-500 bg-red-50' : 'border-gray-300'">
+                        <p x-show="emailError" x-text="emailError" class="text-xs text-red-500 mt-1"></p>
+                    </div>
+                    <div>
+                        <input type="tel" x-model="userInfo.phone" placeholder="No. WhatsApp * (08xxxxxxxxxx)"
+                               class="px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
+                               :class="phoneError ? 'border-red-500 bg-red-50' : 'border-gray-300'">
+                        <p x-show="phoneError" x-text="phoneError" class="text-xs text-red-500 mt-1"></p>
+                    </div>
                 </div>
                 <button type="button" @click="submitUserInfo()"
-                        :disabled="!userInfo.name || !userInfo.email || !userInfo.phone"
-                        class="mt-3 w-full py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 text-white text-sm font-medium rounded-lg transition-colors">
+                        class="mt-3 w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors">
                     Lanjutkan Chat
                 </button>
             </div>
@@ -213,11 +224,14 @@ function chatWidget() {
         messages: [],
         error: '',
         placeholder: 'Ketik pertanyaan Anda...',
-        suggestions: ['Jam pelayanan?', 'Layanan nikah', 'Alamat kantor'],
+        suggestions: ['Jam pelayanan?', 'Layanan yg Tersedia', 'Alamat kantor'],
         closeOnOutside: false,
         userInfo: { name: '', email: '', phone: '' },
         userInfoSubmitted: false,
         userInfoExpiry: 4 * 60 * 60 * 1000, // 4 hours in milliseconds
+        nameError: '',
+        emailError: '',
+        phoneError: '',
 
         init() {
             // Load user info from localStorage if exists and not expired
@@ -266,11 +280,57 @@ function chatWidget() {
             localStorage.removeItem('chatbot_messages');
         },
 
+        validateName() {
+            this.nameError = '';
+            if (!this.userInfo.name.trim()) {
+                this.nameError = 'Nama lengkap wajib diisi';
+            } else if (this.userInfo.name.trim().length < 2) {
+                this.nameError = 'Nama minimal 2 karakter';
+            } else if (!/^[a-zA-Z\s\'-]+$/.test(this.userInfo.name.trim())) {
+                this.nameError = 'Nama hanya boleh huruf, spasi, petik, dan strip';
+            }
+            return !this.nameError;
+        },
+
+        validateEmail() {
+            this.emailError = '';
+            if (!this.userInfo.email.trim()) {
+                this.emailError = 'Email wajib diisi';
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.userInfo.email.trim())) {
+                this.emailError = 'Format email tidak valid';
+            }
+            return !this.emailError;
+        },
+
+        validatePhone() {
+            this.phoneError = '';
+            if (!this.userInfo.phone.trim()) {
+                this.phoneError = 'No. WhatsApp wajib diisi';
+            } else {
+                // Remove all non-digit characters for validation
+                const cleanPhone = this.userInfo.phone.replace(/\D/g, '');
+                if (cleanPhone.length < 10 || cleanPhone.length > 15) {
+                    this.phoneError = 'No. WhatsApp harus 10-15 digit';
+                } else if (!/^0\d+$/.test(cleanPhone)) {
+                    this.phoneError = 'No. WhatsApp harus dimulai dengan 0';
+                }
+            }
+            return !this.phoneError;
+        },
+
         submitUserInfo() {
-            // Validate and confirm user info
-            if (this.userInfo.name && this.userInfo.email && this.userInfo.phone) {
+            // Validate all fields
+            const isNameValid = this.validateName();
+            const isEmailValid = this.validateEmail();
+            const isPhoneValid = this.validatePhone();
+
+            if (isNameValid && isEmailValid && isPhoneValid) {
                 // Set submitted state to true - this will hide the form
                 this.userInfoSubmitted = true;
+                // Clear error states
+                this.nameError = '';
+                this.emailError = '';
+                this.phoneError = '';
                 // Save to localStorage with timestamp
                 localStorage.setItem('chatbot_user_info', JSON.stringify(this.userInfo));
                 localStorage.setItem('chatbot_user_submitted', 'true');
