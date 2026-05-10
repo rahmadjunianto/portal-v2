@@ -691,6 +691,36 @@
     </div>
 </section>
 
+<!-- ===================== GOOGLE MAPS SECTION ===================== -->
+<section class="bg-emerald-900 py-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div class="lg:col-span-8">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3954.6677388334288!2d111.8991191768781!3d-7.6110870752418815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e784b0a4b1c6983%3A0xcac034becf05e4ff!2sKementerian%20Agama%20Kabupaten%20Nganjuk!5e0!3m2!1sid!2sid!4v1778387725628!5m2!1sid!2sid"
+                    width="100%"
+                    height="350"
+                    style="border:0; border-radius: 0.75rem;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+            </div>
+            <div class="lg:col-span-4 text-center lg:text-left">
+                <h3 class="text-white text-xl font-bold mb-2">Lokasi Kami</h3>
+                <p class="text-emerald-200 mb-4">Kementerian Agama Kabupaten Nganjuk</p>
+                <p class="text-emerald-300 text-sm">Jalan Dermojoyo 22, Payaman,<br>Kec. Nganjuk, Kabupaten Nganjuk,<br>Jawa Timur</p>
+                <a href="https://maps.google.com/?q=Kementerian+Agama+Kabupaten+Nganjuk" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-4 bg-white text-emerald-700 px-4 py-2 rounded-lg font-medium hover:bg-emerald-50 transition-colors text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    </svg>
+                    Buka di Maps
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 @endsection
 
 @push('scripts')

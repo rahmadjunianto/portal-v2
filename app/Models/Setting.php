@@ -23,6 +23,9 @@ class Setting extends Model
         'maps_embed',
         'footer_description',
         'facebook_url',
+        'instagram_url',
+        'youtube_url',
+        'twitter_url',
     ];
 
     /**
