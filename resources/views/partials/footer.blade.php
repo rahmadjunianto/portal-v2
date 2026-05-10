@@ -21,7 +21,7 @@
             </div>
 
             <!-- Quick Links -->
-            <div class="md:col-span-1">
+            <div class="col-span-2 md:col-span-1">
                 <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
                     <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
@@ -39,7 +39,7 @@
             </div>
 
             <!-- Contact Info -->
-            <div class="sm:col-span-2 md:col-span-1">
+            <div class="col-span-2">
                 <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
                     <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
