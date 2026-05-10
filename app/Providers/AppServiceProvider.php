@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\MenuService;
+use App\ViewComposers\MenuViewComposer;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(MenuService::class, function () {
+            return new MenuService();
+        });
     }
 
     /**
@@ -19,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('layouts.*', MenuViewComposer::class);
+        View::composer('partials.*', MenuViewComposer::class);
+        View::composer('components.layout', MenuViewComposer::class);
     }
 }

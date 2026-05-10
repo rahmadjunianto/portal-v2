@@ -48,10 +48,15 @@ class MigrateUsersFromOldDatabase extends Command
             return self::FAILURE;
         }
 
-        // Fresh option
+        // Fresh option - disable foreign key checks for fresh migration
         if ($isFresh) {
             $this->warn('Mode fresh aktif - menghapus semua user yang sudah dimigrasikan...');
+
+            // Disable foreign key checks temporarily
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
             User::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
             $this->info('✓ Semua user berhasil dihapus');
         }
 

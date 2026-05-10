@@ -172,7 +172,7 @@ class MigratePostsFromOldDatabase extends Command
                     'subtitle' => $this->sanitizeString($row->subjudul ?? '') ?: null,
                     'slug' => $slug,
                     'content' => $content,
-                    'thumbnail' => $thumbnail ?: null,
+                    'thumbnail' => $thumbnail ? 'posts/' . $thumbnail : null,
                     'image_caption' => $imageCaption ?: null,
                     'youtube_url' => $youtubeUrl ?: null,
                     'type' => $type,

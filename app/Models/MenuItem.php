@@ -17,14 +17,11 @@ class MenuItem extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'legacy_id',
-        'menu_id',
         'parent_id',
         'title',
         'url',
-        'is_active',
-        'target_blank',
         'sort_order',
+        'is_active',
     ];
 
     /**
@@ -36,20 +33,11 @@ class MenuItem extends Model
     {
         return [
             'is_active' => 'boolean',
-            'target_blank' => 'boolean',
             'sort_order' => 'integer',
         ];
     }
 
     // ==================== RELATIONSHIPS ====================
-
-    /**
-     * Get the menu that owns this item.
-     */
-    public function menu(): BelongsTo
-    {
-        return $this->belongsTo(Menu::class, 'menu_id');
-    }
 
     /**
      * Get the parent menu item.
@@ -123,55 +111,50 @@ class MenuItem extends Model
     }
 
     /**
-     * Get the link attributes for HTML anchor tag.
+     * Get the depth level of this item.
      */
-    public function getLinkAttributesAttribute(): array
+    public function getDepth(): int
     {
-        $attributes = [];
+        $depth = 0;
+        $current = $this;
 
-        if ($this->target_blank) {
-            $attributes['target'] = '_blank';
-            $attributes['rel'] = 'noopener noreferrer';
+        while ($current->parent) {
+            $depth++;
+            $current = $current->parent;
         }
 
-        return $attributes;
+        return $depth;
     }
 
     /**
-     * Check if URL is internal (relative path).
+     * Check if URL is external (starts with http/https).
      */
-    public function isInternalLink(): bool
+    public function isExternal(): bool
     {
         if (!$this->url) {
             return false;
         }
 
-        return !str_starts_with($this->url, 'http://')
-            && !str_starts_with($this->url, 'https://')
-            && !str_starts_with($this->url, '//');
+        return str_starts_with($this->url, 'http://')
+            || str_starts_with($this->url, 'https://');
     }
 
     /**
-     * Check if URL is external.
+     * Get link target attribute.
      */
-    public function isExternalLink(): bool
+    public function getTargetAttribute(): ?string
     {
-        return !$this->isInternalLink();
+        return $this->isExternal ? '_blank' : null;
     }
 
     /**
-     * Get breadcrumb trail (ancestors).
+     * Get children collection (for eager loaded relations).
      */
-    public function getAncestors(): array
+    public function getChildrenCollectionAttribute(): \Illuminate\Support\Collection
     {
-        $ancestors = [];
-        $current = $this;
-
-        while ($current->parent) {
-            array_unshift($ancestors, $current->parent);
-            $current = $current->parent;
+        if (isset($this->relations['children'])) {
+            return collect($this->relations['children']);
         }
-
-        return $ancestors;
+        return $this->children()->get();
     }
 }

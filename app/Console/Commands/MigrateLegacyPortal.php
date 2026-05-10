@@ -48,10 +48,18 @@ class MigrateLegacyPortal extends Command
         $isFresh = $this->option('fresh');
         if ($isFresh) {
             $this->warn('⚠ Mode FRESH aktif - semua data lama akan dihapus!');
-            if (!$this->confirm('Lanjutkan?')) {
+        }
+
+        // Auto-confirm if fresh mode is active
+        $autoConfirm = $isFresh || $this->option('yes');
+
+        if (!$autoConfirm) {
+            if (!$this->confirm('Lanjutkan migrasi?')) {
                 $this->info('Migrasi dibatalkan.');
                 return self::SUCCESS;
             }
+        } else {
+            $this->info('Mode auto-confirm aktif (--fresh atau --yes)');
         }
 
         $connection = $this->option('connection');
@@ -130,15 +138,20 @@ class MigrateLegacyPortal extends Command
             return self::SUCCESS;
         }
 
-        // Confirmation
-        if (!$this->confirm('Mulai migrasi?')) {
-            $this->info('Migrasi dibatalkan.');
-            return self::SUCCESS;
+        // Final confirmation (skip if auto-confirm is active)
+        if (!$autoConfirm) {
+            if (!$this->confirm('Mulai migrasi?')) {
+                $this->info('Migrasi dibatalkan.');
+                return self::SUCCESS;
+            }
         }
 
         $this->newLine();
         $this->info(str_repeat('=', 60));
         $this->newLine();
+
+        // Define commands that support --fresh option
+        $commandsWithFreshOption = ['migrate:users', 'migrate:categories', 'migrate:posts', 'migrate:pages', 'migrate:agendas', 'migrate:downloads', 'migrate:external-links', 'migrate:menus'];
 
         // Run migrations
         $results = [];
@@ -149,9 +162,13 @@ class MigrateLegacyPortal extends Command
             $this->line("  {$step['description']}");
             $this->newLine();
 
-            $options = ['--connection=' . $connection];
-            if ($isFresh) {
-                $options[] = '--fresh';
+            // Build options array for call
+            $options = [
+                '--connection' => $connection,
+            ];
+
+            if ($isFresh && in_array($step['command'], $commandsWithFreshOption)) {
+                $options['--fresh'] = true;
             }
 
             $result = $this->call($step['command'], $options);

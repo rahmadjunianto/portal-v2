@@ -2,261 +2,419 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class MigrateMenusFromOldDatabase extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'migrate:menus
-                            {--fresh : Drop all existing menus before migrating}
-                            {--connection=mysql_old : Database connection name}';
+                            {--fresh : Drop all existing menu items before seeding}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Migrate menus from old database to new portal database';
+    protected $description = 'Seed default menu items for Kemenag Nganjuk portal';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(): int
     {
-        $connection = $this->option('connection');
-        $isFresh = $this->option('fresh');
-
         $this->info('===========================================');
-        $this->info('  Migrasi Menu dari Database Lama');
+        $this->info('  Seeding Menu Items');
         $this->info('===========================================');
         $this->newLine();
 
-        // Check connection
-        try {
-            DB::connection($connection)->getPdo();
-            $this->info("✓ Koneksi ke database lama ({$connection}) berhasil");
-        } catch (\Exception $e) {
-            $this->error("✗ Gagal terhubung ke database lama: " . $e->getMessage());
-            return self::FAILURE;
-        }
-
-        // Check if old table exists
-        $oldTableExists = DB::connection($connection)->getSchemaBuilder()->hasTable('menu');
-        if (!$oldTableExists) {
-            $this->warn('⚠ Tabel "menu" tidak ditemukan di database lama. Skip migrasi.');
-            return self::SUCCESS;
-        }
-
-        // Fresh option
-        if ($isFresh) {
-            $this->warn('Mode fresh aktif - menghapus semua menu yang sudah dimigrasikan...');
+        if ($this->option('fresh')) {
+            $this->warn('Mode fresh aktif - menghapus semua menu items...');
             MenuItem::truncate();
-            Menu::truncate();
-            $this->info('✓ Semua menu berhasil dihapus');
+            $this->info('✓ Semua menu items berhasil dihapus');
         }
 
+        $this->info('Memulai seeding menu items...');
         $this->newLine();
-        $this->info('Memulai migrasi menu...');
-        $this->newLine();
-
-        // Create default menus
-        $headerMenu = Menu::firstOrCreate(
-            ['name' => 'Main Menu', 'location' => Menu::LOCATION_HEADER],
-            ['name' => 'Main Menu', 'location' => Menu::LOCATION_HEADER]
-        );
-        $footerMenu = Menu::firstOrCreate(
-            ['name' => 'Footer Menu', 'location' => Menu::LOCATION_FOOTER],
-            ['name' => 'Footer Menu', 'location' => Menu::LOCATION_FOOTER]
-        );
-
-        $this->line("  • Header menu ID: {$headerMenu->id}");
-        $this->line("  • Footer menu ID: {$footerMenu->id}");
-
-        $this->newLine();
-
-        // Get all menu items from old database
-        $oldMenus = DB::connection($connection)->table('menu')->get();
-        $total = $oldMenus->count();
-        $progressBar = $this->output->createProgressBar($total);
-        $progressBar->start();
 
         $created = 0;
-        $updated = 0;
-        $errors = [];
 
-        // Build mapping for parent items
-        $legacyIdMapping = [];
+        // ==================== MENU UTAMA ====================
+        $beranda = MenuItem::create([
+            'title' => 'Beranda',
+            'url' => '/',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
 
-        DB::beginTransaction();
+        $profil = MenuItem::create([
+            'title' => 'Profil',
+            'url' => null,
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+        $created++;
 
-        try {
-            // First pass: Create all menu items without parent relationships
-            foreach ($oldMenus as $row) {
-                $legacyId = $row->id_menu ?? null;
-                $namamenu = $this->sanitizeString($row->nama_menu ?? '');
-                $link = $this->sanitizeString($row->link ?? '');
-                $position = $this->sanitizeString($row->position ?? 'Top');
-                $aktif = $row->aktif ?? 'Y';
-                $target = $row->target ?? '_self';
-                $urutan = $row->urutan ?? 0;
+        $informasi = MenuItem::create([
+            'title' => 'Informasi',
+            'url' => null,
+            'sort_order' => 3,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                // Validasi
-                if (empty($legacyId)) {
-                    $errors[] = "Menu tanpa ID, dilewati";
-                    $progressBar->advance();
-                    continue;
-                }
+        $layanan = MenuItem::create([
+            'title' => 'Layanan Publik',
+            'url' => null,
+            'sort_order' => 4,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                if (empty($namamenu)) {
-                    $errors[] = "Menu ID {$legacyId} tidak memiliki nama, dilewati";
-                    $progressBar->advance();
-                    continue;
-                }
+        $unitLembaga = MenuItem::create([
+            'title' => 'Unit & Lembaga',
+            'url' => null,
+            'sort_order' => 5,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                // Determine which menu based on position
-                $menuId = $position === 'Bottom' ? $footerMenu->id : $headerMenu->id;
+        $dokumen = MenuItem::create([
+            'title' => 'Dokumen',
+            'url' => null,
+            'sort_order' => 6,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                // Check if target should open in new tab
-                $targetBlank = strtolower($target) === '_blank';
+        $tautan = MenuItem::create([
+            'title' => 'Tautan Terkait',
+            'url' => null,
+            'sort_order' => 7,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                $data = [
-                    'menu_id' => $menuId,
-                    'parent_id' => null, // Will be updated in second pass
-                    'title' => $namamenu,
-                    'url' => $this->normalizeUrl($link),
-                    'is_active' => $aktif === 'Y',
-                    'target_blank' => $targetBlank,
-                    'sort_order' => (int) $urutan,
-                ];
+        // ==================== SUBMENU: Profil ====================
+        MenuItem::create([
+            'parent_id' => $profil->id,
+            'title' => 'Profil',
+            'url' => '/profil',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                $menuItem = MenuItem::updateOrCreate(
-                    ['legacy_id' => $legacyId],
-                    $data
-                );
+        MenuItem::create([
+            'parent_id' => $profil->id,
+            'title' => 'Tentang Kemenag Nganjuk',
+            'url' => '/profil/tentang',
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                // Store mapping of legacy_id to new id
-                $legacyIdMapping[$legacyId] = $menuItem->id;
+        // ==================== SUBMENU: Informasi ====================
+        MenuItem::create([
+            'parent_id' => $informasi->id,
+            'title' => 'Semua Berita',
+            'url' => '/berita',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                if ($menuItem->wasRecentlyCreated) {
-                    $created++;
-                    Log::info("Created menu item: {$namamenu}");
-                } else {
-                    $updated++;
-                    Log::info("Updated menu item: {$namamenu}");
-                }
+        MenuItem::create([
+            'parent_id' => $informasi->id,
+            'title' => 'Pengumuman',
+            'url' => '/pengumuman',
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                $progressBar->advance();
-            }
+        MenuItem::create([
+            'parent_id' => $informasi->id,
+            'title' => 'Download',
+            'url' => '/download',
+            'sort_order' => 3,
+            'is_active' => true,
+        ]);
+        $created++;
 
-            // Second pass: Update parent relationships
-            $parentUpdates = 0;
-            foreach ($oldMenus as $row) {
-                $legacyId = $row->id_menu ?? null;
-                $idparent = $row->id_parent ?? null;
+        MenuItem::create([
+            'parent_id' => $informasi->id,
+            'title' => 'Agenda Kegiatan',
+            'url' => '/agenda',
+            'sort_order' => 4,
+            'is_active' => true,
+        ]);
+        $created++;
 
-                if ($legacyId && $idparent && isset($legacyIdMapping[$legacyId]) && isset($legacyIdMapping[$idparent])) {
-                    $menuItem = MenuItem::find($legacyIdMapping[$legacyId]);
-                    if ($menuItem && $menuItem->parent_id === null) {
-                        $menuItem->update(['parent_id' => $legacyIdMapping[$idparent]]);
-                        $parentUpdates++;
-                    }
-                }
-            }
+        // ==================== SUBMENU: Layanan Publik ====================
+        MenuItem::create([
+            'parent_id' => $layanan->id,
+            'title' => 'PPID',
+            'url' => '/ppid',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
 
-            DB::commit();
-            $progressBar->finish();
+        MenuItem::create([
+            'parent_id' => $layanan->id,
+            'title' => 'SKM',
+            'url' => '/skm',
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+        $created++;
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $this->newLine(2);
-            $this->error("✗ Error migrasi: " . $e->getMessage());
-            Log::error('Migrasi Menus Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+        MenuItem::create([
+            'parent_id' => $layanan->id,
+            'title' => 'Lapor',
+            'url' => '/lapor',
+            'sort_order' => 3,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        // ==================== SUBMENU: Unit & Lembaga ====================
+        $unitPelayanan = MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'Unit Pelayanan',
+            'url' => null,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        $man = MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'MAN',
+            'url' => null,
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        $mtsn = MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'MTsN',
+            'url' => null,
+            'sort_order' => 3,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        $min = MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'MIN',
+            'url' => null,
+            'sort_order' => 4,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        $kua = MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'KUA',
+            'url' => null,
+            'sort_order' => 5,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'Jurnal Pengawas PAI',
+            'url' => '/jurnal-pengawas',
+            'sort_order' => 6,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        $lembaga = MenuItem::create([
+            'parent_id' => $unitLembaga->id,
+            'title' => 'Lembaga',
+            'url' => null,
+            'sort_order' => 7,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        // ==================== SUB-SUBMENU: Unit Pelayanan ====================
+        $unitPelayananItems = [
+            'SUB BAG TU',
+            'SEKSI PENDIDIKAN MADRASAH',
+            'SEKSI BIMAS ISLAM',
+            'SEKSI HAJI & UMRAH',
+            'SEKSI PENDIDIKAN AGAMA ISLAM',
+            'PENYELENGGARA ZAKAT WAKAF',
+            'PD. PONTREN',
+            'KEPEGAWAIAN',
+        ];
+
+        foreach ($unitPelayananItems as $i => $title) {
+            MenuItem::create([
+                'parent_id' => $unitPelayanan->id,
+                'title' => $title,
+                'url' => '/unit-pelayanan/' . strtolower(str_replace(' ', '-', $title)),
+                'sort_order' => $i + 1,
+                'is_active' => true,
             ]);
-            return self::FAILURE;
+            $created++;
         }
 
-        $this->newLine(2);
-        $this->info('===========================================');
-        $this->info('  Hasil Migrasi Menu');
-        $this->info('===========================================');
-        $this->line("  Total data lama: {$total}");
-        $this->line("  Berhasil dibuat: {$created}");
-        $this->line("  Berhasil diupdate: {$updated}");
-        $this->line("  Parent relationships updated: {$parentUpdates}");
-        $this->line("  Total menu sekarang: " . Menu::count());
-        $this->line("  Total menu items sekarang: " . MenuItem::count());
+        // ==================== SUB-SUBMENU: MAN ====================
+        $manItems = [
+            ['title' => 'MAN 1 NGANJUK', 'url' => 'https://man1nganjuk.sch.id/'],
+            ['title' => 'MAN 3 NGANJUK', 'url' => 'https://man3nganjuk.sch.id/'],
+            ['title' => 'MAN 2 NGANJUK', 'url' => 'https://man2nganjuk.sch.id/'],
+        ];
 
-        if (count($errors) > 0) {
-            $this->newLine();
-            $this->warn('  Errors/Warnings:');
-            foreach (array_slice($errors, 0, 5) as $error) {
-                $this->line("    - {$error}");
-            }
-            if (count($errors) > 5) {
-                $this->line("    ... dan " . (count($errors) - 5) . " error lainnya");
-            }
+        foreach ($manItems as $i => $item) {
+            MenuItem::create([
+                'parent_id' => $man->id,
+                'title' => $item['title'],
+                'url' => $item['url'],
+                'sort_order' => $i + 1,
+                'is_active' => true,
+            ]);
+            $created++;
         }
 
+        // ==================== SUB-SUBMENU: MTsN ====================
+        $mtsnItems = [
+            ['title' => 'MTsN 1 NGANJUK', 'url' => 'https://www.mtsn1nganjuk.sch.id/'],
+            ['title' => 'MTsN 2 NGANJUK', 'url' => 'https://www.mtsn2nganjuk.sch.id/'],
+            ['title' => 'MTsN 3 NGANJUK', 'url' => 'https://www.mtsn3nganjuk.sch.id/'],
+            ['title' => 'MTsN 4 NGANJUK', 'url' => null],
+            ['title' => 'MTsN 5 NGANJUK', 'url' => 'https://www.mtsnnganjuk.sch.id/'],
+            ['title' => 'MTsN 6 NGANJUK', 'url' => null],
+            ['title' => 'MTsN 7 NGANJUK', 'url' => null],
+            ['title' => 'MTsN 8 NGANJUK', 'url' => null],
+            ['title' => 'MTsN 9 NGANJUK', 'url' => null],
+            ['title' => 'MTsN 10 NGANJUK', 'url' => null],
+        ];
+
+        foreach ($mtsnItems as $i => $item) {
+            MenuItem::create([
+                'parent_id' => $mtsn->id,
+                'title' => $item['title'],
+                'url' => $item['url'],
+                'sort_order' => $i + 1,
+                'is_active' => true,
+            ]);
+            $created++;
+        }
+
+        // ==================== SUB-SUBMENU: MIN ====================
+        $minItems = [
+            ['title' => 'MIN 1 NGANJUK', 'url' => null],
+            ['title' => 'MIN 2 NGANJUK', 'url' => 'http://www.min2nganjuk.sch.id/madrasah/'],
+            ['title' => 'MIN 3 NGANJUK', 'url' => null],
+            ['title' => 'MIN 4 NGANJUK', 'url' => null],
+            ['title' => 'MIN 5 NGANJUK', 'url' => null],
+            ['title' => 'MIN 6 NGANJUK', 'url' => null],
+            ['title' => 'MIN 7 NGANJUK', 'url' => null],
+            ['title' => 'MIN 8 NGANJUK', 'url' => null],
+            ['title' => 'MIN 9 NGANJUK', 'url' => null],
+            ['title' => 'MIN 10 NGANJUK', 'url' => null],
+            ['title' => 'MIN 11 NGANJUK', 'url' => null],
+        ];
+
+        foreach ($minItems as $i => $item) {
+            MenuItem::create([
+                'parent_id' => $min->id,
+                'title' => $item['title'],
+                'url' => $item['url'],
+                'sort_order' => $i + 1,
+                'is_active' => true,
+            ]);
+            $created++;
+        }
+
+        // ==================== SUB-SUBMENU: KUA ====================
+        $kuaItems = [
+            ['title' => 'KUA JATIKALEN', 'url' => 'https://kuajatikalen.kemenagnganjuk.id'],
+            ['title' => 'KUA NGANJUK', 'url' => 'https://kuanganjuk.kemenagnganjuk.id'],
+            ['title' => 'KUA SUKOMORO', 'url' => 'https://kuasukomoro.kemenagnganjuk.id'],
+            ['title' => 'KUA BAGOR', 'url' => 'https://kuabagor.kemenagnganjuk.id'],
+            ['title' => 'KUA WILANGAN', 'url' => 'https://kuawilangan.kemenagnganjuk.id'],
+            ['title' => 'KUA BERBEK', 'url' => 'https://kuaberbek.kemenagnganjuk.id'],
+            ['title' => 'KUA NGETOS', 'url' => 'https://kuangetos.kemenagnganjuk.id'],
+            ['title' => 'KUA LOCERET', 'url' => 'https://kualoceret.kemenagnganjuk.id'],
+            ['title' => 'KUA SAWAHAN', 'url' => 'https://kuasawahan.kemenagnganjuk.id'],
+            ['title' => 'KUA KERTOSONO', 'url' => 'https://kuakertosono.kemenagnganjuk.id'],
+            ['title' => 'KUA BARON', 'url' => 'https://kuabaron.kemenagnganjuk.id'],
+            ['title' => 'KUA NGRONGGOT', 'url' => 'https://kuangronggot.kemenagnganjuk.id'],
+            ['title' => 'KUA PATIANROWO', 'url' => 'https://kuapatianrowo.kemenagnganjuk.id'],
+            ['title' => 'KUA TANJUNGANOM', 'url' => 'https://kuatanjunganom.kemenagnganjuk.id'],
+            ['title' => 'KUA PRAMBON', 'url' => 'https://kuaprambon.kemenagnganjuk.id'],
+            ['title' => 'KUA PACE', 'url' => 'https://kuapace.kemenagnganjuk.id'],
+            ['title' => 'KUA LENGKONG', 'url' => 'https://kualengkong.kemenagnganjuk.id'],
+            ['title' => 'KUA GONDANG', 'url' => 'https://kuagondang.kemenagnganjuk.id'],
+            ['title' => 'KUA NGLUYU', 'url' => 'https://kuangluyu.kemenagnganjuk.id'],
+            ['title' => 'KUA REJOSO', 'url' => 'https://kuarejoso.kemenagnganjuk.id'],
+        ];
+
+        foreach ($kuaItems as $i => $item) {
+            MenuItem::create([
+                'parent_id' => $kua->id,
+                'title' => $item['title'],
+                'url' => $item['url'],
+                'sort_order' => $i + 1,
+                'is_active' => true,
+            ]);
+            $created++;
+        }
+
+        // ==================== SUB-SUBMENU: Lembaga ====================
+        MenuItem::create([
+            'parent_id' => $lembaga->id,
+            'title' => 'Daftar Lembaga',
+            'url' => null,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        // ==================== SUBMENU: Dokumen ====================
+        MenuItem::create([
+            'parent_id' => $dokumen->id,
+            'title' => 'Regulasi dan Info Penting',
+            'url' => '/dokumen/regulasi',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        // ==================== SUBMENU: Tautan Terkait ====================
+        MenuItem::create([
+            'parent_id' => $tautan->id,
+            'title' => 'Kanwil Kemenag Jatim',
+            'url' => 'https://jatim.kemenag.go.id',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        MenuItem::create([
+            'parent_id' => $tautan->id,
+            'title' => 'Haji dan Umrah',
+            'url' => 'https://haji.kemenag.go.id',
+            'sort_order' => 2,
+            'is_active' => true,
+        ]);
+        $created++;
+
+        MenuItem::create([
+            'parent_id' => $tautan->id,
+            'title' => 'Pernikahan',
+            'url' => '/pernikahan',
+            'sort_order' => 3,
+            'is_active' => true,
+        ]);
+        $created++;
+
         $this->newLine();
-        $this->warn('⚠ Catatan: Struktur menu lama mungkin perlu di-review manual');
-        $this->warn('   karena navigasi website redesign biasanya berubah.');
-        $this->newLine();
-        $this->info('✓ Migrasi menu selesai!');
+        $this->info("✓ Berhasil membuat {$created} menu items");
+        $this->info("  Total menu items sekarang: " . MenuItem::count());
         $this->newLine();
 
         return self::SUCCESS;
-    }
-
-    /**
-     * Normalize URL - ensure proper format.
-     */
-    private function normalizeUrl(?string $url): ?string
-    {
-        if (empty($url)) {
-            return null;
-        }
-
-        $url = trim($url);
-
-        // Skip javascript and special links
-        if (str_starts_with($url, 'javascript:') || str_starts_with($url, '#')) {
-            return null;
-        }
-
-        // Add https if no protocol
-        if (!str_starts_with($url, 'http://') && !str_starts_with($url, 'https://') && !str_starts_with($url, '/')) {
-            $url = '/' . $url;
-        }
-
-        return $url;
-    }
-
-    /**
-     * Sanitize string from old database encoding.
-     */
-    private function sanitizeString(?string $value): ?string
-    {
-        if ($value === null) {
-            return null;
-        }
-
-        $encoding = mb_detect_encoding($value, ['UTF-8', 'ISO-8859-1', 'ASCII'], true);
-
-        if ($encoding === 'ISO-8859-1' || $encoding === false) {
-            $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
-        }
-
-        $value = trim($value);
-
-        return $value ?: null;
     }
 }
