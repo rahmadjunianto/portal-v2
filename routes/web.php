@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -41,3 +42,9 @@ Route::get('/halaman/{slug}', [PageController::class, 'show'])->name('pages.show
 // Static Pages
 Route::get('/profil', function () { return view('profil'); })->name('profil');
 Route::get('/kontak', function () { return view('kontak'); })->name('kontak');
+
+// Chatbot Routes
+Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.chat');
+Route::get('/chatbot/info', [ChatbotController::class, 'info'])->name('chatbot.info');
+Route::get('/chatbot/health', [ChatbotController::class, 'health'])->name('chatbot.health');
+Route::get('/admin/chat-history', [ChatbotController::class, 'history'])->name('chatbot.history');

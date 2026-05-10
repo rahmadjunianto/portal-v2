@@ -231,6 +231,12 @@
     <!-- Scripts -->
     @stack('scripts')
 
+    <!-- CSRF Token for AJAX -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Chat Widget -->
+    <x-chat-widget />
+
     <script>
         // Back to top functionality
         const backToTop = document.getElementById('back-to-top');
