@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,14 +26,14 @@ Route::get('/berita', [PostController::class, 'index'])->name('posts.index');
 Route::get('/berita/{slug}', [PostController::class, 'show'])->name('posts.show');
 
 // Agendas Routes
-Route::get('/agenda', function () { return view('agenda'); })->name('agendas.index');
-Route::get('/agenda/{slug}', function ($slug) { return view('agenda-detail', ['slug' => $slug]); })->name('agendas.show');
+Route::get('/agenda', [AgendaController::class, 'index'])->name('agendas.index');
+Route::get('/agenda/{slug}', [AgendaController::class, 'show'])->name('agendas.show');
 
 // Downloads Route
 Route::get('/download', [DownloadController::class, 'index'])->name('downloads.index');
 
 // Pages Route
-Route::get('/halaman/{slug}', function ($slug) { return view('page-detail', ['slug' => $slug]); })->name('pages.show');
+Route::get('/halaman/{slug}', [PageController::class, 'show'])->name('pages.show');
 
 // Static Pages
 Route::get('/profil', function () { return view('profil'); })->name('profil');

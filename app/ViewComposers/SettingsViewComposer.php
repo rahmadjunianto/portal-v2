@@ -3,17 +3,24 @@
 namespace App\ViewComposers;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class SettingsViewComposer
 {
+    protected const CACHE_KEY = 'site_settings_data';
+
     /**
      * Bind settings ke semua view
      */
     public function compose(View $view): void
     {
-        // Ambil settings dari database, fallback ke default
-        $settings = Setting::first() ?? $this->getDefaultSettings();
+        $data = Cache::remember(self::CACHE_KEY, now()->addDay(), function () {
+            $setting = Setting::first();
+            return $setting ? $setting->toArray() : null;
+        });
+
+        $settings = $data ? new Setting($data) : $this->getDefaultSettings();
 
         $view->with('settings', $settings);
     }

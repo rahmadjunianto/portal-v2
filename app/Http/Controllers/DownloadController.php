@@ -14,7 +14,7 @@ class DownloadController extends Controller
     {
         $downloads = Download::query()
             ->orderBy('published_at', 'desc')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('download', compact('downloads'));
     }

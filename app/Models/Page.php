@@ -20,13 +20,11 @@ class Page extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
-        'is_published',
         'published_at',
         'legacy_id',
     ];
 
     protected $casts = [
-        'is_published' => 'boolean',
         'published_at' => 'datetime',
     ];
 }
