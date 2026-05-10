@@ -9,91 +9,41 @@ class Download extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'downloads';
+
     protected $fillable = [
-        'legacy_id',
         'title',
         'slug',
-        'file_name',
+        'description',
         'file_path',
-        'file_type',
         'file_size',
-        'downloads_count',
+        'extension',
+        'download_count',
+        'is_published',
         'published_at',
+        'legacy_id',
+    ];
+
+    protected $casts = [
+        'file_size' => 'integer',
+        'download_count' => 'integer',
+        'is_published' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'file_size' => 'integer',
-            'downloads_count' => 'integer',
-            'published_at' => 'datetime',
-        ];
-    }
-
-    // ==================== SCOPES ====================
-
-    /**
-     * Scope for downloads by file type.
-     */
-    public function scopeOfType($query, string $type)
-    {
-        return $query->where('file_type', $type);
-    }
-
-    /**
-     * Scope to order by most downloaded.
-     */
-    public function scopeMostDownloaded($query)
-    {
-        return $query->orderBy('downloads_count', 'desc');
-    }
-
-    // ==================== ACCESSORS & MUTATORS ====================
-
-    /**
-     * Increment the downloads count.
-     */
-    public function incrementDownloads(): void
-    {
-        $this->increment('downloads_count');
-    }
-
-    /**
-     * Get human-readable file size.
+     * Get formatted file size.
      */
     public function getFileSizeFormattedAttribute(): string
     {
-        if (!$this->file_size) {
-            return 'Unknown';
+        $bytes = $this->file_size;
+
+        if ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            return $bytes . ' bytes';
         }
-
-        $units = ['B', 'KB', 'MB', 'GB'];
-        $unitIndex = 0;
-        $size = (float) $this->file_size;
-
-        while ($size >= 1024 && $unitIndex < count($units) - 1) {
-            $size /= 1024;
-            $unitIndex++;
-        }
-
-        return round($size, 2) . ' ' . $units[$unitIndex];
-    }
-
-    /**
-     * Get file extension from file_name.
-     */
-    public function getExtensionAttribute(): string
-    {
-        return pathinfo($this->file_name, PATHINFO_EXTENSION);
     }
 }

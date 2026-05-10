@@ -4,41 +4,64 @@ namespace App\Services;
 
 use App\Models\MenuItem;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class MenuService
 {
     /**
-     * Ambil semua menu items aktif, diurutkan
+     * Cache menu tree untuk menghindari query berulang
      */
-    public function getActiveMenus(): Collection
+    protected ?Collection $cachedTree = null;
+
+    /**
+     * Ambil SEMUA menu items aktif dalam SATU query, lalu build tree di memory
+     */
+    public function getAllActiveMenus(): Collection
     {
-        return MenuItem::active()
+        // Gunakan cache jika sudah ada
+        if ($this->cachedTree !== null) {
+            return $this->cachedTree;
+        }
+
+        // Single query untuk ambil semua menu items aktif
+        $items = MenuItem::active()
             ->ordered()
             ->get();
+
+        // Build tree di PHP memory (tidak ada query tambahan)
+        $this->cachedTree = $this->buildTreeFromCollection($items);
+
+        return $this->cachedTree;
     }
 
     /**
-     * Bangun tree menu dari flat array
+     * Build tree dari flat collection (di memory, tanpa query)
      */
-    public function buildTree(Collection $items): Collection
+    public function buildTreeFromCollection(Collection $items): Collection
     {
+        // Group berdasarkan parent_id untuk efisiensi O(n)
         $grouped = $items->groupBy('parent_id');
-        return $this->buildSubTree($grouped, null);
+
+        // Build subtree dimulai dari root (parent_id = null)
+        return $this->buildSubTreeFromGrouped($grouped, null);
     }
 
     /**
-     * Rekursif build subtree
+     * Rekursif build subtree dari grouped collection
      */
-    protected function buildSubTree($grouped, $parentId): Collection
+    protected function buildSubTreeFromGrouped($grouped, $parentId): Collection
     {
         $collection = collect();
 
+        // Jika tidak ada children untuk parent ini, return empty collection
         if (!$grouped->has($parentId)) {
             return $collection;
         }
 
+        // Iterate children dan set relation
         foreach ($grouped->get($parentId) as $item) {
-            $children = $this->buildSubTree($grouped, $item->id);
+            // Rekursif ambil children dari grouped collection
+            $children = $this->buildSubTreeFromGrouped($grouped, $item->id);
             $item->setRelation('children', $children);
             $collection->push($item);
         }
@@ -47,49 +70,35 @@ class MenuService
     }
 
     /**
-     * Get menu utama (parent_id NULL) dengan ALL children loaded (recursive)
+     * Clear cache (panggil jika ada perubahan menu)
      */
-    public function getMainMenus(): Collection
+    public function clearCache(): void
     {
-        return MenuItem::active()
-            ->root()
-            ->ordered()
-            ->with(['children' => function($q) {
-                $q->active()->ordered();
-            }])
-            ->get()
-            ->each(function ($item) {
-                $this->loadAllChildren($item);
-            });
+        $this->cachedTree = null;
     }
 
     /**
-     * Load all nested children recursively (max 3 levels untuk perfomansi)
+     * Get main menus (root items dengan children) - backward compatible
      */
-    protected function loadAllChildren($item, int $depth = 0, int $maxDepth = 3): void
+    public function getMainMenus(): Collection
     {
-        if ($depth >= $maxDepth) {
-            return;
-        }
+        return $this->getAllActiveMenus();
+    }
 
-        if ($item->children && $item->children->count() > 0) {
-            $childIds = $item->children->pluck('id')->toArray();
+    /**
+     * Get menu tree - alias dari getAllActiveMenus
+     */
+    public function getMenuTree(): Collection
+    {
+        return $this->getAllActiveMenus();
+    }
 
-            $grandChildren = \App\Models\MenuItem::whereIn('parent_id', $childIds)
-                ->active()
-                ->ordered()
-                ->get()
-                ->groupBy('parent_id');
-
-            foreach ($item->children as $child) {
-                $childrenOfChild = $grandChildren->get($child->id, collect());
-                $child->setRelation('children', $childrenOfChild);
-
-                if ($childrenOfChild->count() > 0) {
-                    $this->loadAllChildren($child, $depth + 1, $maxDepth);
-                }
-            }
-        }
+    /**
+     * Get active menus (flat) - untuk backward compatibility
+     */
+    public function getActiveMenus(): Collection
+    {
+        return MenuItem::active()->ordered()->get();
     }
 
     /**
@@ -101,18 +110,10 @@ class MenuService
             if ($child->url === $currentPath) {
                 return true;
             }
-            if ($child->children->isNotEmpty() && $this->isChildActive($child->children, $currentPath)) {
+            if ($child->children && $child->children->isNotEmpty() && $this->isChildActive($child->children, $currentPath)) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * Get menu tree lengkap
-     */
-    public function getMenuTree(): Collection
-    {
-        return $this->buildTree($this->getActiveMenus());
     }
 }

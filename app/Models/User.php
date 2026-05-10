@@ -11,51 +11,29 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'username',
         'name',
         'email',
-        'phone',
-        'photo',
+        'username',
         'password',
-        'role_name',
-        'is_active',
-        'legacy_username',
+        'role',
+        'avatar',
+        'bio',
+        'legacy_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_active' => 'boolean',
-        ];
-    }
-
-    // ==================== RELATIONSHIPS ====================
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
-     * Get all posts written by this user.
+     * Get the posts for the user (author).
      */
     public function posts(): HasMany
     {
@@ -63,44 +41,10 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all pages written by this user.
-     */
-    public function pages(): HasMany
-    {
-        return $this->hasMany(Page::class, 'author_id');
-    }
-
-    /**
-     * Get all agendas created by this user.
-     */
-    public function agendas(): HasMany
-    {
-        return $this->hasMany(Agenda::class, 'author_id');
-    }
-
-    // ==================== ACCESSORS & MUTATORS ====================
-
-    /**
-     * Check if user is an admin.
+     * Check if user is admin.
      */
     public function isAdmin(): bool
     {
-        return $this->role_name === 'admin';
-    }
-
-    /**
-     * Check if user is active.
-     */
-    public function isActive(): bool
-    {
-        return $this->is_active;
-    }
-
-    /**
-     * Get the user's display name.
-     */
-    public function getDisplayNameAttribute(): string
-    {
-        return $this->name ?: $this->username ?: 'Unknown';
+        return $this->role === 'admin';
     }
 }

@@ -148,13 +148,16 @@ class MenuItem extends Model
     }
 
     /**
-     * Get children collection (for eager loaded relations).
+     * Get children collection - selalu pakai data yang sudah di-load.
+     * Tidak pernah menjalankan query baru.
      */
     public function getChildrenCollectionAttribute(): \Illuminate\Support\Collection
     {
+        // Jika children sudah di-load via relation, pakai itu
         if (isset($this->relations['children'])) {
             return collect($this->relations['children']);
         }
-        return $this->children()->get();
+        // Fallback ke empty collection (bukan query baru)
+        return collect();
     }
 }

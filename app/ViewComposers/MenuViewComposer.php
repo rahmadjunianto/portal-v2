@@ -16,21 +16,18 @@ class MenuViewComposer
 
     /**
      * Bind data ke view
+     * OPTIMIZED: Hanya 1 query untuk semua menu items
      */
     public function compose(View $view): void
     {
-        // getMainMenus sudah load recursive children
-        $mainMenus = $this->menuService->getMainMenus();
-
-        // menuTree dari flat collection
-        $menuTree = $this->menuService->getMenuTree();
-        $currentPath = '/' . request()->path();
+        // Single query dengan tree building di memory
+        $menuTree = $this->menuService->getAllActiveMenus();
 
         $view->with([
+            'headerMenuItems' => $menuTree,
             'menuTree' => $menuTree,
-            'mainMenus' => $mainMenus,
-            'headerMenuItems' => $mainMenus, // Langsung pakai, sudah ada children
-            'currentPath' => $currentPath,
+            'mainMenus' => $menuTree,
+            'currentPath' => '/' . request()->path(),
         ]);
     }
 }

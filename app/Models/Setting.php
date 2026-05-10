@@ -9,11 +9,8 @@ class Setting extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'settings';
+
     protected $fillable = [
         'site_name',
         'site_url',
@@ -29,64 +26,41 @@ class Setting extends Model
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Get singleton instance (returns the single Setting model).
      */
-    protected function casts(): array
+    public static function getInstance(): ?Setting
     {
-        return [
-            'maps_embed' => 'array',
-        ];
+        return static::first();
     }
 
-    // ==================== SINGLETON PATTERN ====================
-
     /**
-     * Get the singleton setting instance.
+     * Get setting value by key.
      */
-    public static function getInstance(): self
+    public static function getValue(string $key, $default = null)
     {
-        return static::firstOrCreate([], [
-            'site_name' => config('app.name', 'Portal Kemenag'),
-        ]);
-    }
-
-    // ==================== HELPER METHODS ====================
-
-    /**
-     * Get logo URL or default.
-     */
-    public function getLogoUrlAttribute(): ?string
-    {
-        if (!$this->logo) {
-            return null;
+        $setting = static::first();
+        if (!$setting) {
+            return $default;
         }
 
-        return asset('storage/' . $this->logo);
+        return $setting->{$key} ?? $default;
     }
 
     /**
-     * Get favicon URL or default.
+     * Set setting value by key.
      */
-    public function getFaviconUrlAttribute(): ?string
+    public static function setValue(string $key, $value): void
     {
-        if (!$this->favicon) {
-            return null;
-        }
-
-        return asset('storage/' . $this->favicon);
+        $setting = static::firstOrCreate(['id' => 1], ['site_name' => 'Portal Kemenag Nganjuk']);
+        $setting->{$key} = $value;
+        $setting->save();
     }
 
     /**
-     * Get meta keywords as array.
+     * Get singleton instance (alias for getInstance).
      */
-    public function getKeywordsArrayAttribute(): array
+    public static function getSingleton(): ?Setting
     {
-        if (!$this->meta_keywords) {
-            return [];
-        }
-
-        return array_filter(array_map('trim', explode(',', $this->meta_keywords)));
+        return static::first();
     }
 }

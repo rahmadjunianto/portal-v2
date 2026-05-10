@@ -6,61 +6,41 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Post extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'posts';
+
     protected $fillable = [
-        'legacy_id',
-        'category_id',
-        'author_id',
         'title',
-        'subtitle',
         'slug',
+        'subtitle',
         'content',
         'thumbnail',
         'image_caption',
         'youtube_url',
         'type',
+        'author_id',
+        'category_id',
         'is_headline',
         'is_featured',
         'is_active',
         'status',
         'views',
         'published_at',
+        'legacy_id',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'is_headline' => 'boolean',
-            'is_featured' => 'boolean',
-            'is_active' => 'boolean',
-            'published_at' => 'datetime',
-        ];
-    }
-
-    // ==================== RELATIONSHIPS ====================
-
-    /**
-     * Get the category that owns the post.
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(PostCategory::class, 'category_id');
-    }
+    protected $casts = [
+        'is_headline' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
+        'published_at' => 'datetime',
+        'views' => 'integer',
+    ];
 
     /**
      * Get the author that owns the post.
@@ -71,57 +51,31 @@ class Post extends Model
     }
 
     /**
+     * Get the category that owns the post.
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(PostCategory::class, 'category_id');
+    }
+
+    /**
      * Get the tags for the post.
      */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'post_tag');
+        return $this->belongsToMany(Tag::class, 'post_tag', 'post_id', 'tag_id');
     }
 
-    // ==================== SCOPES ====================
-
     /**
-     * Scope for published posts.
+     * Scope a query to only include published posts.
      */
-    public function scopePublished($query)
+    public function scopePublished(Builder $query): Builder
     {
         return $query->where('status', 'published')
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
     }
-
-    /**
-     * Scope for draft posts.
-     */
-    public function scopeDraft($query)
-    {
-        return $query->where('status', 'draft');
-    }
-
-    /**
-     * Scope for headline posts.
-     */
-    public function scopeHeadline($query)
-    {
-        return $query->where('is_headline', true);
-    }
-
-    /**
-     * Scope for featured posts.
-     */
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
-
-    /**
-     * Scope for posts by type.
-     */
-    public function scopeOfType($query, string $type)
-    {
-        return $query->where('type', $type);
-    }
-
-    // ==================== ACCESSORS & MUTATORS ====================
 
     /**
      * Increment the views count.
@@ -132,10 +86,14 @@ class Post extends Model
     }
 
     /**
-     * Check if post is published.
+     * Get excerpt from content.
      */
-    public function isPublished(): bool
+    public function getExcerptAttribute(int $length = 150): string
     {
-        return $this->status === 'published' && $this->is_active;
+        $content = strip_tags($this->content);
+        if (strlen($content) <= $length) {
+            return $content;
+        }
+        return substr($content, 0, $length) . '...';
     }
 }

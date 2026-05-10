@@ -1,291 +1,156 @@
-# Panduan Migrasi Database Portal Kemenag Nganjuk
+# Migrasi Database Portal Lama ke Laravel (Kemenag Nganjuk)
 
-## Overview
+## Ringkasan
 
-Dokumen ini menjelaskan cara menjalankan migrasi data dari database CMS lama ke database Laravel baru.
+Dokumen ini menjelaskan proses migrasi dari database CMS lama (`portal`) ke database Laravel baru (`portal_v2`).
 
-## Prerequisites
+## Struktur Database Lama
 
-1. **Database Connection** - Pastikan koneksi `mysql_old` sudah dikonfigurasi di `.env`:
+Database: `portal`
 
-```env
-DB_HOST_OLD=your_old_db_host
-DB_PORT_OLD=3306
-DB_DATABASE_OLD=your_old_database
-DB_USERNAME_OLD=your_old_username
-DB_PASSWORD_OLD=your_old_password
+| Tabel Lama | Deskripsi |
+|------------|-----------|
+| `users` | Data pengguna (username, password, level) |
+| `kategori` | Kategori berita |
+| `berita` | Berita/artikel (dengan tag string) |
+| `tag` | Tabel tag (flat) |
+| `halamanstatis` | Halaman statis |
+| `agenda` | Agenda kegiatan |
+| `download` | File download |
+| `identitas` | Identitas website |
+| `logo` | Logo website |
+| `link_terkait` | Link terkait |
+| `menu` | Menu items (flat, tanpa tabel menus) |
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=portal_v2
-DB_USERNAME=root
-DB_PASSWORD=
-```
+## Struktur Database Baru
 
-2. **Konfigurasi `config/database.php`** - Tambahkan koneksi berikut:
+Database: `portal_v2`
 
-```php
-'mysql_old' => [
-    'driver' => 'mysql',
-    'host' => env('DB_HOST_OLD', '127.0.0.1'),
-    'port' => env('DB_PORT_OLD', '3306'),
-    'database' => env('DB_DATABASE_OLD', 'forge'),
-    'username' => env('DB_USERNAME_OLD', 'forge'),
-    'password' => env('DB_PASSWORD_OLD', ''),
-    'charset' => 'utf8mb4',
-    'collation' => 'utf8mb4_unicode_ci',
-    'prefix' => '',
-    'options' => [
-        \PDO::ATTR_EMULATE_PREPARES => true,
-    ],
-],
-```
+| Tabel Baru | Source | Legacy ID |
+|------------|--------|-----------|
+| `users` | users | legacy_username |
+| `post_categories` | kategori | legacy_id |
+| `posts` | berita | legacy_id |
+| `tags` | berita.tag (parsed) | - |
+| `post_tag` | berita.tag pivot | - |
+| `pages` | halamanstatis | legacy_id |
+| `agendas` | agenda | legacy_id |
+| `downloads` | download | legacy_id |
+| `settings` | identitas + logo | - |
+| `external_links` | link_terkait | legacy_id |
+| `menu_items` | menu | - |
 
-## Urutan Migrasi
+> **Catatan:** Menu menggunakan `menu_items` langsung tanpa tabel `menus` untuk simplifikasi.
 
-Migrasi harus dijalankan dalam urutan berikut karena ada dependensi:
+## Command Migrasi
 
-1. **Users** - Dasar untuk semua relasi author
-2. **Settings** - Konfigurasi website
-3. **Categories** - Kategori berita
-4. **Pages** - Halaman statis
-5. **Posts** - Berita (membutuhkan users & categories)
-6. **Agendas** - Agenda
-7. **Downloads** - File download
-8. **External Links** - Link terkait
-9. **Menus** - Struktur menu
-
-## Cara Menjalankan
-
-### A. Migrasi Lengkap (Recommended)
-
-Jalankan semua migrasi dalam satu command:
+### Cara Menjalankan
 
 ```bash
+# Migrasi semua data sekaligus
 php artisan migrate:legacy-portal
+
+# Atau satu per satu
+php artisan migrate:users
+php artisan migrate:settings
+php artisan migrate:categories
+php artisan migrate:pages
+php artisan migrate:posts
+php artisan migrate:agendas
+php artisan migrate:downloads
+php artisan migrate:external-links
+php artisan migrate:menus
 ```
 
-Dengan mode fresh (hapus semua data lama):
+### Mode Fresh (Hapus & Migrasi Ulang)
+
 ```bash
 php artisan migrate:legacy-portal --fresh
 ```
 
-### B. Migrasi Per-Modul
+## Urutan Migrasi
 
-Jika ingin menjalankan migrasi per-modul:
+1. **Users** - Dasar untuk author_id
+2. **Settings** - Konfigurasi website
+3. **Categories** - Untuk post_categories
+4. **Pages** - Tidak depend pada tabel lain
+5. **Posts** - Butuh users dan categories
+6. **Agendas** - Tidak depend pada tabel lain
+7. **Downloads** - Tidak depend pada tabel lain
+8. **External Links** - Tidak depend pada tabel lain
+9. **Menus** - Menu items
 
-```bash
-# 1. Users
-php artisan migrate:users
-php artisan migrate:users --fresh    # Fresh migrate
+## Transformasi Data
 
-# 2. Settings
-php artisan migrate:settings
+### Users
+- `username` → `username` (unique)
+- `nama_lengkap` → `name`
+- `email` → `email`
+- `no_telp` → `phone`
+- `foto` → `photo`
+- `level` → `role_name`
+- `blokir` (Y/N) → `is_active`
 
-# 3. Categories
-php artisan migrate:categories
-php artisan migrate:categories --fresh
+### Posts (Berita)
+- `id_berita` → `legacy_id`
+- `id_kategori` → `category_id` (melalui mapping)
+- `username` → `author_id` (melalui mapping)
+- `judul` + `judul_seo` → `title` + `slug`
+- `isi_berita` → `content`
+- `gambar` → `thumbnail`
+- `headline` (Y/N) → `is_headline`
+- `tanggal` + `jam` → `published_at`
+- `tag` (string) → `tags` + `post_tag` pivot
 
-# 4. Pages
-php artisan migrate:pages
-php artisan migrate:pages --fresh
+### Categories (Kategori)
+- `id_kategori` → `legacy_id`
+- `nama_kategori` → `name`
+- `kategori_seo` → `slug`
 
-# 5. Posts
-php artisan migrate:posts
-php artisan migrate:posts --fresh
+### Menu Items
+- `id_menu` → `legacy_id`
+- `id_parent` → `parent_id`
+- `nama_menu` → `title`
+- `link` → `url`
+- `aktif` (Ya/Tidak) → `is_active`
+- `urutan` → `sort_order`
+- `position` → `location` (Top/Footer/Bottom)
 
-# 6. Agendas
-php artisan migrate:agendas
-php artisan migrate:agendas --fresh
+## Status Migrasi (Per 10 Mei 2026)
 
-# 7. Downloads
-php artisan migrate:downloads
-php artisan migrate:downloads --fresh
+| Tabel | Status | Records |
+|-------|--------|---------|
+| users | ✅ Selesai | 57 |
+| post_categories | ✅ Selesai | 7 |
+| posts | ✅ Selesai | 1169 |
+| tags | ✅ Selesai | - |
+| pages | ✅ Selesai | - |
+| agendas | ✅ Selesai | - |
+| downloads | ✅ Selesai | - |
+| settings | ✅ Selesai | 1 |
+| external_links | ✅ Selesai | - |
+| menu_items | ✅ Selesai | - |
 
-# 8. External Links
-php artisan migrate:external-links
-php artisan migrate:external-links --fresh
+## Langkah Setelah Migrasi
 
-# 9. Menus
-php artisan migrate:menus
-php artisan migrate:menus --fresh
-```
+1. **Salin file media:**
+   ```bash
+   cp -r /path/to/old/portal/images/* storage/app/public/images/
+   php artisan storage:link
+   ```
 
-### C. Skip Modul Tertentu
+2. **Clear cache:**
+   ```bash
+   php artisan config:clear
+   php artisan cache:clear
+   ```
 
-```bash
-php artisan migrate:legacy-portal --skip-users --skip-menus
-```
-
-### D. Custom Database Connection
-
-```bash
-php artisan migrate:legacy-portal --connection=mysql_old_custom
-```
-
-## Penjelasan Setiap Command
-
-### migrate:users
-- Memindahkan data dari tabel `users` lama
-- Mapping role: admin, moderator, editor, user
-- Password default: `changeme123` (harus diganti)
-
-### migrate:settings
-- Menggabungkan data dari tabel `identitas` dan `logo`
-- Membuat singleton setting di database baru
-
-### migrate:categories
-- Memindahkan data dari tabel `kategori`
-- Konversi enum `Y/N` ke boolean
-- Generate slug otomatis jika kosong
-
-### migrate:pages
-- Memindahkan data dari tabel `halamanstatis`
-- Relasi author berdasarkan username
-- Gabung tanggal + jam jadi `published_at`
-
-### migrate:posts
-- Memindahkan data dari tabel `berita`
-- **Parsing tags** dari string ke tabel pivot `post_tag`
-- Mapping category & author dari cache
-- Konversi headline/featured/aktif ke boolean
-
-### migrate:agendas
-- Memindahkan data dari tabel `agenda`
-- Parse tanggal mulai & selesai
-- Relasi author berdasarkan username
-
-### migrate:downloads
-- Memindahkan data dari tabel `download`
-- Generate file path untuk storage
-- Map extension ke file type category
-
-### migrate:external-links
-- Memindahkan data dari tabel `linkterkait`
-- Extract category dari domain URL
-- Normalisasi format URL
-
-### migrate:menus
-- Memindahkan data dari tabel `menu` & `menu_items`
-- Buat header & footer menu
-- Two-pass approach untuk parent relationships
-
-## Hal yang Perlu Dicek Setelah Migrasi
-
-### 1. Review Data
-```bash
-# Cek jumlah data
-php artisan tinker --execute="echo App\Models\User::count();"
-php artisan tinker --execute="echo App\Models\Post::count();"
-php artisan tinker --execute="echo App\Models\Category::count();"
-```
-
-### 2. File Media
-File media lama perlu disalin manual ke storage Laravel:
-
-```bash
-# Buat symbolic link
-php artisan storage:link
-
-# Salin file dari server lama
-# Source: /path/to/old/uploads/
-# Dest: storage/app/public/
-```
-
-Folder yang perlu disalin:
-- `gambar/` - Gambar berita
-- `logo/` - Logo website
-- `download/` - File download
-- `agenda/` - Gambar agenda
-
-### 3. Password Users
-Password semua user di-set ke `changeme123`. Ganti dengan:
-
-```bash
-# Via tinker
-php artisan tinker
->>> $user = App\Models\User::find(1);
->>> $user->password = bcrypt('password_baru');
->>> $user->save();
-```
-
-### 4. Review Menu
-Struktur menu lama mungkin perlu di-review manual karena:
-- URL lama mungkin tidak valid di sistem baru
-- Navigasi website redesign biasanya berubah
-
-### 5. Generate Slugs
-Slug yang duplikat sudah di-handle dengan suffix legacy_id. Review jika perlu.
-
-## Troubleshooting
-
-### Error: Koneksi database gagal
-- Cek konfigurasi `.env` untuk `DB_HOST_OLD`, dll
-- Pastikan database lama accessible
-- Test koneksi: `mysql -h $DB_HOST_OLD -u $DB_USERNAME_OLD -p $DB_DATABASE_OLD`
-
-### Error: Tabel tidak ditemukan
-- Cek apakah nama tabel sesuai (case-sensitive)
-- Cek prefix tabel di database lama
-
-### Encoding Issue
-- Semua command sudah handle konversi latin1 -> utf8mb4
-- Jika masih ada karakter aneh, cek collation database lama
-
-### Data Tidak Muncul
-- Cek apakah `is_active` = true
-- Cek apakah `published_at` sudah terisi
-- Cek `status` = 'published'
-
-## Struktur Database Baru
-
-```
-┌─────────────────┐     ┌──────────────────────┐
-│     users       │────<│ posts (author_id)    │
-└─────────────────┘     └──────────────────────┘
-                               │
-                               │ (pivot)
-                               ▼
-                         ┌──────────┐     ┌─────────┐
-                         │  tags    │<────│post_tag │
-                         └──────────┘     └─────────┘
-
-┌─────────────────┐     ┌──────────────────────┐
-│post_categories  │────<│   posts (category)   │
-└─────────────────┘     └──────────────────────┘
-
-┌─────────────────┐     ┌──────────────────────┐
-│     users       │────<│     pages            │
-└─────────────────┘     └──────────────────────┘
-
-┌─────────────────┐     ┌──────────────────────┐
-│     users       │────<│     agendas          │
-└─────────────────┘     └──────────────────────┘
-
-┌─────────────────┐
-│    settings     │ (singleton)
-└─────────────────┘
-
-┌─────────────────┐
-│ external_links  │
-└─────────────────┘
-
-┌─────────────────┐     ┌──────────────────────┐
-│     menus       │────<│    menu_items         │
-└─────────────────┘     └──────────────────────┘
-                               │
-                               │ (self-referencing)
-                               ▼
-                         ┌──────────────────────┐
-                         │    menu_items         │ (parent_id)
-                         └──────────────────────┘
-```
+3. **Test frontend**
 
 ## Catatan Penting
 
-1. **Idempotent** - Semua command aman dijalankan ulang
-2. **Uses updateOrCreate** - Tidak akan membuat duplikat
-3. **Legacy ID Tracking** - Semua record baru menyimpan `legacy_id` untuk audit
-4. **UTF-8 Compatible** - Handle encoding dari latin1
-5. **Transaction** - Setiap batch adalah satu transaction (rollback on error)
+- Encoding lama (latin1) dikonversi otomatis ke UTF-8
+- Field kosong → null
+- Slug duplikat → suffix `-legacy_id`
+- Semua command idempotent (aman dijalankan ulang)
+- Menu tidak menggunakan tabel `menus` (flat structure)

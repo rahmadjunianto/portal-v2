@@ -14,5 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Disable debugbar in production-like errors
+        if (config('app.debug') === false) {
+            $exceptions->shouldRenderJsonWhen(function () {
+                return true;
+            });
+        }
     })->create();

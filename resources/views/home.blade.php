@@ -10,9 +10,9 @@
 
     @if($headlinePosts->count() > 0)
     <!-- Hero Carousel -->
-    <div x-data="heroSlider()" x-init="init()" class="relative h-[500px] md:h-[550px]">
+    <div x-data="heroSlider()" x-init="init()" class="relative w-full" style="aspect-ratio: 16/9; max-height: 70vh;">
         <!-- Slides -->
-        <div class="relative h-full">
+        <div class="relative w-full h-full">
             @foreach($headlinePosts as $index => $post)
             <div
                 x-show="active === {{ $index }}"
@@ -25,10 +25,18 @@
                 class="absolute inset-0"
             >
                 <!-- Image Background -->
-                @if($post->thumbnail)
-                <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
+                <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-full object-contain">
                 @else
-                <div class="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900"></div>
+                <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Placeholder" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center hidden">
+                    <div class="text-center text-emerald-200">
+                        <svg class="w-24 h-24 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                        <p class="text-lg font-medium">Tidak ada gambar</p>
+                    </div>
+                </div>
                 @endif
 
                 <!-- Overlay -->
@@ -169,11 +177,12 @@
             <article class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow group">
                 <!-- Thumbnail -->
                 <a href="{{ route('posts.show', $post->slug) }}" class="block relative overflow-hidden">
-                    @if($post->thumbnail)
+                    @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
                     <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
                     @else
-                    <div class="w-full h-48 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Placeholder" class="w-full h-48 object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-48 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center hidden">
+                        <svg class="w-12 h-12 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>

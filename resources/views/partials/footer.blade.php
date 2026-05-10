@@ -37,27 +37,12 @@
                     Tautan Cepat
                 </h4>
                 <ul class="space-y-2">
-                    @forelse($footerMenuItems as $menuItem)
-                    <li>
-                        <a
-                            href="{{ $menuItem->url ?? '#' }}"
-                            @if($menuItem->target_blank) target="_blank" rel="noopener noreferrer" @endif
-                            class="hover:text-emerald-400 transition-colors flex items-center gap-1"
-                        >
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ $menuItem->title }}
-                        </a>
-                    </li>
-                    @empty
                     <li><a href="{{ url('/') }}" class="hover:text-emerald-400 transition-colors">Beranda</a></li>
-                    <li><a href="#" class="hover:text-emerald-400 transition-colors">Profil</a></li>
-                    <li><a href="#" class="hover:text-emerald-400 transition-colors">Berita</a></li>
-                    <li><a href="#" class="hover:text-emerald-400 transition-colors">Agenda</a></li>
-                    <li><a href="#" class="hover:text-emerald-400 transition-colors">Unduh</a></li>
-                    <li><a href="#" class="hover:text-emerald-400 transition-colors">Kontak</a></li>
-                    @endforelse
+                    <li><a href="{{ route('posts.index') }}" class="hover:text-emerald-400 transition-colors">Berita</a></li>
+                    <li><a href="{{ route('agendas.index') }}" class="hover:text-emerald-400 transition-colors">Agenda</a></li>
+                    <li><a href="{{ route('downloads.index') }}" class="hover:text-emerald-400 transition-colors">Unduh</a></li>
+                    <li><a href="{{ route('pages.show', 'profil') }}" class="hover:text-emerald-400 transition-colors">Profil</a></li>
+                    <li><a href="{{ route('pages.show', 'kontak') }}" class="hover:text-emerald-400 transition-colors">Kontak</a></li>
                 </ul>
             </div>
 

@@ -10,43 +10,19 @@ class Tag extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'tags';
+
     protected $fillable = [
         'name',
         'slug',
+        'legacy_id',
     ];
 
-    // ==================== RELATIONSHIPS ====================
-
     /**
-     * Get the posts that have this tag.
+     * Get the posts for the tag.
      */
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'post_tag');
-    }
-
-    /**
-     * Get only published posts with this tag.
-     */
-    public function publishedPosts(): BelongsToMany
-    {
-        return $this->belongsToMany(Post::class, 'post_tag')
-            ->where('status', 'published')
-            ->where('is_active', true);
-    }
-
-    // ==================== SCOPES ====================
-
-    /**
-     * Scope to find by slug.
-     */
-    public function scopeBySlug($query, string $slug)
-    {
-        return $query->where('slug', $slug);
+        return $this->belongsToMany(Post::class, 'post_tag', 'tag_id', 'post_id');
     }
 }
