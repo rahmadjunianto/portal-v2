@@ -24,13 +24,25 @@
         @if(isset($categories) && $categories->count() > 0)
         <div class="flex gap-2 flex-wrap">
             <a href="{{ route('posts.index') }}"
-               class="px-4 py-2 rounded-lg {{ !request('category') ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+               class="px-4 py-2 rounded-lg {{ !request('category') && !request('tag') ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                 Semua
             </a>
             @foreach($categories as $cat)
             <a href="{{ route('posts.index', ['category' => $cat->slug]) }}"
                class="px-4 py-2 rounded-lg {{ request('category') == $cat->slug ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                 {{ $cat->name }}
+            </a>
+            @endforeach
+        </div>
+        @endif
+
+        @if(isset($tags) && $tags->count() > 0)
+        <div class="flex gap-2 flex-wrap mt-4">
+            <span class="px-3 py-2 text-gray-500 text-sm font-medium">Tag:</span>
+            @foreach($tags as $tag)
+            <a href="{{ route('posts.index', ['tag' => $tag->slug]) }}"
+               class="px-3 py-1 rounded-full text-sm {{ request('tag') == $tag->slug ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-emerald-100 hover:text-emerald-700' }}">
+                {{ $tag->name }}
             </a>
             @endforeach
         </div>

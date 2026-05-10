@@ -73,7 +73,27 @@
             @endif
 
             <!-- Content -->
-            <div class="prose prose-emerald max-w-none">
+            <div class="prose prose-emerald max-w-none
+                prose-headings:text-gray-900 prose-headings:font-bold prose-headings:tracking-tight
+                prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-3
+                prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+                prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-2
+                prose-p:text-gray-700 prose-p:leading-7 prose-p:mb-5
+                prose-a:text-emerald-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+                prose-img:rounded-xl prose-img:shadow-lg prose-img:mx-auto prose-img:my-6
+                prose-ul:my-4 prose-ul:space-y-2
+                prose-ol:my-4 prose-ol:space-y-2
+                prose-li:text-gray-700 prose-li:leading-relaxed
+                prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:bg-emerald-50 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-gray-700 prose-blockquote:my-6
+                prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:text-emerald-700 prose-code:font-mono
+                prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:overflow-x-auto prose-pre:my-6
+                prose-pre code:bg-transparent prose-pre code:text-inherit
+                prose-strong:text-gray-900 prose-strong:font-semibold
+                prose-hr:border-gray-200 prose-hr:my-10
+                prose-table:text-sm prose-table:overflow-hidden prose-table:rounded-lg prose-table:shadow
+                prose-th:bg-emerald-600 prose-th:text-white prose-th:px-4 prose-th:py-3 prose-th:font-semibold
+                prose-td:px-4 prose-td:py-3 prose-td:border-b prose-td:border-gray-200
+                prose-tr:hover:bg-gray-50">
                 {!! $post->content !!}
             </div>
 

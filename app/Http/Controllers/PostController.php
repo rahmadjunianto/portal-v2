@@ -6,6 +6,7 @@ use App\Models\MenuItem;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\Setting;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -30,6 +31,9 @@ class PostController extends Controller
 
         // Get categories for filter
         $categories = PostCategory::orderBy('name', 'asc')->get();
+
+        // Get tags for filter
+        $tags = Tag::orderBy('name', 'asc')->get();
 
         // Build query
         $query = Post::published()
@@ -69,6 +73,7 @@ class PostController extends Controller
             'settings' => $settings,
             'headerMenuItems' => $headerMenuItems,
             'categories' => $categories,
+            'tags' => $tags,
             'posts' => $posts,
         ]);
     }
