@@ -52,9 +52,9 @@ class HomeController extends Controller
             ->limit(8)
             ->get();
 
-        // Get upcoming agendas
-        $upcomingAgendas = Agenda::upcoming()
-            ->orderBy('start_date', 'asc')
+        // Get latest agendas (show recent regardless of date)
+        $upcomingAgendas = Agenda::published()
+            ->orderBy('start_date', 'desc')
             ->limit(4)
             ->get();
 

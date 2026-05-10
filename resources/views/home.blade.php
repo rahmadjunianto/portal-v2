@@ -125,46 +125,40 @@
 </section>
 
 <!-- ===================== SEKILAS KEMENAG SECTION ===================== -->
-<section class="py-20 md:py-28 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-50 relative overflow-hidden">
-    <!-- Modern Decorative Elements -->
-    <div class="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-emerald-200/30 to-teal-200/20 rounded-full blur-[100px] pointer-events-none"></div>
-    <div class="absolute bottom-20 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-emerald-300/20 to-emerald-100/10 rounded-full blur-[80px] pointer-events-none"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-emerald-100/10 to-transparent rounded-full pointer-events-none"></div>
-
-    <!-- Floating Shapes -->
-    <div class="absolute top-32 left-[15%] w-4 h-4 bg-emerald-400/40 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-40 right-[20%] w-3 h-3 bg-teal-400/50 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-    <div class="absolute top-1/3 right-[10%] w-2 h-2 bg-emerald-500/60 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+<section class="py-10 md:py-20 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-50 relative overflow-hidden">
+    <!-- Modern Decorative Elements (reduced on mobile) -->
+    <div class="absolute top-0 right-0 w-64 h-64 md:w-[500px] md:h-[500px] bg-gradient-to-br from-emerald-200/30 to-teal-200/20 rounded-full blur-[80px] md:blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-48 h-48 md:w-[400px] md:h-[400px] bg-gradient-to-tr from-emerald-300/20 to-emerald-100/10 rounded-full blur-[60px] md:blur-[80px] pointer-events-none hidden sm:block"></div>
 
     <div class="container mx-auto px-4 relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <!-- Gambar di kiri - Modern Card -->
-            <div class="lg:col-span-5 order-2 lg:order-1">
-                <div class="relative group">
-                    <!-- Glow Effect -->
-                    <div class="absolute -inset-8 bg-gradient-to-br from-emerald-400/20 via-emerald-300/10 to-transparent rounded-[3rem] blur-2xl opacity-60 group-hover:opacity-80 transition duration-700"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 items-center">
+            <!-- Gambar di kiri - Hidden on Mobile -->
+            <div class="lg:col-span-5 order-2 lg:order-1 hidden sm:block">
+                <div class="relative group max-w-xs mx-auto lg:max-w-none">
+                    <!-- Glow Effect (smaller on mobile) -->
+                    <div class="absolute -inset-4 md:-inset-8 bg-gradient-to-br from-emerald-400/20 via-emerald-300/10 to-transparent rounded-2xl md:rounded-[3rem] blur-xl opacity-60 group-hover:opacity-80 transition duration-700"></div>
 
-                    <!-- Main Card -->
-                    <div class="relative bg-gradient-to-br from-white to-emerald-50/50 rounded-[2rem] p-3 shadow-2xl shadow-emerald-200/50 border border-white/80 backdrop-blur-sm">
+                    <!-- Main card -->
+                    <div class="relative bg-gradient-to-br from-white to-emerald-50/50 rounded-xl md:rounded-[2rem] p-2 md:p-3 shadow-2xl shadow-emerald-200/50 border border-white/80 backdrop-blur-sm">
                         <!-- Inner Image Container -->
-                        <div class="relative aspect-[4/5] rounded-[1.5rem] overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-800">
+                        <div class="relative aspect-[4/5] rounded-xl md:rounded-[1.5rem] overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-800">
                             @if($settings->logo_path && file_exists(public_path('storage/' . $settings->logo_path)))
-                            <img src="{{ asset('storage/' . $settings->logo_path) }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-8 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700">
+                            <img src="{{ asset('storage/' . $settings->logo_path) }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-4 md:p-8 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700">
                             @else
-                            <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-10 group-hover:scale-105 transition-transform duration-700">
+                            <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-6 md:p-10 group-hover:scale-105 transition-transform duration-700">
                             @endif
 
                             <!-- Overlay Gradient -->
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
-                            <!-- Floating Badge -->
-                            <div class="absolute top-6 right-6 bg-white/95 backdrop-blur-md rounded-2xl px-5 py-3 shadow-xl">
-                                <p class="text-emerald-700 font-bold text-lg tracking-tight">SENYUM</p>
-                                <p class="text-emerald-600/70 text-xs">Sehat, Nyaman, Unggul & Maju</p>
+                            <!-- Floating Badge (smaller on mobile) -->
+                            <div class="absolute top-3 right-3 md:top-6 md:right-6 bg-white/95 backdrop-blur-md rounded-xl md:rounded-2xl px-3 py-2 md:px-5 md:py-3 shadow-xl">
+                                <p class="text-emerald-700 font-bold text-sm md:text-lg tracking-tight">SENYUM</p>
+                                <p class="text-emerald-600/70 text-[10px] md:text-xs hidden sm:block">Sehat, Nyaman, Unggul & Maju</p>
                             </div>
 
-                            <!-- Bottom Info -->
-                            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                            <!-- Bottom Info (hidden on mobile) -->
+                            <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent hidden md:block">
                                 <p class="text-white/90 text-sm font-light leading-relaxed">
                                     "Melayani umat agama dengan excellence dan inovasi"
                                 </p>
@@ -172,46 +166,47 @@
                         </div>
                     </div>
 
-                    <!-- Decorative Corner Elements -->
-                    <div class="absolute -top-4 -left-4 w-16 h-16 border-l-4 border-t-4 border-emerald-300/50 rounded-tl-3xl"></div>
-                    <div class="absolute -bottom-4 -right-4 w-16 h-16 border-r-4 border-b-4 border-emerald-300/50 rounded-br-3xl"></div>
+                    <!-- Decorative Corner Elements (hidden on mobile) -->
+                    <div class="absolute -top-2 -left-2 md:-top-4 md:-left-4 w-8 h-8 md:w-16 md:h-16 border-l-2 md:border-l-4 border-t-2 md:border-t-4 border-emerald-300/50 rounded-tl-xl md:rounded-tl-3xl hidden md:block"></div>
+                    <div class="absolute -bottom-2 -right-2 md:-bottom-4 md:-right-4 w-8 h-8 md:w-16 md:h-16 border-r-2 md:border-r-4 border-b-2 md:border-b-4 border-emerald-300/50 rounded-br-xl md:rounded-br-3xl hidden md:block"></div>
                 </div>
             </div>
 
-            <!-- Konten di kanan - Modern Design -->
+            <!-- Konten di kanan - Compact on Mobile -->
             <div class="lg:col-span-7 order-1 lg:order-2" x-data="sekilasTabs()">
-                <!-- Modern Header -->
-                <div class="mb-10">
-                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-[1.1] mb-4">
+                <!-- Compact Header -->
+                <div class="mb-4 md:mb-10">
+                    <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-2 md:mb-4">
                         Sekilas
                         <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Kemenag</span>
                     </h2>
-                    <p class="text-gray-500 text-lg max-w-xl leading-relaxed">
-                        Mengenal lebih dekat Kantor Kementerian Agama Kabupaten Nganjuk
+                    <p class="text-gray-500 text-sm md:text-base max-w-xl leading-relaxed">
+                        Mengenal lebih dekat Kemenag Nganjuk
                     </p>
                 </div>
 
-                <!-- Modern Tab Pills -->
-                <div class="flex flex-wrap gap-3 mb-8">
+                <!-- Compact Tab Pills -->
+                <div class="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-8">
                     <button
                         @click="activeTab = 'sejarah'"
                         :class="activeTab === 'sejarah' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
-                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                        class="px-3 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="flex items-center gap-1 md:gap-2">
+                            <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Tentang Kami
+                            <span class="hidden sm:inline">Tentang Kami</span>
+                            <span class="sm:hidden">Tentang</span>
                         </span>
                     </button>
                     <button
                         @click="activeTab = 'visi'"
                         :class="activeTab === 'visi' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
-                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                        class="px-3 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="flex items-center gap-1 md:gap-2">
+                            <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
@@ -221,10 +216,10 @@
                     <button
                         @click="activeTab = 'misi'"
                         :class="activeTab === 'misi' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
-                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                        class="px-3 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="flex items-center gap-1 md:gap-2">
+                            <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
                             Misi
@@ -233,10 +228,10 @@
                     <button
                         @click="activeTab = 'motto'"
                         :class="activeTab === 'motto' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
-                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                        class="px-3 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
                     >
-                        <span class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="flex items-center gap-1 md:gap-2">
+                            <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                             </svg>
                             Motto
@@ -244,148 +239,145 @@
                     </button>
                 </div>
 
-                <!-- Modern Content Card -->
-                <div class="relative bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100/50 overflow-hidden">
-                    <!-- Decorative Top Border -->
-                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-400"></div>
-
+                <!-- Compact Content Card -->
+                <div class="relative bg-white rounded-xl md:rounded-3xl p-4 md:p-8 shadow-xl shadow-gray-200/50 border border-gray-100/50 overflow-hidden">
                     <!-- Content Area -->
-                    <div class="relative min-h-[200px]">
+                    <div class="relative min-h-[120px] md:min-h-[200px]">
                         <!-- Sejarah Tab -->
                         <div x-show="activeTab === 'sejarah'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
-                            <div class="flex items-start gap-4 mb-6">
-                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+                                <div class="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl md:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 md:w-7 md:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Tentang Kami</h3>
-                                    <p class="text-emerald-600 font-medium text-sm">Kantor Kemenag Nganjuk</p>
+                                    <h3 class="text-lg md:text-2xl font-bold text-gray-900 mb-1 md:mb-2">Tentang Kami</h3>
+                                    <p class="text-emerald-600 font-medium text-xs md:text-sm">Kantor Kemenag Nganjuk</p>
                                 </div>
                             </div>
                             @if($pagesSejarah)
-                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesSejarah->content)) }}</p>
-                            <a href="{{ route('pages.show', $pagesSejarah->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                            <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4 md:mb-8 line-clamp-2 md:line-clamp-3">{{ html_entity_decode(strip_tags($pagesSejarah->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesSejarah->slug) }}" class="group inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
                                 Baca Selengkapnya
-                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                                 </svg>
                             </a>
                             @else
-                            <div class="text-center py-8">
-                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="text-center py-4 md:py-8">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                    <svg class="w-6 h-6 md:w-8 md:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                     </svg>
                                 </div>
-                                <p class="text-gray-500">Data sejarah belum tersedia.</p>
+                                <p class="text-gray-500 text-sm">Data sejarah belum tersedia.</p>
                             </div>
                             @endif
                         </div>
 
                         <!-- Visi Tab -->
                         <div x-show="activeTab === 'visi'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
-                            <div class="flex items-start gap-4 mb-6">
-                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+                                <div class="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl md:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 md:w-7 md:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Visi</h3>
-                                    <p class="text-emerald-600 font-medium text-sm">Visi Kemenag Nganjuk</p>
+                                    <h3 class="text-lg md:text-2xl font-bold text-gray-900 mb-1 md:mb-2">Visi</h3>
+                                    <p class="text-emerald-600 font-medium text-xs md:text-sm">Visi Kemenag Nganjuk</p>
                                 </div>
                             </div>
                             @if($pagesVisi)
-                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesVisi->content)) }}</p>
-                            <a href="{{ route('pages.show', $pagesVisi->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                            <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4 md:mb-8 line-clamp-2 md:line-clamp-3">{{ html_entity_decode(strip_tags($pagesVisi->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesVisi->slug) }}" class="group inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
                                 Baca Selengkapnya
-                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                                 </svg>
                             </a>
                             @else
-                            <div class="text-center py-8">
-                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="text-center py-4 md:py-8">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                    <svg class="w-6 h-6 md:w-8 md:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                     </svg>
                                 </div>
-                                <p class="text-gray-500">Data visi belum tersedia.</p>
+                                <p class="text-gray-500 text-sm">Data visi belum tersedia.</p>
                             </div>
                             @endif
                         </div>
 
                         <!-- Misi Tab -->
                         <div x-show="activeTab === 'misi'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
-                            <div class="flex items-start gap-4 mb-6">
-                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+                                <div class="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl md:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 md:w-7 md:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Misi</h3>
-                                    <p class="text-emerald-600 font-medium text-sm">Misi Kemenag Nganjuk</p>
+                                    <h3 class="text-lg md:text-2xl font-bold text-gray-900 mb-1 md:mb-2">Misi</h3>
+                                    <p class="text-emerald-600 font-medium text-xs md:text-sm">Misi Kemenag Nganjuk</p>
                                 </div>
                             </div>
                             @if($pagesMisi)
-                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesMisi->content)) }}</p>
-                            <a href="{{ route('pages.show', $pagesMisi->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                            <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4 md:mb-8 line-clamp-2 md:line-clamp-3">{{ html_entity_decode(strip_tags($pagesMisi->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesMisi->slug) }}" class="group inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
                                 Baca Selengkapnya
-                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                                 </svg>
                             </a>
                             @else
-                            <div class="text-center py-8">
-                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="text-center py-4 md:py-8">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                    <svg class="w-6 h-6 md:w-8 md:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                     </svg>
                                 </div>
-                                <p class="text-gray-500">Data misi belum tersedia.</p>
+                                <p class="text-gray-500 text-sm">Data misi belum tersedia.</p>
                             </div>
                             @endif
                         </div>
 
                         <!-- Motto Tab -->
                         <div x-show="activeTab === 'motto'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
-                            <div class="flex items-start gap-4 mb-6">
-                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-start gap-3 md:gap-4 mb-4 md:mb-6">
+                                <div class="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl md:rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 md:w-7 md:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Motto / SENYUM</h3>
-                                    <p class="text-emerald-600 font-medium text-sm">Semangat Kemenag Nganjuk</p>
+                                    <h3 class="text-lg md:text-2xl font-bold text-gray-900 mb-1 md:mb-2">Motto</h3>
+                                    <p class="text-emerald-600 font-medium text-xs md:text-sm">Semangat Kemenag Nganjuk</p>
                                 </div>
                             </div>
                             @if($pagesMotto)
-                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesMotto->content)) }}</p>
-                            <a href="{{ route('pages.show', $pagesMotto->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                            <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4 md:mb-8 line-clamp-2 md:line-clamp-3">{{ html_entity_decode(strip_tags($pagesMotto->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesMotto->slug) }}" class="group inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
                                 Baca Selengkapnya
-                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                                 </svg>
                             </a>
                             @else
-                            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 text-center border border-emerald-100">
-                                <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
-                                    <span class="text-white font-black text-2xl">S</span>
+                            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl md:rounded-2xl p-4 md:p-8 text-center border border-emerald-100">
+                                <div class="w-12 h-12 md:w-20 md:h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg shadow-emerald-500/30">
+                                    <span class="text-white font-black text-lg md:text-2xl">S</span>
                                 </div>
-                                <p class="text-3xl font-bold text-emerald-700 mb-4">SENYUM</p>
-                                <p class="text-gray-600 leading-relaxed mb-6">
+                                <p class="text-xl md:text-3xl font-bold text-emerald-700 mb-2 md:mb-4">SENYUM</p>
+                                <p class="text-gray-600 leading-relaxed mb-4 md:mb-6 text-sm">
                                     <span class="font-bold text-emerald-600">S</span>ehat,
                                     <span class="font-bold text-emerald-600">N</span>yam,
                                     <span class="font-bold text-emerald-600">Y</span>ang,
                                     <span class="font-bold text-emerald-600">U</span>ntuk,
                                     <span class="font-bold text-emerald-600">M</span>asyarakat
                                 </p>
-                                <p class="text-emerald-600 font-medium italic">"Sehat, Nyaman, Unggul, dan Maju"</p>
+                                <p class="text-emerald-600 font-medium italic text-sm">"Sehat, Nyaman, Unggul, dan Maju"</p>
                             </div>
                             @endif
                         </div>
@@ -590,256 +582,109 @@
     </div>
 </section>
 
-<!-- ===================== AGENDA SECTION ===================== -->
-<section class="py-12 md:py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <div>
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-2">
-                    <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    Agenda Terkini
-                </h2>
-                <p class="text-gray-600 mt-1">Jadwal kegiatan Kementerian Agama Kabupaten Nganjuk</p>
-            </div>
-            <a href="{{ route('agendas.index') }}" class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium">
-                Lihat Semua Agenda
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </a>
-        </div>
-
-        @if($upcomingAgendas->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($upcomingAgendas as $agenda)
-            <article class="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-100 group">
-                <!-- Date Badge -->
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="bg-emerald-600 text-white rounded-lg p-3 text-center min-w-[60px]">
-                        <div class="text-2xl font-bold">{{ $agenda->start_date ? \Carbon\Carbon::parse($agenda->start_date)->format('d') : '-' }}</div>
-                        <div class="text-xs uppercase">{{ $agenda->start_date ? \Carbon\Carbon::parse($agenda->start_date)->format('M') : '' }}</div>
-                    </div>
-                    @if($agenda->end_date && $agenda->end_date != $agenda->start_date)
-                    <span class="text-gray-400">-</span>
-                    <div class="bg-gray-400 text-white rounded-lg p-3 text-center min-w-[60px]">
-                        <div class="text-2xl font-bold">{{ \Carbon\Carbon::parse($agenda->end_date)->format('d') }}</div>
-                        <div class="text-xs uppercase">{{ \Carbon\Carbon::parse($agenda->end_date)->format('M') }}</div>
-                    </div>
-                    @endif
-                </div>
-
-                <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                    <a href="{{ route('agendas.show', $agenda->slug) }}">{{ $agenda->title }}</a>
-                </h3>
-
-                @if($agenda->location)
-                <p class="text-gray-600 text-sm flex items-start gap-2">
-                    <svg class="w-4 h-4 mt-0.5 flex-shrink-0 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    {{ $agenda->location }}
-                </p>
-                @endif
-
-                @if($agenda->event_time_text)
-                <p class="text-gray-500 text-sm mt-2 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {{ $agenda->event_time_text }}
-                </p>
-                @endif
-            </article>
-            @endforeach
-        </div>
-        @else
-        <div class="text-center py-12 bg-gray-50 rounded-xl">
-            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            <p class="text-gray-500">Belum ada agenda yang akan datang</p>
-        </div>
-        @endif
-    </div>
-</section>
-
-<!-- ===================== DOWNLOAD & LAYANAN SECTION ===================== -->
+<!-- ===================== AGENDA, DOWNLOAD & LAYANAN SECTION ===================== -->
 <section class="py-12 md:py-16 bg-gray-50">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Download Section -->
-            <div>
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                        <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Agenda Column -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-emerald-600 px-4 py-3 flex items-center justify-between">
+                    <h3 class="text-white font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Agenda
+                    </h3>
+                    <a href="{{ route('agendas.index') }}" class="text-emerald-100 hover:text-white text-xs font-medium">Lihat Semua</a>
+                </div>
+                <div class="p-4">
+                    @if($upcomingAgendas->count() > 0)
+                    <div class="space-y-3">
+                        @foreach($upcomingAgendas->take(3) as $agenda)
+                        <a href="{{ route('agendas.show', $agenda->slug) }}" class="block p-3 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-emerald-100 text-emerald-700 rounded-lg px-2 py-1 text-center min-w-[50px]">
+                                    <div class="text-lg font-bold">{{ $agenda->start_date ? \Carbon\Carbon::parse($agenda->start_date)->format('d') : '-' }}</div>
+                                    <div class="text-[10px] uppercase">{{ $agenda->start_date ? \Carbon\Carbon::parse($agenda->start_date)->format('M') : '' }}</div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-medium text-gray-800 text-sm line-clamp-2">{{ $agenda->title }}</h4>
+                                    @if($agenda->location)
+                                    <p class="text-gray-500 text-xs mt-1 truncate">{{ $agenda->location }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                        @endforeach
+                    </div>
+                    @else
+                    <p class="text-gray-500 text-sm text-center py-4">Belum ada agenda</p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Download Column -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-emerald-600 px-4 py-3 flex items-center justify-between">
+                    <h3 class="text-white font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                         Download
-                    </h2>
-                    <a href="{{ route('downloads.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium text-sm">Lihat Semua</a>
+                    </h3>
+                    <a href="{{ route('downloads.index') }}" class="text-emerald-100 hover:text-white text-xs font-medium">Lihat Semua</a>
                 </div>
-
-                @if($latestDownloads->count() > 0)
-                <div class="space-y-3">
-                    @foreach($latestDownloads as $download)
-                    <a href="{{ asset('storage/' . $download->file_path) }}" target="_blank" class="block bg-white rounded-lg p-4 hover:shadow-md transition-shadow border border-gray-100 group">
-                        <div class="flex items-center gap-4">
-                            <!-- File Icon -->
-                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-emerald-600 font-bold text-xs uppercase">{{ $download->extension ?? 'FILE' }}</span>
+                <div class="p-4">
+                    @if($latestDownloads->count() > 0)
+                    <div class="space-y-2">
+                        @foreach($latestDownloads->take(4) as $download)
+                        <a href="{{ asset('storage/' . $download->file_path) }}" target="_blank" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-emerald-600 font-bold text-[10px]">{{ $download->extension ?? 'PDF' }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <h4 class="font-medium text-gray-800 truncate group-hover:text-emerald-600 transition-colors">{{ $download->title }}</h4>
-                                <div class="flex items-center gap-3 text-xs text-gray-500 mt-1">
-                                    @if($download->file_size)
-                                    <span>{{ $download->file_size_formatted }}</span>
-                                    @endif
-                                    <span>{{ $download->published_at ? $download->published_at->format('d M Y') : '' }}</span>
-                                </div>
+                                <h4 class="font-medium text-gray-800 text-sm truncate">{{ $download->title }}</h4>
+                                <p class="text-gray-400 text-xs">{{ $download->file_size_formatted ?? '' }}</p>
                             </div>
-                            <svg class="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
-                        </div>
-                    </a>
-                    @endforeach
+                        </a>
+                        @endforeach
+                    </div>
+                    @else
+                    <p class="text-gray-500 text-sm text-center py-4">Belum ada dokumen</p>
+                    @endif
                 </div>
-                @else
-                <div class="text-center py-8 bg-white rounded-lg">
-                    <p class="text-gray-500">Belum ada dokumen yang tersedia</p>
-                </div>
-                @endif
             </div>
 
-            <!-- External Links Section -->
-            <div>
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                        <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Layanan Column -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-emerald-600 px-4 py-3 flex items-center justify-between">
+                    <h3 class="text-white font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
                         </svg>
-                        Layanan Publik
-                    </h2>
+                        Layanan
+                    </h3>
                 </div>
-
-                @if($externalLinks->count() > 0)
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    @foreach($externalLinks as $link)
-                    <a
-                        href="{{ $link->url }}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="bg-white rounded-xl p-4 hover:shadow-lg transition-all border border-gray-100 text-center group"
-                    >
-                        <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-emerald-600 transition-colors">
-                            <svg class="w-7 h-7 text-emerald-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-medium text-gray-800 text-sm line-clamp-2 group-hover:text-emerald-600 transition-colors">{{ $link->title }}</h4>
-                    </a>
-                    @endforeach
-                </div>
-                @else
-                <div class="text-center py-8 bg-white rounded-lg">
-                    <p class="text-gray-500">Belum ada tautan layanan</p>
-                </div>
-                @endif
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===================== PROFIL SECTION ===================== -->
-<section class="py-12 md:py-16 bg-emerald-700 relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                    <circle cx="1" cy="1" r="1" fill="white"/>
-                </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#grid)"/>
-        </svg>
-    </div>
-
-    <div class="container mx-auto px-4 relative">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-                <span class="inline-block px-4 py-1 bg-white/20 text-white text-sm font-medium rounded-full mb-4">Tentang Kami</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-                    @if($profilePage)
-                    {{ $profilePage->title }}
+                <div class="p-4">
+                    @if($externalLinks->count() > 0)
+                    <div class="grid grid-cols-2 gap-2">
+                        @foreach($externalLinks->take(6) as $link)
+                        <a href="{{ $link->url }}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center p-3 rounded-lg hover:bg-emerald-50 transition-colors text-center">
+                            <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mb-2">
+                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                            </div>
+                            <h4 class="text-gray-700 text-xs font-medium line-clamp-2">{{ $link->title }}</h4>
+                        </a>
+                        @endforeach
+                    </div>
                     @else
-                    Kantor Kementerian Agama<br>Kabupaten Nganjuk
+                    <p class="text-gray-500 text-sm text-center py-4">Belum ada tautan</p>
                     @endif
-                </h2>
-                <div class="text-emerald-100 leading-relaxed mb-8">
-                    @if($profilePage)
-                    <p class="line-clamp-6">{{ strip_tags($profilePage->content) }}</p>
-                    @else
-                    <p>Kantor Kementerian Agama Kabupaten Nganjuk merupakan instansi pemerintah yang bertugas menangani urusan keagamaan di tingkat kabupaten. Kami berkomitmen untuk memberikan pelayanan terbaik kepada masyarakat dalam bidang keagamaan.</p>
-                    <p class="mt-4">Portal ini menyajikan informasi terkini mengenai kegiatan, layanan, dan berbagai programme Kementerian Agama Kabupaten Nganjuk untuk masyarakat.</p>
-                    @endif
-                </div>
-                @if($profilePage)
-                <a href="{{ route('pages.show', $profilePage->slug) }}" class="inline-flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-lg font-semibold hover:bg-emerald-50 transition-colors">
-                    Selengkapnya
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-                @endif
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Visi -->
-                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
-                    <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Visi</h3>
-                    <p class="text-emerald-100 text-sm">Terwujudnya masyarakat beragama yang religius, sejahtera, dan toleran</p>
-                </div>
-
-                <!-- Misi -->
-                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
-                    <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Misi</h3>
-                    <p class="text-emerald-100 text-sm">Meningkatkan kualitas pelayanan keagamaan dan pendidikan agama</p>
-                </div>
-
-                <!-- Nilai -->
-                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
-                    <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Nilai</h3>
-                    <p class="text-emerald-100 text-sm">Integritas, profesional, transparan, dan akuntabel</p>
-                </div>
-
-                <!-- Komitmen -->
-                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
-                    <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Komitmen</h3>
-                    <p class="text-emerald-100 text-sm">Pelayanan prima untuk kepuasan masyarakat</p>
                 </div>
             </div>
         </div>

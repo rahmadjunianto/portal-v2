@@ -63,10 +63,10 @@
             @if($post->author)
             <div class="flex items-center gap-3 mb-6 pb-6 border-b">
                 <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <span class="text-emerald-700 font-semibold">{{ substr($post->author->name, 0, 1) }}</span>
+                    <span class="text-emerald-700 font-semibold">{{ substr($post->author->username, 0, 1) }}</span>
                 </div>
                 <div>
-                    <p class="font-medium text-gray-800">{{ $post->author->name }}</p>
+                    <p class="font-medium text-gray-800">{{ $post->author->username }}</p>
                     <p class="text-sm text-gray-500">{{ $post->author->email }}</p>
                 </div>
             </div>
