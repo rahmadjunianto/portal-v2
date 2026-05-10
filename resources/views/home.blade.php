@@ -124,6 +124,282 @@
     @endif
 </section>
 
+<!-- ===================== SEKILAS KEMENAG SECTION ===================== -->
+<section class="py-20 md:py-28 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-50 relative overflow-hidden">
+    <!-- Modern Decorative Elements -->
+    <div class="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-emerald-200/30 to-teal-200/20 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-20 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-emerald-300/20 to-emerald-100/10 rounded-full blur-[80px] pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-emerald-100/10 to-transparent rounded-full pointer-events-none"></div>
+
+    <!-- Floating Shapes -->
+    <div class="absolute top-32 left-[15%] w-4 h-4 bg-emerald-400/40 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-40 right-[20%] w-3 h-3 bg-teal-400/50 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+    <div class="absolute top-1/3 right-[10%] w-2 h-2 bg-emerald-500/60 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <!-- Gambar di kiri - Modern Card -->
+            <div class="lg:col-span-5 order-2 lg:order-1">
+                <div class="relative group">
+                    <!-- Glow Effect -->
+                    <div class="absolute -inset-8 bg-gradient-to-br from-emerald-400/20 via-emerald-300/10 to-transparent rounded-[3rem] blur-2xl opacity-60 group-hover:opacity-80 transition duration-700"></div>
+
+                    <!-- Main Card -->
+                    <div class="relative bg-gradient-to-br from-white to-emerald-50/50 rounded-[2rem] p-3 shadow-2xl shadow-emerald-200/50 border border-white/80 backdrop-blur-sm">
+                        <!-- Inner Image Container -->
+                        <div class="relative aspect-[4/5] rounded-[1.5rem] overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-800">
+                            @if($settings->logo_path && file_exists(public_path('storage/' . $settings->logo_path)))
+                            <img src="{{ asset('storage/' . $settings->logo_path) }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-8 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700">
+                            @else
+                            <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-10 group-hover:scale-105 transition-transform duration-700">
+                            @endif
+
+                            <!-- Overlay Gradient -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                            <!-- Floating Badge -->
+                            <div class="absolute top-6 right-6 bg-white/95 backdrop-blur-md rounded-2xl px-5 py-3 shadow-xl">
+                                <p class="text-emerald-700 font-bold text-lg tracking-tight">SENYUM</p>
+                                <p class="text-emerald-600/70 text-xs">Sehat, Nyaman, Unggul & Maju</p>
+                            </div>
+
+                            <!-- Bottom Info -->
+                            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                                <p class="text-white/90 text-sm font-light leading-relaxed">
+                                    "Melayani umat agama dengan excellence dan inovasi"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Corner Elements -->
+                    <div class="absolute -top-4 -left-4 w-16 h-16 border-l-4 border-t-4 border-emerald-300/50 rounded-tl-3xl"></div>
+                    <div class="absolute -bottom-4 -right-4 w-16 h-16 border-r-4 border-b-4 border-emerald-300/50 rounded-br-3xl"></div>
+                </div>
+            </div>
+
+            <!-- Konten di kanan - Modern Design -->
+            <div class="lg:col-span-7 order-1 lg:order-2" x-data="sekilasTabs()">
+                <!-- Modern Header -->
+                <div class="mb-10">
+                    <div class="inline-flex items-center gap-3 bg-emerald-100/80 backdrop-blur-sm rounded-full px-5 py-2 mb-6">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                        <span class="text-emerald-700 font-semibold text-sm tracking-wide">Tentang Kami</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-[1.1] mb-4">
+                        Sekilas
+                        <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Kemenag</span>
+                    </h2>
+                    <p class="text-gray-500 text-lg max-w-xl leading-relaxed">
+                        Mengenal lebih dekat Kantor Kementerian Agama Kabupaten Nganjuk
+                    </p>
+                </div>
+
+                <!-- Modern Tab Pills -->
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <button
+                        @click="activeTab = 'sejarah'"
+                        :class="activeTab === 'sejarah' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
+                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                    >
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Tentang Kami
+                        </span>
+                    </button>
+                    <button
+                        @click="activeTab = 'visi'"
+                        :class="activeTab === 'visi' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
+                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                    >
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            Visi
+                        </span>
+                    </button>
+                    <button
+                        @click="activeTab = 'misi'"
+                        :class="activeTab === 'misi' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
+                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                    >
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            Misi
+                        </span>
+                    </button>
+                    <button
+                        @click="activeTab = 'motto'"
+                        :class="activeTab === 'motto' ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-500/30 scale-105' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md'"
+                        class="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all duration-300 border border-gray-100/50"
+                    >
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                            Motto
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Modern Content Card -->
+                <div class="relative bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100/50 overflow-hidden">
+                    <!-- Decorative Top Border -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-400"></div>
+
+                    <!-- Content Area -->
+                    <div class="relative min-h-[200px]">
+                        <!-- Sejarah Tab -->
+                        <div x-show="activeTab === 'sejarah'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="flex items-start gap-4 mb-6">
+                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Tentang Kami</h3>
+                                    <p class="text-emerald-600 font-medium text-sm">Kantor Kemenag Nganjuk</p>
+                                </div>
+                            </div>
+                            @if($pagesSejarah)
+                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesSejarah->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesSejarah->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                                Baca Selengkapnya
+                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                            @else
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-500">Data sejarah belum tersedia.</p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Visi Tab -->
+                        <div x-show="activeTab === 'visi'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="flex items-start gap-4 mb-6">
+                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Visi</h3>
+                                    <p class="text-emerald-600 font-medium text-sm">Visi Kemenag Nganjuk</p>
+                                </div>
+                            </div>
+                            @if($pagesVisi)
+                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesVisi->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesVisi->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                                Baca Selengkapnya
+                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                            @else
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-500">Data visi belum tersedia.</p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Misi Tab -->
+                        <div x-show="activeTab === 'misi'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="flex items-start gap-4 mb-6">
+                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Misi</h3>
+                                    <p class="text-emerald-600 font-medium text-sm">Misi Kemenag Nganjuk</p>
+                                </div>
+                            </div>
+                            @if($pagesMisi)
+                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesMisi->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesMisi->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                                Baca Selengkapnya
+                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                            @else
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-500">Data misi belum tersedia.</p>
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Motto Tab -->
+                        <div x-show="activeTab === 'motto'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="flex items-start gap-4 mb-6">
+                                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Motto / SENYUM</h3>
+                                    <p class="text-emerald-600 font-medium text-sm">Semangat Kemenag Nganjuk</p>
+                                </div>
+                            </div>
+                            @if($pagesMotto)
+                            <p class="text-gray-600 leading-relaxed text-base mb-8 line-clamp-3">{{ html_entity_decode(strip_tags($pagesMotto->content)) }}</p>
+                            <a href="{{ route('pages.show', $pagesMotto->slug) }}" class="group inline-flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                                Baca Selengkapnya
+                                <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                            @else
+                            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-8 text-center border border-emerald-100">
+                                <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
+                                    <span class="text-white font-black text-2xl">S</span>
+                                </div>
+                                <p class="text-3xl font-bold text-emerald-700 mb-4">SENYUM</p>
+                                <p class="text-gray-600 leading-relaxed mb-6">
+                                    <span class="font-bold text-emerald-600">S</span>ehat,
+                                    <span class="font-bold text-emerald-600">N</span>yam,
+                                    <span class="font-bold text-emerald-600">Y</span>ang,
+                                    <span class="font-bold text-emerald-600">U</span>ntuk,
+                                    <span class="font-bold text-emerald-600">M</span>asyarakat
+                                </p>
+                                <p class="text-emerald-600 font-medium italic">"Sehat, Nyaman, Unggul, dan Maju"</p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ===================== STATISTICS BAR ===================== -->
 <section class="bg-white py-6 shadow-sm border-b">
     <div class="container mx-auto px-4">
@@ -519,6 +795,21 @@
                 this.active = index;
                 this.stopAutoplay();
                 this.startAutoplay();
+            }
+        }
+    }
+
+    // Sekilas Kemenag Tabs
+    function sekilasTabs() {
+        return {
+            activeTab: 'sejarah',
+            setTab(tab) {
+                this.activeTab = tab;
+            },
+            isActive(tab) {
+                return this.activeTab === tab
+                    ? 'bg-emerald-600 text-white shadow-xl shadow-emerald-600/30 md:scale-105'
+                    : 'bg-gray-50 text-gray-400 hover:bg-gray-100';
             }
         }
     }

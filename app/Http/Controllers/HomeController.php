@@ -74,6 +74,12 @@ class HomeController extends Controller
             ->orderBy('published_at', 'desc')
             ->first();
 
+        // Get pages for "Sekilas Kemenag" section
+        $pagesSejarah = Page::where('slug', 'tentang-kami')->first();
+        $pagesVisi = Page::where('slug', 'visi-misi-dan-tujuan')->first();
+        $pagesMisi = Page::where('slug', 'misi')->first();
+        $pagesMotto = Page::where('slug', 'motto')->orWhere('slug', 'senyum')->first();
+
         return view('home', [
             'settings' => $settings,
             'headerMenuItems' => $headerMenuItems,
@@ -84,6 +90,10 @@ class HomeController extends Controller
             'latestDownloads' => $latestDownloads,
             'externalLinks' => $externalLinks,
             'profilePage' => $profilePage,
+            'pagesSejarah' => $pagesSejarah,
+            'pagesVisi' => $pagesVisi,
+            'pagesMisi' => $pagesMisi,
+            'pagesMotto' => $pagesMotto,
         ]);
     }
 }
