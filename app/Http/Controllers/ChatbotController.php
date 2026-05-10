@@ -204,7 +204,7 @@ class ChatbotController extends Controller
             $query->where('is_success', $request->status === '1');
         }
 
-        $conversations = $query->orderBy('created_at', 'desc')->paginate(50);
+        $conversations = $query->orderBy('created_at', 'desc')->paginate(10);
 
         // Statistics
         $stats = [
