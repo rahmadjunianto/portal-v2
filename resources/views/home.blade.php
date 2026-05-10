@@ -182,10 +182,6 @@
             <div class="lg:col-span-7 order-1 lg:order-2" x-data="sekilasTabs()">
                 <!-- Modern Header -->
                 <div class="mb-10">
-                    <div class="inline-flex items-center gap-3 bg-emerald-100/80 backdrop-blur-sm rounded-full px-5 py-2 mb-6">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                        <span class="text-emerald-700 font-semibold text-sm tracking-wide">Tentang Kami</span>
-                    </div>
                     <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-[1.1] mb-4">
                         Sekilas
                         <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Kemenag</span>
@@ -400,33 +396,113 @@
     </div>
 </section>
 
-<!-- ===================== STATISTICS BAR ===================== -->
-<section class="bg-white py-6 shadow-sm border-b">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div class="p-4">
-                <div class="text-3xl font-bold text-emerald-600">{{ $latestPosts->count() }}+</div>
-                <div class="text-gray-600 text-sm">Berita</div>
+<!-- ===================== STATISTICS SECTION ===================== -->
+<section class="relative py-12 md:py-16 overflow-hidden">
+    <!-- Background Gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-900"></div>
+
+    <!-- Decorative Overlay -->
+    <div class="absolute inset-0 opacity-15">
+        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+                <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="rgba(251, 191, 36, 0.5)"/>
+                </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#dots)"/>
+        </svg>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="absolute top-4 left-0 w-24 h-[1px] bg-gradient-to-r from-amber-400 to-transparent"></div>
+    <div class="absolute top-4 right-0 w-24 h-[1px] bg-gradient-to-l from-amber-400 to-transparent"></div>
+    <div class="absolute bottom-4 left-1/2 w-40 h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent transform -translate-x-1/2"></div>
+
+    <!-- Floating Shapes -->
+    <div class="absolute top-12 left-[5%] w-16 h-16 border border-white/20 rounded-full hidden md:block"></div>
+    <div class="absolute bottom-12 right-[10%] w-12 h-12 border border-amber-400/30 rotate-45 hidden md:block"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- Section Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-2 mb-3">
+                <span class="w-8 h-[1px] bg-amber-400"></span>
+                <span class="text-amber-400 text-xs font-semibold tracking-widest uppercase">Statistik</span>
+                <span class="w-8 h-[1px] bg-amber-400"></span>
             </div>
-            <div class="p-4">
-                <div class="text-3xl font-bold text-emerald-600">{{ $upcomingAgendas->count() }}+</div>
-                <div class="text-gray-600 text-sm">Agenda</div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+                Kemenag Nganjuk <span class="text-amber-400">dalam Angka</span>
+            </h2>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-4 gap-3 md:gap-4">
+            <!-- Card 1: Berita -->
+            <div class="group relative">
+                <div class="relative bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/10 hover:border-amber-400/30 transition-all duration-300 hover:-translate-y-1 text-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-400/20 to-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-105 transition-transform">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                    </div>
+                    <div class="text-2xl md:text-3xl font-bold text-white mb-1">{{ $latestPosts->count() }}+</div>
+                    <div class="text-emerald-100/70 text-xs md:text-sm">Berita</div>
+                </div>
             </div>
-            <div class="p-4">
-                <div class="text-3xl font-bold text-emerald-600">{{ $latestDownloads->count() }}+</div>
-                <div class="text-gray-600 text-sm">Unduhan</div>
+
+            <!-- Card 2: Agenda -->
+            <div class="group relative">
+                <div class="relative bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/10 hover:border-amber-400/30 transition-all duration-300 hover:-translate-y-1 text-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-400/20 to-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-105 transition-transform">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div class="text-2xl md:text-3xl font-bold text-white mb-1">{{ $upcomingAgendas->count() }}+</div>
+                    <div class="text-emerald-100/70 text-xs md:text-sm">Agenda</div>
+                </div>
             </div>
-            <div class="p-4">
-                <div class="text-3xl font-bold text-emerald-600">{{ $externalLinks->count() }}+</div>
-                <div class="text-gray-600 text-sm">Layanan</div>
+
+            <!-- Card 3: Download -->
+            <div class="group relative">
+                <div class="relative bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/10 hover:border-amber-400/30 transition-all duration-300 hover:-translate-y-1 text-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-400/20 to-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-105 transition-transform">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="text-2xl md:text-3xl font-bold text-white mb-1">{{ $latestDownloads->count() }}+</div>
+                    <div class="text-emerald-100/70 text-xs md:text-sm">Download</div>
+                </div>
+            </div>
+
+            <!-- Card 4: Layanan -->
+            <div class="group relative">
+                <div class="relative bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/10 hover:border-amber-400/30 transition-all duration-300 hover:-translate-y-1 text-center">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-amber-400/20 to-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-105 transition-transform">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                        </svg>
+                    </div>
+                    <div class="text-2xl md:text-3xl font-bold text-white mb-1">{{ $externalLinks->count() }}+</div>
+                    <div class="text-emerald-100/70 text-xs md:text-sm">Layanan</div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ===================== BERITA TERBARU SECTION ===================== -->
-<section id="berita" class="py-12 md:py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
+<section id="berita" class="py-12 md:py-16 bg-gray-50 relative overflow-hidden">
+    <!-- Decorative Elements -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+        <div class="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
+        <div class="absolute top-1/4 left-1/4 w-32 h-32 border-4 border-emerald-400 rotate-45"></div>
+        <div class="absolute bottom-1/3 right-1/3 w-24 h-24 border-4 border-emerald-400 rounded-full"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
         <!-- Section Header -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
@@ -446,52 +522,59 @@
             </a>
         </div>
 
-        <!-- News Grid -->
+        <!-- News Grid - Mobile: List Horizontal | Desktop: Grid -->
         @if($latestPosts->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6">
             @foreach($latestPosts as $post)
             <article class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow group">
-                <!-- Thumbnail -->
-                <a href="{{ route('posts.show', $post->slug) }}" class="block relative overflow-hidden">
-                    @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
-                    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
-                    @else
-                    <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Placeholder" class="w-full h-48 object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="w-full h-48 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center hidden">
-                        <svg class="w-12 h-12 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
+                <!-- Mobile: flex-row thumbnail-left, Desktop: block stacked -->
+                <a href="{{ route('posts.show', $post->slug) }}" class="flex flex-row sm:flex-col">
+                    <!-- Thumbnail - Square on mobile (left), Full width on desktop -->
+                    <div class="relative w-32 sm:w-full sm:aspect-video flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200">
+                        @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
+                        <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-full sm:h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+                        @else
+                        <div class="w-full h-full sm:h-48 flex items-center justify-center">
+                            <svg class="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        @endif
+                        @if($post->category)
+                        <span class="absolute top-2 left-2 px-2 py-0.5 bg-emerald-600 text-white text-[10px] sm:text-xs font-medium rounded-full hidden sm:block">
+                            {{ $post->category->name }}
+                        </span>
+                        @endif
                     </div>
-                    @endif
-                    @if($post->category)
-                    <span class="absolute top-3 left-3 px-3 py-1 bg-emerald-600 text-white text-xs font-medium rounded-full">
-                        {{ $post->category->name }}
-                    </span>
-                    @endif
-                </a>
 
-                <!-- Content -->
-                <div class="p-5">
-                    <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                        <a href="{{ route('posts.show', $post->slug) }}">{{ $post->title }}</a>
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ $post->subtitle ?? strip_tags($post->content) }}</p>
-                    <div class="flex items-center justify-between text-xs text-gray-500">
-                        <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            {{ $post->published_at ? $post->published_at->diffForHumans() : '' }}
+                    <!-- Content -->
+                    <div class="flex-1 p-3 sm:p-5 flex flex-col justify-center">
+                        @if($post->category)
+                        <span class="sm:hidden inline-block px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-medium rounded-full mb-1 w-fit">
+                            {{ Str::limit($post->category->name, 8) }}
                         </span>
-                        <span class="flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                            </svg>
-                            {{ $post->views }} views
-                        </span>
+                        @endif
+                        <h3 class="font-semibold text-gray-800 mb-1 line-clamp-2 group-hover:text-emerald-600 transition-colors text-sm sm:text-base">
+                            {{ $post->title }}
+                        </h3>
+                        <p class="text-gray-600 text-xs line-clamp-2 sm:text-sm sm:line-clamp-2">{{ Str::limit(strip_tags(html_entity_decode($post->subtitle ?? $post->content)), 100) }}</p>
+                        <div class="flex items-center gap-3 text-xs text-gray-500 mt-2">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span class="text-[10px] sm:text-xs">{{ $post->published_at ? $post->published_at->diffForHumans() : '' }}</span>
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                <span class="text-[10px] sm:text-xs">{{ $post->views ?? 0 }}</span>
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </article>
             @endforeach
         </div>
