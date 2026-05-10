@@ -79,6 +79,49 @@ class PostController extends Controller
     }
 
     /**
+     * Display a listing of announcements.
+     */
+    public function announcements(Request $request): View
+    {
+        $settings = Setting::getInstance();
+
+        // Get header menu items
+        $headerMenuItems = MenuItem::query()
+            ->where('is_active', true)
+            ->whereNull('parent_id')
+            ->orderBy('sort_order', 'asc')
+            ->with(['children' => function ($query) {
+                $query->where('is_active', true)->orderBy('sort_order', 'asc');
+            }])
+            ->get();
+
+        // Build query for announcements only
+        $query = Post::published()
+            ->where('type', 'pengumuman')
+            ->with(['category', 'author']);
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('subtitle', 'like', "%{$search}%");
+            });
+        }
+
+        // Paginate results
+        $posts = $query->orderBy('published_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pengumuman', [
+            'settings' => $settings,
+            'headerMenuItems' => $headerMenuItems,
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
      * Display the specified post.
      */
     public function show(string $slug): View

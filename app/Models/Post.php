@@ -88,12 +88,15 @@ class Post extends Model
     /**
      * Get excerpt from content.
      */
-    public function getExcerptAttribute(int $length = 150): string
+    public function getExcerptAttribute($value): ?string
     {
-        $content = strip_tags($this->content);
-        if (strlen($content) <= $length) {
+        if ($value === null) {
+            return null;
+        }
+        $content = strip_tags($value);
+        if (strlen($content) <= 150) {
             return $content;
         }
-        return substr($content, 0, $length) . '...';
+        return substr($content, 0, 150) . '...';
     }
 }

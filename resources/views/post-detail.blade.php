@@ -20,11 +20,11 @@
         <!-- Featured Image -->
         <div class="relative">
             @if(file_exists(public_path('storage/' . $post->thumbnail)))
-            <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-[400px] object-cover">
+            <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full aspect-video md:aspect-[21/9] object-cover">
             @else
-            <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Placeholder" class="w-full h-[400px] object-cover"
+            <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Placeholder" class="w-full aspect-video md:aspect-[21/9] object-cover"
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="w-full h-[400px] bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center hidden">
+            <div class="w-full aspect-video md:aspect-[21/9] bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center hidden">
                 <svg class="w-24 h-24 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>

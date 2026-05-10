@@ -25,6 +25,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/berita', [PostController::class, 'index'])->name('posts.index');
 Route::get('/berita/{slug}', [PostController::class, 'show'])->name('posts.show');
 
+// Announcements Route
+Route::get('/pengumuman', [PostController::class, 'announcements'])->name('posts.announcements');
+
 // Agendas Routes
 Route::get('/agenda', [AgendaController::class, 'index'])->name('agendas.index');
 Route::get('/agenda/{slug}', [AgendaController::class, 'show'])->name('agendas.show');
