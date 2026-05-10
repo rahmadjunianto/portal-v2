@@ -1,9 +1,10 @@
 <footer class="bg-emerald-900 text-gray-300">
     <!-- Main Footer -->
     <div class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Desktop: 1 Row with 3 Columns -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- About Section -->
-            <div class="col-span-2 lg:col-span-2">
+            <div>
                 <div class="flex items-center gap-3 mb-4">
                     <img
                         src="{{ asset('logo-kemenag.png') }}"
@@ -15,13 +16,13 @@
                         <p class="text-sm text-emerald-400">Kabupaten Nganjuk</p>
                     </div>
                 </div>
-                <p class="text-gray-400 mb-4 leading-relaxed">
-                    {{ $settings->footer_description ?? 'Portal resmi Kantor Kementerian Agama Kabupaten Nganjuk. Menyajikan informasi seputar kegiatan, layanan, dan berita keagamaan di Kabupaten Nganjuk.' }}
+                <p class="text-gray-400 leading-relaxed">
+                    {{ $settings->footer_description ?? 'Portal resmi Kantor Kementerian Agama Kabupaten Nganjuk.' }}
                 </p>
             </div>
 
             <!-- Quick Links -->
-            <div class="col-span-2 md:col-span-1">
+            <div>
                 <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
                     <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
@@ -39,7 +40,7 @@
             </div>
 
             <!-- Contact Info -->
-            <div class="col-span-2">
+            <div>
                 <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
                     <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
