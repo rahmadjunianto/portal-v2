@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ExternalLinkController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\ResetPasswordController;
 use App\Http\Controllers\Admin\UploadController;
@@ -83,13 +84,21 @@ Route::middleware(['web'])->group(function () {
         Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
         
-        // External Links
+        // External Links (alias: links)
         Route::get('/external-links', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'index'])->name('external-links.index');
         Route::get('/external-links/create', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'create'])->name('external-links.create');
         Route::post('/external-links', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'store'])->name('external-links.store');
         Route::get('/external-links/{id}/edit', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'edit'])->name('external-links.edit');
         Route::put('/external-links/{id}', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'update'])->name('external-links.update');
         Route::delete('/external-links/{id}', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'destroy'])->name('external-links.destroy');
+        
+        // Links alias
+        Route::get('/links', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'index'])->name('links.index');
+        Route::get('/links/create', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'create'])->name('links.create');
+        Route::post('/links', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'store'])->name('links.store');
+        Route::get('/links/{id}/edit', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'edit'])->name('links.edit');
+        Route::put('/links/{id}', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'update'])->name('links.update');
+        Route::delete('/links/{id}', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'destroy'])->name('links.destroy');
         
         // Menus
         Route::get('/menus', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('menus.index');
