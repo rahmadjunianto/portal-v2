@@ -7,9 +7,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "jeroennoten/laravel-adminlte": "^3.16",
         "laravel/framework": "^13.0",
-        "laravel/tinker": "^3.0",
-        "laravel/pao": "^1.0.6"
+        "laravel/pao": "^1.0.6",
+        "laravel/tinker": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.2",

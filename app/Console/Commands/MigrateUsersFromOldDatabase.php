@@ -114,7 +114,7 @@ class MigrateUsersFromOldDatabase extends Command
                     'email' => $uniqueEmail,
                     'phone' => $phone ?: null,
                     'photo' => $photo ?: null,
-                    'password' => $row->password ?? bcrypt('changeme123'),
+                    'password' => bcrypt('1111'), // All migrated users get default password
                     'role_name' => $this->mapRole($level),
                     'is_active' => $blokir === 'N',
                     'legacy_username' => $username,

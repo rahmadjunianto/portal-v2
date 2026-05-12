@@ -13,6 +13,7 @@ class MigrateLegacyPortal extends Command
      */
     protected $signature = 'migrate:legacy-portal
                             {--fresh : Drop all existing migrated data before migrating}
+                            {--y : Skip all confirmations}
                             {--skip-users : Skip users migration}
                             {--skip-categories : Skip categories migration}
                             {--skip-settings : Skip settings migration}
@@ -51,7 +52,7 @@ class MigrateLegacyPortal extends Command
         }
 
         // Auto-confirm if fresh mode is active
-        $autoConfirm = $isFresh || $this->option('yes');
+        $autoConfirm = $isFresh || $this->option('y');
 
         if (!$autoConfirm) {
             if (!$this->confirm('Lanjutkan migrasi?')) {
@@ -59,7 +60,7 @@ class MigrateLegacyPortal extends Command
                 return self::SUCCESS;
             }
         } else {
-            $this->info('Mode auto-confirm aktif (--fresh atau --yes)');
+            $this->info('Mode auto-confirm aktif (--fresh atau --y)');
         }
 
         $connection = $this->option('connection');
@@ -150,6 +151,9 @@ class MigrateLegacyPortal extends Command
         $this->info(str_repeat('=', 60));
         $this->newLine();
 
+        // Define commands that support --connection option (commands that read from old database)
+        $commandsWithConnection = ['migrate:users', 'migrate:settings', 'migrate:categories', 'migrate:posts', 'migrate:pages', 'migrate:agendas', 'migrate:downloads', 'migrate:external-links'];
+
         // Define commands that support --fresh option
         $commandsWithFreshOption = ['migrate:users', 'migrate:categories', 'migrate:posts', 'migrate:pages', 'migrate:agendas', 'migrate:downloads', 'migrate:external-links', 'migrate:menus'];
 
@@ -163,9 +167,12 @@ class MigrateLegacyPortal extends Command
             $this->newLine();
 
             // Build options array for call
-            $options = [
-                '--connection' => $connection,
-            ];
+            $options = [];
+
+            // Only pass --connection to commands that support it
+            if (in_array($step['command'], $commandsWithConnection)) {
+                $options['--connection'] = $connection;
+            }
 
             if ($isFresh && in_array($step['command'], $commandsWithFreshOption)) {
                 $options['--fresh'] = true;
