@@ -35,6 +35,7 @@ Route::get('/agenda/{slug}', [AgendaController::class, 'show'])->name('agendas.s
 
 // Downloads Route
 Route::get('/download', [DownloadController::class, 'index'])->name('downloads.index');
+Route::get('/download/{download}', [DownloadController::class, 'download'])->name('downloads.download');
 
 // Pages Route
 Route::get('/halaman/{slug}', [PageController::class, 'show'])->name('pages.show');

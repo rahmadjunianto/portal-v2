@@ -124,9 +124,12 @@ class DownloadController extends Controller
 
         // Handle new file upload
         if ($request->hasFile('file')) {
-            // Delete old file
-            if ($download->file_path && Storage::disk('public')->exists($download->file_path)) {
-                Storage::disk('public')->delete($download->file_path);
+            // Delete old file from public storage
+            if ($download->file_path) {
+                $oldPath = public_path('storage/' . $download->file_path);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
 
             $file = $request->file('file');
@@ -154,9 +157,12 @@ class DownloadController extends Controller
      */
     public function destroy(Download $download)
     {
-        // Delete file
-        if ($download->file_path && Storage::disk('public')->exists($download->file_path)) {
-            Storage::disk('public')->delete($download->file_path);
+        // Delete file from public storage
+        if ($download->file_path) {
+            $fullPath = public_path('storage/' . $download->file_path);
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+            }
         }
 
         $download->delete();

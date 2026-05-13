@@ -81,9 +81,9 @@ Route::middleware(['web'])->group(function () {
         Route::put('/downloads/{id}', [DownloadController::class, 'update'])->name('downloads.update');
         Route::delete('/downloads/{id}', [DownloadController::class, 'destroy'])->name('downloads.destroy');
         
-        // Settings
-        Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
-        Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
+        // Settings (disabled - controller not created yet)
+        // Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+        // Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
         
         // External Links (alias: links)
         Route::get('/external-links', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'index'])->name('external-links.index');
@@ -101,17 +101,17 @@ Route::middleware(['web'])->group(function () {
         Route::put('/links/{id}', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'update'])->name('links.update');
         Route::delete('/links/{id}', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'destroy'])->name('links.destroy');
         
-        // Menus
-        Route::get('/menus', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('menus.index');
-        Route::get('/menus/{id}/edit', [\App\Http\Controllers\Admin\MenuController::class, 'edit'])->name('menus.edit');
-        Route::put('/menus/{id}', [\App\Http\Controllers\Admin\MenuController::class, 'update'])->name('menus.update');
+        // Menus (disabled - controller not created yet)
+        // Route::get('/menus', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('menus.index');
+        // Route::get('/menus/{id}/edit', [\App\Http\Controllers\Admin\MenuController::class, 'edit'])->name('menus.edit');
+        // Route::put('/menus/{id}', [\App\Http\Controllers\Admin\MenuController::class, 'update'])->name('menus.update');
         
-        // Menu Items
-        Route::get('/menu-items/create', [\App\Http\Controllers\Admin\MenuItemController::class, 'create'])->name('menu-items.create');
-        Route::post('/menu-items', [\App\Http\Controllers\Admin\MenuItemController::class, 'store'])->name('menu-items.store');
-        Route::get('/menu-items/{id}/edit', [\App\Http\Controllers\Admin\MenuItemController::class, 'edit'])->name('menu-items.edit');
-        Route::put('/menu-items/{id}', [\App\Http\Controllers\Admin\MenuItemController::class, 'update'])->name('menu-items.update');
-        Route::delete('/menu-items/{id}', [\App\Http\Controllers\Admin\MenuItemController::class, 'destroy'])->name('menu-items.destroy');
+        // Menu Items (disabled - controller not created yet)
+        // Route::get('/menu-items/create', [\App\Http\Controllers\Admin\MenuItemController::class, 'create'])->name('menu-items.create');
+        // Route::post('/menu-items', [\App\Http\Controllers\Admin\MenuItemController::class, 'store'])->name('menu-items.store');
+        // Route::get('/menu-items/{id}/edit', [\App\Http\Controllers\Admin\MenuItemController::class, 'edit'])->name('menu-items.edit');
+        // Route::put('/menu-items/{id}', [\App\Http\Controllers\Admin\MenuItemController::class, 'update'])->name('menu-items.update');
+        // Route::delete('/menu-items/{id}', [\App\Http\Controllers\Admin\MenuItemController::class, 'destroy'])->name('menu-items.destroy');
         
         // Users
         Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');

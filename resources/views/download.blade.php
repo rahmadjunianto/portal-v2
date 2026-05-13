@@ -24,8 +24,7 @@
                         <td class="px-4 lg:px-6 py-4 text-sm text-gray-900">{{ $download->title }}</td>
                         <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $download->downloads_count }} Kali</td>
                         <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-center">
-                            <a href="{{ asset('storage/' . $download->file_path) }}"
-                               target="_blank"
+                            <a href="{{ route('downloads.download', $download->id) }}"
                                class="inline-flex items-center px-3 py-1 bg-emerald-600 text-white text-xs font-medium rounded hover:bg-emerald-700 transition-colors">
                                 Download
                             </a>
@@ -46,8 +45,7 @@
                     <p class="text-sm font-medium text-gray-900">{{ $download->title }}</p>
                     <p class="text-xs text-gray-500 mt-1">{{ $download->downloads_count }} Kali diunduh</p>
                 </div>
-                <a href="{{ asset('storage/' . $download->file_path) }}"
-                   target="_blank"
+                <a href="{{ route('downloads.download', $download->id) }}"
                    class="flex-shrink-0 inline-flex items-center px-3 py-2 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors">
                     Download
                 </a>
