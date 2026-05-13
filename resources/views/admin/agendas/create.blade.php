@@ -99,11 +99,11 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="description">Deskripsi</label>
-                    <textarea class="form-control summernote @error('description') is-invalid @enderror" 
-                              id="description" 
-                              name="description" 
-                              rows="5">{{ old('description') }}</textarea>
+                    <label for="content">Deskripsi</label>
+                    <textarea class="form-control summernote @error('content') is-invalid @enderror" 
+                              id="content" 
+                              name="content" 
+                              rows="5">{{ old('content') }}</textarea>
                 </div>
                 
                 <div class="form-group">
@@ -151,17 +151,43 @@
     </div>
 @endsection
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+@endpush
+
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-id-ID.min.js"></script>
 <script>
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            $('#preview-img').attr('src', e.target.result);
-            $('#image-preview').show();
-        };
-        reader.readAsDataURL(input.files[0]);
+$(function() {
+    // Initialize Summernote WYSIWYG Editor
+    $('#content').summernote({
+        height: 300,
+        lang: 'id-ID',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph', 'height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video', 'hr']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+            ['misc', ['undo', 'redo']]
+        ]
+    });
+    
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#preview-img').attr('src', e.target.result);
+                $('#image-preview').show();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
-}
+});
 </script>
 @endpush

@@ -36,8 +36,9 @@ class MenuItemController extends Controller
             $parent = MenuItem::find($parentId);
         }
 
-        // Get all menu items for parent selection (exclude current item and descendants if editing)
-        $menuItems = MenuItem::orderBy('parent_id')
+        // Get all menu items with eager loading for parent selection
+        $menuItems = MenuItem::with(['children', 'children.children'])
+            ->orderBy('parent_id')
             ->orderBy('sort_order')
             ->get();
 
@@ -83,7 +84,8 @@ class MenuItemController extends Controller
         $excludeIds = $this->getDescendantIds($menuItem);
         $excludeIds[] = $menuItem->id;
         
-        $menuItems = MenuItem::whereNotIn('id', $excludeIds)
+        $menuItems = MenuItem::with(['children', 'children.children'])
+            ->whereNotIn('id', $excludeIds)
             ->orderBy('parent_id')
             ->orderBy('sort_order')
             ->get();

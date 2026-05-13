@@ -38,7 +38,7 @@ class AgendaController extends Controller
             });
         }
 
-        $agendas = $query->paginate(15)->withQueryString();
+        $agendas = $query->with('author')->paginate(15)->withQueryString();
 
         // Get unique years and months for filter
         $years = Agenda::selectRaw('YEAR(start_date) as year')
@@ -64,7 +64,7 @@ class AgendaController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'content' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'sender_name' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
@@ -73,6 +73,12 @@ class AgendaController extends Controller
             'event_time_text' => 'nullable|string|max:100',
             'published_at' => 'nullable|date',
         ]);
+        
+        // Map content to description for database
+        if (isset($validated['content'])) {
+            $validated['description'] = $validated['content'];
+            unset($validated['content']);
+        }
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['title']);
@@ -132,7 +138,7 @@ class AgendaController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'content' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'sender_name' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
@@ -141,6 +147,12 @@ class AgendaController extends Controller
             'event_time_text' => 'nullable|string|max:100',
             'published_at' => 'nullable|date',
         ]);
+        
+        // Map content to description for database
+        if (isset($validated['content'])) {
+            $validated['description'] = $validated['content'];
+            unset($validated['content']);
+        }
 
         // Update slug if title changed
         if ($agenda->title !== $validated['title']) {
