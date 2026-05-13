@@ -134,6 +134,7 @@
                                     @else
                                         <li class="px-4 py-2 hover:bg-emerald-50">
                                             <a href="{{ $child->url ?? '#' }}"
+                                               @if($child->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif
                                                class="block text-gray-700 hover:text-emerald-700">
                                                 {{ $child->title }}
                                             </a>
@@ -143,6 +144,7 @@
                             </ul>
                         @else
                             <a href="{{ $menuItem->url ?? '#' }}"
+                               @if($menuItem->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif
                                class="px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors block">
                                 {{ $menuItem->title }}
                             </a>

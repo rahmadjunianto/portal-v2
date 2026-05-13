@@ -67,7 +67,7 @@
     </div>
 
     <div class="menu-item">
-        <a href="{{ route('admin.menus.index') }}" class="menu-link {{ request()->routeIs('admin.menus.*') ? 'active' : '' }}">
+        <a href="{{ route('admin.menu-items.index') }}" class="menu-link {{ request()->routeIs('admin.menu-items.*') ? 'active' : '' }}">
             <i class="fas fa-bars me-3 text-base"></i>
             <span>Menu</span>
         </a>

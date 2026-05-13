@@ -20,6 +20,7 @@ class MenuItem extends Model
         'parent_id',
         'title',
         'url',
+        'open_in_new_tab',
         'sort_order',
         'is_active',
     ];
@@ -33,6 +34,7 @@ class MenuItem extends Model
     {
         return [
             'is_active' => 'boolean',
+            'open_in_new_tab' => 'boolean',
             'sort_order' => 'integer',
         ];
     }

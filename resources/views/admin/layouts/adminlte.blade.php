@@ -121,6 +121,12 @@
                                 <p>External Links</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.menu-items.index') }}" class="nav-link {{ request()->is('admin/menu-items*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-bars"></i>
+                                <p>Menu</p>
+                            </a>
+                        </li>
                         
                         <li class="nav-header text-muted">PENGATURAN</li>
                         <li class="nav-item">
