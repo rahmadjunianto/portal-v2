@@ -24,10 +24,24 @@
         </form>
     </div>
 
-    <!-- Agendas List -->
+    <!-- Agendas List by Year -->
     @if(isset($agendas) && $agendas->count() > 0)
-    <div class="space-y-3">
-        @foreach($agendas as $agenda)
+    @php
+        $groupedAgendas = $agendas->groupBy(function($item) {
+            return $item->start_date ? $item->start_date->format('Y') : 'Unknown';
+        })->sortKeysDesc();
+    @endphp
+    
+    @foreach($groupedAgendas as $year => $yearAgendas)
+        <!-- Year Header -->
+        <div class="mt-8 first:mt-0 mb-4">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <span class="px-3 py-1 bg-emerald-600 text-white rounded-lg text-sm">{{ $year }}</span>
+            </h2>
+        </div>
+        
+        <div class="space-y-3">
+        @foreach($yearAgendas as $agenda)
         <article class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow border-l-4 border-emerald-600">
             <div class="flex items-start gap-3">
                 <!-- Date Badge -->
@@ -97,7 +111,8 @@
             </div>
         </article>
         @endforeach
-    </div>
+        </div>
+    @endforeach
 
     <!-- Pagination -->
     @if(method_exists($agendas, 'links'))

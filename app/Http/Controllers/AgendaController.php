@@ -20,8 +20,8 @@ class AgendaController extends Controller
                   ->whereYear('start_date', date('Y', strtotime($request->month)));
         }
 
-        // Order by start date
-        $agendas = $query->orderBy('start_date', 'asc')->paginate(9);
+        // Order by start date (newest first)
+        $agendas = $query->orderBy('start_date', 'desc')->paginate(9);
 
         return view('agenda', compact('agendas'));
     }

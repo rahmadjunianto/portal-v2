@@ -16,10 +16,11 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
-        'role',
-        'avatar',
-        'bio',
-        'legacy_id',
+        'role_name',
+        'phone',
+        'photo',
+        'is_active',
+        'legacy_username',
     ];
 
     protected $hidden = [

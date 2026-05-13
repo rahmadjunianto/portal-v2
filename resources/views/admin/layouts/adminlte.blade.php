@@ -86,13 +86,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('admin/pages*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.pages.index') }}" class="nav-link {{ request()->is('admin/pages*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-file"></i>
                             <p>Pages</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('admin/agendas*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.agendas.index') }}" class="nav-link {{ request()->is('admin/agendas*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-calendar"></i>
                             <p>Agendas</p>
                         </a>
@@ -110,7 +110,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Users</p>
                         </a>
