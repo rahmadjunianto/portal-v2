@@ -12,7 +12,7 @@
                         class="h-12 w-auto object-contain"
                     >
                     <div>
-                        <h3 class="text-white font-bold text-lg">Kementerian Agama </h3>
+                        <h3 class="text-white font-bold text-lg">{{ $settings->site_name ?? 'Kementerian Agama' }}</h3>
                         <p class="text-sm text-emerald-400">Kabupaten Nganjuk</p>
                     </div>
                 </div>

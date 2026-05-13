@@ -88,7 +88,7 @@
                     style="max-width: 70px;"
                 >
                 <div class="min-w-0 flex-1 sm:flex-none">
-                    <h1 class="text-sm sm:text-base md:text-lg font-bold text-emerald-800 leading-tight truncate sm:whitespace-normal">Kementerian Agama</h1>
+                    <h1 class="text-sm sm:text-base md:text-lg font-bold text-emerald-800 leading-tight truncate sm:whitespace-normal">{{ $settings->site_name ?? 'Kementerian Agama' }}</h1>
                     <p class="text-xs text-gray-800 leading-tight">Kabupaten Nganjuk</p>
                 </div>
             </a>
