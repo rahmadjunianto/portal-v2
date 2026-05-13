@@ -41,6 +41,11 @@ class PostController extends Controller
         if ($request->has('type') && $request->type) {
             $query->where('type', $request->type);
         }
+        
+        // Filter by author (admin only)
+        if ($user->role_name === 'admin' && $request->has('author') && $request->author) {
+            $query->where('author_id', $request->author);
+        }
 
         // Search
         if ($request->has('search') && $request->search) {

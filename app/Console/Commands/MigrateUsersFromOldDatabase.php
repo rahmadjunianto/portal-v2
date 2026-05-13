@@ -79,7 +79,6 @@ class MigrateUsersFromOldDatabase extends Command
             foreach ($oldUsers as $row) {
                 // Handle encoding dari latin1 ke utf8mb4
                 $username = $this->sanitizeString($row->username ?? '');
-                $name = $this->sanitizeString($row->namalengkap ?? '');
                 $email = $this->sanitizeString($row->email ?? '');
                 $phone = $this->sanitizeString($row->notelp ?? '');
                 $photo = $this->sanitizeString($row->foto ?? '');
@@ -110,7 +109,7 @@ class MigrateUsersFromOldDatabase extends Command
                 }
 
                 $userData = [
-                    'name' => $name ?: 'Unknown User',
+                    'name' => $username, // name diambil dari username
                     'email' => $uniqueEmail,
                     'phone' => $phone ?: null,
                     'photo' => $photo ?: null,
