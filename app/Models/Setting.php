@@ -37,33 +37,13 @@ class Setting extends Model
     }
 
     /**
-     * Get setting value by key.
+     * Get or create the singleton setting.
      */
-    public static function getValue(string $key, $default = null)
+    public static function getOrCreate(): Setting
     {
-        $setting = static::first();
-        if (!$setting) {
-            return $default;
-        }
-
-        return $setting->{$key} ?? $default;
-    }
-
-    /**
-     * Set setting value by key.
-     */
-    public static function setValue(string $key, $value): void
-    {
-        $setting = static::firstOrCreate(['id' => 1], ['site_name' => 'Portal Kemenag Nganjuk']);
-        $setting->{$key} = $value;
-        $setting->save();
-    }
-
-    /**
-     * Get singleton instance (alias for getInstance).
-     */
-    public static function getSingleton(): ?Setting
-    {
-        return static::first();
+        return static::firstOrCreate(
+            ['id' => 1],
+            ['site_name' => 'Portal Kemenag Nganjuk']
+        );
     }
 }

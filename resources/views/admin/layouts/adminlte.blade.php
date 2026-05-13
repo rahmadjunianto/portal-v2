@@ -124,6 +124,12 @@
                         
                         <li class="nav-header text-muted">PENGATURAN</li>
                         <li class="nav-item">
+                            <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Users</p>

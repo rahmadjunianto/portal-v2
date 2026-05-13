@@ -88,9 +88,9 @@ Route::middleware(['web'])->group(function () {
         Route::put('/downloads/{id}', [DownloadController::class, 'update'])->name('downloads.update');
         Route::delete('/downloads/{id}', [DownloadController::class, 'destroy'])->name('downloads.destroy');
         
-        // Settings (disabled - controller not created yet)
-        // Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
-        // Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
+        // Settings
+        Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
         
         // External Links (alias: links)
         Route::get('/external-links', [\App\Http\Controllers\Admin\ExternalLinkController::class, 'index'])->name('external-links.index');
