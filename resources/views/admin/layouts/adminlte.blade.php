@@ -98,7 +98,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ request()->is('admin/downloads*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.downloads.index') }}" class="nav-link {{ request()->is('admin/downloads*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-download"></i>
                             <p>Downloads</p>
                         </a>

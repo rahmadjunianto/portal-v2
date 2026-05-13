@@ -15,10 +15,11 @@ class Download extends Model
         'title',
         'slug',
         'description',
+        'file_name',
         'file_path',
+        'file_type',
         'file_size',
-        'extension',
-        'download_count',
+        'downloads_count',
         'is_published',
         'published_at',
         'legacy_id',
@@ -26,7 +27,7 @@ class Download extends Model
 
     protected $casts = [
         'file_size' => 'integer',
-        'download_count' => 'integer',
+        'downloads_count' => 'integer',
         'is_published' => 'boolean',
         'published_at' => 'datetime',
     ];
@@ -45,5 +46,13 @@ class Download extends Model
         } else {
             return $bytes . ' bytes';
         }
+    }
+
+    /**
+     * Alias for downloads_count.
+     */
+    public function getDownloadCountAttribute(): int
+    {
+        return $this->downloads_count ?? 0;
     }
 }

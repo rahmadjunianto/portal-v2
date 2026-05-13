@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DownloadController;
 use App\Http\Controllers\Admin\ExternalLinkController;
 use App\Http\Controllers\Admin\ForgotPasswordController;
 use App\Http\Controllers\Admin\ResetPasswordController;
@@ -73,12 +74,12 @@ Route::middleware(['web'])->group(function () {
         Route::delete('/agendas/{id}', [\App\Http\Controllers\Admin\AgendaController::class, 'destroy'])->name('agendas.destroy');
         
         // Downloads
-        Route::get('/downloads', [\App\Http\Controllers\Admin\DownloadController::class, 'index'])->name('downloads.index');
-        Route::get('/downloads/create', [\App\Http\Controllers\Admin\DownloadController::class, 'create'])->name('downloads.create');
-        Route::post('/downloads', [\App\Http\Controllers\Admin\DownloadController::class, 'store'])->name('downloads.store');
-        Route::get('/downloads/{id}/edit', [\App\Http\Controllers\Admin\DownloadController::class, 'edit'])->name('downloads.edit');
-        Route::put('/downloads/{id}', [\App\Http\Controllers\Admin\DownloadController::class, 'update'])->name('downloads.update');
-        Route::delete('/downloads/{id}', [\App\Http\Controllers\Admin\DownloadController::class, 'destroy'])->name('downloads.destroy');
+        Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads.index');
+        Route::get('/downloads/create', [DownloadController::class, 'create'])->name('downloads.create');
+        Route::post('/downloads', [DownloadController::class, 'store'])->name('downloads.store');
+        Route::get('/downloads/{id}/edit', [DownloadController::class, 'edit'])->name('downloads.edit');
+        Route::put('/downloads/{id}', [DownloadController::class, 'update'])->name('downloads.update');
+        Route::delete('/downloads/{id}', [DownloadController::class, 'destroy'])->name('downloads.destroy');
         
         // Settings
         Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
