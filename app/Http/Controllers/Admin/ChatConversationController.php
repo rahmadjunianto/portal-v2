@@ -42,8 +42,12 @@ class ChatConversationController extends Controller
         }
 
         $conversations = $query->paginate(15)->withQueryString();
+        
+        // Total tokens
+        $totalTokens = ChatConversation::sum('tokens_used');
+        $totalConversations = ChatConversation::count();
 
-        return view('admin.chat-conversations.index', compact('conversations'));
+        return view('admin.chat-conversations.index', compact('conversations', 'totalTokens', 'totalConversations'));
     }
 
     /**
