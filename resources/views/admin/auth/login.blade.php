@@ -51,10 +51,10 @@
                 @csrf
                 
                 <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required autofocus>
+                    <input type="text" name="email" class="form-control" placeholder="Email atau Username" value="{{ old('email') }}" required autofocus>
                     <div class="input-group-append">
                         <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
+                            <span class="fas fa-user"></span>
                         </div>
                     </div>
                 </div>
