@@ -47,6 +47,10 @@
                     <i class="far fa-user"></i> {{ auth()->user()->name ?? 'Admin' }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
+                    <a href="{{ route('admin.profile.edit') }}" class="dropdown-item">
+                        <i class="fas fa-user mr-2"></i> Profil
+                    </a>
+                    <div class="dropdown-divider"></div>
                     <a href="{{ route('admin.logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </a>
