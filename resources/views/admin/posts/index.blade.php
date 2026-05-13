@@ -103,9 +103,9 @@
         </table>
     </div>
     
-    <div class="card-footer">
-        {{ $posts->links() }}
-    </div>
+        <div class="card-footer">
+            {{ $posts->withQueryString()->links('pagination::bootstrap-4') }}
+        </div>
 </div>
 @endsection
 

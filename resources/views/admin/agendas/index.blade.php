@@ -137,7 +137,7 @@
         
         <div class="card-footer">
             <div class="float-right">
-                {{ $agendas->links() }}
+                {{ $agendas->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>

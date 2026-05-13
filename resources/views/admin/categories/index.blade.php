@@ -82,7 +82,7 @@
     </div>
     
     <div class="card-footer">
-        {{ $categories->links() }}
+        {{ $categories->withQueryString()->links('pagination::bootstrap-4') }}
     </div>
 </div>
 @endsection
