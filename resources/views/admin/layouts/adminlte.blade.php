@@ -127,6 +127,12 @@
                                 <p>Menu</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.chat-conversations.index') }}" class="nav-link {{ request()->is('admin/chat-conversations*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-comments"></i>
+                                <p>Chat Conversations</p>
+                            </a>
+                        </li>
                         
                         <li class="nav-header text-muted">PENGATURAN</li>
                         <li class="nav-item">

@@ -48,4 +48,4 @@ Route::get('/kontak', function () { return view('kontak'); })->name('kontak');
 Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.chat');
 Route::get('/chatbot/info', [ChatbotController::class, 'info'])->name('chatbot.info');
 Route::get('/chatbot/health', [ChatbotController::class, 'health'])->name('chatbot.health');
-Route::get('/admin/chat-history', [ChatbotController::class, 'history'])->name('chatbot.history');
+// Route::get('/admin/chat-history', [ChatbotController::class, 'history'])->name('chatbot.history');

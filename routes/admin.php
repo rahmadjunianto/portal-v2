@@ -130,5 +130,9 @@ Route::middleware(['web'])->group(function () {
         Route::put('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/{id}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
+        
+        // Chat Conversations
+        Route::get('/chat-conversations', [\App\Http\Controllers\Admin\ChatConversationController::class, 'index'])->name('chat-conversations.index');
+        Route::delete('/chat-conversations/{id}', [\App\Http\Controllers\Admin\ChatConversationController::class, 'destroy'])->name('chat-conversations.destroy');
     });
 });
