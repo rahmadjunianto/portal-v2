@@ -10,6 +10,7 @@ class AdminMiddleware
 {
     /**
      * Handle an incoming request.
+     * Only admin role can access.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
@@ -22,11 +23,19 @@ class AdminMiddleware
 
         // Check if user has admin role
         $user = auth()->user();
-        $allowedRoles = ['admin', 'editor', 'operator'];
-
-        if (!in_array($user->role_name ?? $user->role, $allowedRoles)) {
-            auth()->logout();
-            return redirect()->route('admin.login')->with('error', 'Anda tidak memiliki akses ke panel admin.');
+        
+        if ($user->role_name !== 'admin') {
+            // Non-admin users can only access posts
+            if ($request->is('admin/posts*')) {
+                return $next($request);
+            }
+            
+            // Redirect non-admin to posts if trying to access other pages
+            if (!$request->is('admin/dashboard', 'admin/profile*')) {
+                return redirect()->route('admin.posts.index')->with('error', 'Anda tidak memiliki akses ke menu tersebut.');
+            }
+            
+            return $next($request);
         }
 
         return $next($request);

@@ -71,54 +71,65 @@
         <div class="sidebar">
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                    {{-- Dashboard - visible to all --}}
                     <li class="nav-item">
                         <a href="{{ url('admin/dashboard') }}" class="nav-link {{ request()->is('admin/dashboard') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
+                    
+                    {{-- Posts - visible to all roles --}}
                     <li class="nav-item">
                         <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->is('admin/posts*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-newspaper"></i>
                             <p>Posts</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->is('admin/categories*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-folder"></i>
-                            <p>Categories</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.pages.index') }}" class="nav-link {{ request()->is('admin/pages*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-file"></i>
-                            <p>Pages</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.agendas.index') }}" class="nav-link {{ request()->is('admin/agendas*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-calendar"></i>
-                            <p>Agendas</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.downloads.index') }}" class="nav-link {{ request()->is('admin/downloads*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-download"></i>
-                            <p>Downloads</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.external-links.index') }}" class="nav-link {{ request()->is('admin/external-links*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-link"></i>
-                            <p>External Links</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>Users</p>
-                        </a>
-                    </li>
+                    
+                    {{-- Admin-only menus --}}
+                    @if(auth()->user() && auth()->user()->role_name === 'admin')
+                        <li class="nav-header text-muted">MANAJEMEN KONTEN</li>
+                        
+                        <li class="nav-item">
+                            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->is('admin/categories*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-folder"></i>
+                                <p>Categories</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.pages.index') }}" class="nav-link {{ request()->is('admin/pages*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file"></i>
+                                <p>Pages</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.agendas.index') }}" class="nav-link {{ request()->is('admin/agendas*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-calendar"></i>
+                                <p>Agendas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.downloads.index') }}" class="nav-link {{ request()->is('admin/downloads*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-download"></i>
+                                <p>Downloads</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.external-links.index') }}" class="nav-link {{ request()->is('admin/external-links*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-link"></i>
+                                <p>External Links</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-header text-muted">PENGATURAN</li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Users</p>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </nav>
         </div>

@@ -18,8 +18,14 @@ class PostController extends Controller
      */
     public function index(Request $request): View
     {
+        $user = auth()->user();
         $query = Post::with(['category', 'author', 'tags'])
             ->orderBy('created_at', 'desc');
+        
+        // Non-admin can only see their own posts
+        if ($user->role_name !== 'admin') {
+            $query->where('author_id', $user->id);
+        }
 
         // Filter by status
         if ($request->has('status') && $request->status) {
@@ -139,6 +145,13 @@ class PostController extends Controller
     public function edit(int $id): View
     {
         $post = Post::with(['tags'])->findOrFail($id);
+        
+        // Non-admin can only edit their own posts
+        $user = auth()->user();
+        if ($user->role_name !== 'admin' && $post->author_id !== $user->id) {
+            return redirect()->route('admin.posts.index')->with('error', 'Anda tidak memiliki akses ke post ini.');
+        }
+        
         $categories = PostCategory::where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -153,7 +166,13 @@ class PostController extends Controller
     public function update(Request $request, int $id)
     {
         $post = Post::findOrFail($id);
-
+        
+        // Non-admin can only update their own posts
+        $user = auth()->user();
+        if ($user->role_name !== 'admin' && $post->author_id !== $user->id) {
+            return redirect()->route('admin.posts.index')->with('error', 'Anda tidak memiliki akses ke post ini.');
+        }
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:posts,slug,' . $id,
@@ -236,6 +255,12 @@ class PostController extends Controller
     public function destroy(int $id)
     {
         $post = Post::findOrFail($id);
+        
+        // Non-admin can only delete their own posts
+        $user = auth()->user();
+        if ($user->role_name !== 'admin' && $post->author_id !== $user->id) {
+            return redirect()->route('admin.posts.index')->with('error', 'Anda tidak memiliki akses ke post ini.');
+        }
 
         // Delete thumbnail
         if ($post->thumbnail && Storage::disk('public')->exists($post->thumbnail)) {
