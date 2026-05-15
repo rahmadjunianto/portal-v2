@@ -82,7 +82,7 @@
             <!-- Logo -->
             <a href="{{ url('/') }}" class="flex items-center gap-3 group flex-shrink-0">
                 <img
-                    src="{{ asset('logo-kemenag.png') }}"
+                    src="{{ asset('logo-kemenag.webp') }}"
                     alt="Logo Kementerian Agama Kabupaten Nganjuk"
                     class="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform group-hover:scale-105"
                     style="max-width: 70px;"

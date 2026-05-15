@@ -118,13 +118,25 @@
             <!-- Mobile: flex-row thumbnail-left, Desktop: block stacked -->
             <a href="{{ route('posts.show', $post->slug) }}" class="flex flex-row sm:flex-col">
                 <!-- Thumbnail - Square on mobile (left), Full width on desktop -->
-                <div class="relative w-28 sm:w-full sm:aspect-video flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200">
-                    @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
-                    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-full sm:h-44 object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="relative w-28 sm:w-full h-28 sm:h-44 flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200">
+                    @php
+                        $thumbnailUrl = null;
+                        if (!empty($post->thumbnail)) {
+                            // Cek file baru (WebP variants)
+                            $imageProcessor = app(\App\Services\ImageProcessor::class);
+                            $thumbnailUrl = $imageProcessor->getLargestVariant($post->thumbnail, 'posts');
+                            // Fallback: cek file lama
+                            if (!$thumbnailUrl && file_exists(public_path('storage/' . $post->thumbnail))) {
+                                $thumbnailUrl = asset('storage/' . $post->thumbnail);
+                            }
+                        }
+                    @endphp
+                    @if($thumbnailUrl)
+                    <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     @else
-                    <div class="w-full h-full sm:h-44 flex items-center justify-center">
-                        <svg class="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-emerald-600">
+                        <svg class="w-10 h-10 text-white opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
                         </svg>
                     </div>
                     @endif

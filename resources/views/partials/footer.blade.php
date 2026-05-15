@@ -7,7 +7,7 @@
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <img
-                        src="{{ asset('logo-kemenag.png') }}"
+                        src="{{ asset('logo-kemenag.webp') }}"
                         alt="Logo Kementerian Agama Kabupaten Nganjuk"
                         class="h-12 w-auto object-contain"
                     >

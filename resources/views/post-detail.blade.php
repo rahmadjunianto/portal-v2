@@ -16,22 +16,32 @@
 
     <!-- Article Header -->
     <article class="bg-white rounded-xl shadow-sm overflow-hidden">
-        @if($post->thumbnail)
         <!-- Featured Image -->
         <div class="relative">
-            @if(file_exists(public_path('storage/' . $post->thumbnail)))
-            <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full aspect-video md:aspect-[21/9] object-cover">
+            @php
+                $thumbnailUrl = null;
+                if (!empty($post->thumbnail)) {
+                    // Cek file baru (WebP variants)
+                    $imageProcessor = app(\App\Services\ImageProcessor::class);
+                    $thumbnailUrl = $imageProcessor->getLargestVariant($post->thumbnail, 'posts');
+                    // Fallback: cek file lama
+                    if (!$thumbnailUrl && file_exists(public_path('storage/' . $post->thumbnail))) {
+                        $thumbnailUrl = asset('storage/' . $post->thumbnail);
+                    }
+                }
+            @endphp
+
+            @if($thumbnailUrl)
+                <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" class="w-full aspect-video object-cover" loading="eager">
             @else
-            <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Placeholder" class="w-full aspect-video md:aspect-[21/9] object-cover"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="w-full aspect-video md:aspect-[21/9] bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center hidden">
-                <svg class="w-24 h-24 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-            </div>
+                <!-- Dummy placeholder -->
+                <div class="w-full aspect-video bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
+                    <svg class="w-24 h-24 text-white opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                </div>
             @endif
         </div>
-        @endif
 
         <div class="p-6 md:p-10">
             <!-- Category & Date -->
