@@ -96,39 +96,52 @@
             </a>
 
             <!-- Desktop Navigation -->
-            <nav class="hidden lg:block" role="navigation" aria-label="Menu utama">
-                <ul class="flex items-center gap-1" role="menubar">
+            <nav class="hidden lg:block" aria-label="Menu utama">
+                <ul class="flex items-center gap-1">
                     {{-- Menu dari database --}}
                     @forelse($headerMenuItems as $menuItem)
-                    <li class="relative group/menu">
+                    <li class="relative group">
                         @php $menuChildren = $menuItem->children_collection; @endphp
                         @if($menuChildren->count() > 0)
-                            <button type="button" class="px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors flex items-center gap-1 cursor-pointer w-full text-left"
-                                    aria-haspopup="true"
-                                    aria-expanded="false">
+                            <button type="button"
+                                    class="nav-dropdown-toggle px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors flex items-center gap-1 w-full text-left"
+                                    aria-expanded="false"
+                                    aria-controls="dropdown-{{ $menuItem->id }}">
                                 {{ $menuItem->title }}
-                                <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 ml-auto transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </button>
-                            {{-- Dropdown Level 1 - hover dengan group-hover --}}
-                            <ul class="absolute left-0 top-full pt-2 min-w-[220px] z-50 hidden group-hover/menu:flex flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2">
+                            {{-- Dropdown Level 1 --}}
+                            <ul class="dropdown-menu absolute left-0 top-full pt-2 min-w-[220px] z-50 hidden flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2"
+                                id="dropdown-{{ $menuItem->id }}"
+                                role="menu"
+                                aria-label="{{ $menuItem->title }}">
                                 @foreach($menuChildren as $child)
                                     @php $grandChildren = $child->children_collection ?? collect(); @endphp
                                     @if($grandChildren->count() > 0)
-                                        <li class="relative px-4 py-2 hover:bg-emerald-50 group/sub">
+                                        <li class="relative px-4 py-2 hover:bg-emerald-50 group/sub" role="none">
                                             <div class="flex items-center justify-between text-gray-700 hover:text-emerald-700">
-                                                <a href="{{ $child->url ?? '#' }}" class="flex-1">{{ $child->title }}</a>
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <a href="{{ $child->url ?? '#' }}"
+                                                   class="flex-1"
+                                                   role="menuitem"
+                                                   @if($child->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif>
+                                                    {{ $child->title }}
+                                                </a>
+                                                <svg class="w-4 h-4 nav-submenu-arrow transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                                 </svg>
                                             </div>
-                                            {{-- Dropdown Level 2 - muncul saat hover parent --}}
-                                            <ul class="absolute left-full top-0 ml-0 min-w-[200px] hidden group-hover/sub:block flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2">
+                                            {{-- Dropdown Level 2 - Uses group-hover/sub to show when hovering anywhere in the li --}}
+                                            <ul class="dropdown-menu-sub absolute left-full top-0 ml-0 min-w-[200px] flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2 hidden group-hover/sub:flex"
+                                                role="menu"
+                                                aria-label="{{ $child->title }}">
                                                 @foreach($grandChildren as $grandChild)
-                                                <li class="px-4 py-2 hover:bg-emerald-50">
+                                                <li role="none">
                                                     <a href="{{ $grandChild->url ?? '#' }}"
-                                                       class="block text-gray-700 hover:text-emerald-700">
+                                                       class="block text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-2 transition-colors"
+                                                       role="menuitem"
+                                                       @if($grandChild->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif>
                                                         {{ $grandChild->title }}
                                                     </a>
                                                 </li>
@@ -136,10 +149,11 @@
                                             </ul>
                                         </li>
                                     @else
-                                        <li class="px-4 py-2 hover:bg-emerald-50">
+                                        <li role="none">
                                             <a href="{{ $child->url ?? '#' }}"
-                                               @if($child->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif
-                                               class="block text-gray-700 hover:text-emerald-700">
+                                               class="block text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-2 transition-colors"
+                                               role="menuitem"
+                                               @if($child->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif>
                                                 {{ $child->title }}
                                             </a>
                                         </li>
@@ -149,7 +163,6 @@
                         @else
                             <a href="{{ $menuItem->url ?? '#' }}"
                                @if($menuItem->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif
-                               role="menuitem"
                                class="px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors block">
                                 {{ $menuItem->title }}
                             </a>
@@ -178,15 +191,163 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle submenu hover
-    document.querySelectorAll('.submenu-trigger').forEach(function(trigger) {
-        trigger.addEventListener('mouseenter', function() {
-            const panel = this.querySelector('.submenu-panel');
-            if (panel) panel.classList.remove('hidden');
+    'use strict';
+
+    // ============================================
+    // Desktop Navigation - Hover Dropdowns
+    // ============================================
+
+    // Main menu dropdown hover
+    document.querySelectorAll('.relative.group').forEach(function(menuItem) {
+        const button = menuItem.querySelector('.nav-dropdown-toggle');
+        const dropdownId = button?.getAttribute('aria-controls');
+        const dropdown = dropdownId ? document.getElementById(dropdownId) : null;
+
+        if (!button || !dropdown) return;
+
+        let hideTimeout = null;
+
+        // Show on mouseenter
+        menuItem.addEventListener('mouseenter', function() {
+            clearTimeout(hideTimeout);
+            button.setAttribute('aria-expanded', 'true');
+            dropdown.classList.remove('hidden');
         });
-        trigger.addEventListener('mouseleave', function() {
-            const panel = this.querySelector('.submenu-panel');
-            if (panel) panel.classList.add('hidden');
+
+        // Hide on mouseleave with delay
+        menuItem.addEventListener('mouseleave', function() {
+            hideTimeout = setTimeout(function() {
+                button.setAttribute('aria-expanded', 'false');
+                dropdown.classList.add('hidden');
+                const arrow = button.querySelector('svg');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            }, 200);
+        });
+    });
+
+    // Submenu hover (grandchild menus) - use CSS hover via group-hover
+    // The .group/sub class on <li> allows us to use group-hover on the submenu
+    // We need to ensure the submenu stays open when hovering over parent link or submenu
+
+    // Keep dropdown open when hovering over the dropdown content
+    document.querySelectorAll('.dropdown-menu').forEach(function(dropdown) {
+        let hideTimeout = null;
+        const parentId = dropdown.getAttribute('id');
+        const triggerButton = document.querySelector(`[aria-controls="${parentId}"]`);
+
+        dropdown.addEventListener('mouseenter', function() {
+            clearTimeout(hideTimeout);
+            if (triggerButton) triggerButton.setAttribute('aria-expanded', 'true');
+        });
+
+        dropdown.addEventListener('mouseleave', function() {
+            hideTimeout = setTimeout(function() {
+                dropdown.classList.add('hidden');
+                if (triggerButton) {
+                    triggerButton.setAttribute('aria-expanded', 'false');
+                    const arrow = triggerButton.querySelector('svg');
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                }
+            }, 200);
+        });
+    });
+
+    // ============================================
+    // Click Toggle (optional - works alongside hover)
+    // ============================================
+
+    // Toggle dropdown on button click
+    document.querySelectorAll('.nav-dropdown-toggle').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById(this.getAttribute('aria-controls'));
+            if (!dropdown) return;
+
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+            // Close all other dropdowns
+            document.querySelectorAll('.nav-dropdown-toggle').forEach(function(otherBtn) {
+                if (otherBtn !== button) {
+                    otherBtn.setAttribute('aria-expanded', 'false');
+                    const otherDropdownId = otherBtn.getAttribute('aria-controls');
+                    const otherDropdown = document.getElementById(otherDropdownId);
+                    if (otherDropdown) otherDropdown.classList.add('hidden');
+                    const otherArrow = otherBtn.querySelector('svg');
+                    if (otherArrow) otherArrow.style.transform = 'rotate(0deg)';
+                }
+            });
+            document.querySelectorAll('.dropdown-menu-sub').forEach(function(sm) {
+                sm.classList.add('hidden');
+            });
+
+            // Toggle current
+            this.setAttribute('aria-expanded', !isExpanded);
+            dropdown.classList.toggle('hidden');
+            const arrow = this.querySelector('svg');
+            if (arrow) arrow.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+    });
+
+    // Submenu click toggle
+    document.querySelectorAll('.group/sub > div').forEach(function(div) {
+        div.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const submenu = this.parentElement.querySelector('.dropdown-menu-sub');
+            const arrow = this.querySelector('.nav-submenu-arrow');
+            if (!submenu) return;
+
+            const isVisible = !submenu.classList.contains('hidden');
+            submenu.classList.toggle('hidden');
+            if (arrow) arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(90deg)';
+        });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('nav')) {
+            document.querySelectorAll('.dropdown-menu').forEach(function(d) { d.classList.add('hidden'); });
+            document.querySelectorAll('.dropdown-menu-sub').forEach(function(sm) { sm.classList.add('hidden'); });
+            document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {
+                btn.setAttribute('aria-expanded', 'false');
+                const arrow = btn.querySelector('svg');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            });
+        }
+    });
+
+    // ============================================
+    // Keyboard Navigation
+    // ============================================
+    document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn) {
+        btn.addEventListener('keydown', function(e) {
+            const parentLi = this.closest('li');
+            const parentUl = parentLi?.parentElement;
+
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    this.setAttribute('aria-expanded', 'true');
+                    const dropdown = document.getElementById(this.getAttribute('aria-controls'));
+                    dropdown?.classList.remove('hidden');
+                    const firstItem = dropdown?.querySelector('a, button');
+                    firstItem?.focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    const prevItem = parentLi?.previousElementSibling?.querySelector('a, button');
+                    if (prevItem) prevItem.focus();
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    document.querySelectorAll('.dropdown-menu').forEach(function(d) { d.classList.add('hidden'); });
+                    document.querySelectorAll('.dropdown-menu-sub').forEach(function(sm) { sm.classList.add('hidden'); });
+                    document.querySelectorAll('.nav-dropdown-toggle').forEach(function(b) {
+                        b.setAttribute('aria-expanded', 'false');
+                        const arrow = b.querySelector('svg');
+                        if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    });
+                    break;
+            }
         });
     });
 });
