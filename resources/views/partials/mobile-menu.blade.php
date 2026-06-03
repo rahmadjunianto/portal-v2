@@ -1,24 +1,33 @@
-<!-- Mobile Menu Overlay -->
-<div id="mobile-menu" class="fixed inset-0 bg-black/50 z-50 opacity-0 invisible transition-opacity duration-300 lg:hidden">
-    <div class="absolute right-0 top-0 h-full w-80 max-w-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300" id="mobile-menu-panel">
+<!-- Mobile Menu Overlay - ARIA Dialog per WCAG 2.1 SC 4.1.2 -->
+<div id="mobile-menu" 
+     class="fixed inset-0 bg-black/50 z-50 opacity-0 invisible transition-opacity duration-300 lg:hidden"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="mobile-menu-title"
+     aria-describedby="mobile-menu-desc">
+    <span id="mobile-menu-desc" class="sr-only">Menu navigasi untuk perangkat mobile</span>
+    
+    <div class="absolute right-0 top-0 h-full w-80 max-w-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300"
+         id="mobile-menu-panel"
+         tabindex="-1">
         <!-- Mobile Menu Header -->
         <div class="flex items-center justify-between p-4 border-b bg-emerald-700 text-white">
             <div class="flex items-center gap-2">
-                <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kementerian Agama Kabupaten Nganjuk" class="h-8 w-auto object-contain">
+                <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kementerian Agama Kabupaten Nganjuk" class="h-8 w-auto object-contain" loading="lazy">
                 <div class="flex flex-col">
-                    <span class="font-semibold text-sm leading-tight">Menu</span>
+                    <span id="mobile-menu-title" class="font-semibold text-sm leading-tight">Menu</span>
                     <span class="text-xs text-emerald-200 leading-tight hidden sm:block">Kementerian Agama Kabupaten Nganjuk</span>
                 </div>
             </div>
-            <button id="mobile-menu-close" class="p-2 hover:bg-emerald-600 rounded-lg transition-colors" aria-label="Tutup menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button id="mobile-menu-close" class="p-2 hover:bg-emerald-600 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white" aria-label="Tutup menu" aria-expanded="false">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
-        <!-- Mobile Menu Content -->
-        <nav class="overflow-y-auto h-[calc(100%-64px)]">
+        <!-- Mobile Menu Content - ARIA Navigation per WCAG 2.1 SC 1.3.1 -->
+        <nav class="overflow-y-auto h-[calc(100%-64px)]" aria-label="Menu utama mobile">
             <ul class="py-2">
                 <!-- Home Link -->
                 {{-- <li>
@@ -170,23 +179,61 @@
 
 @push('scripts')
 <script>
+    // ============================================
+    // Mobile Menu Accessibility - WCAG 2.1 SC 2.1.1, 4.1.2
+    // ============================================
+    
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    
+    // Focus trap for mobile menu
+    let lastFocusedElement = null;
 
     function openMobileMenu() {
+        // Save last focused element for focus restoration
+        lastFocusedElement = document.activeElement;
+        
         mobileMenu.classList.remove('opacity-0', 'invisible');
         mobileMenu.classList.add('opacity-100', 'visible');
         mobileMenuPanel.classList.remove('translate-x-full');
+        mobileMenuPanel.removeAttribute('inert');
         document.body.style.overflow = 'hidden';
+        
+        // Update ARIA states
+        if (mobileMenuToggle) {
+            mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        }
+        if (mobileMenuClose) {
+            mobileMenuClose.setAttribute('aria-expanded', 'true');
+        }
+        
+        // Focus the close button for keyboard users
+        setTimeout(() => {
+            mobileMenuClose?.focus();
+        }, 100);
     }
 
     function closeMobileMenu() {
         mobileMenu.classList.add('opacity-0', 'invisible');
         mobileMenu.classList.remove('opacity-100', 'visible');
         mobileMenuPanel.classList.add('translate-x-full');
+        mobileMenuPanel.setAttribute('inert', '');
         document.body.style.overflow = '';
+        
+        // Update ARIA states
+        if (mobileMenuToggle) {
+            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        }
+        if (mobileMenuClose) {
+            mobileMenuClose.setAttribute('aria-expanded', 'false');
+        }
+        
+        // Restore focus to trigger element
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+        }
     }
 
     mobileMenuToggle.addEventListener('click', openMobileMenu);
@@ -199,10 +246,30 @@
         }
     });
 
-    // Close on escape key
+    // Keyboard navigation - Escape key closes menu
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
+        if (e.key === 'Escape' && !mobileMenu.classList.contains('invisible')) {
             closeMobileMenu();
+        }
+    });
+
+    // Focus trap within mobile menu
+    mobileMenuPanel?.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+        
+        const focusableElements = mobileMenuPanel.querySelectorAll(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled], [tabindex]:not([tabindex="-1"])'
+        );
+        
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
         }
     });
 </script>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessibilityController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DownloadController;
@@ -21,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Accessibility Statement Page - WCAG 2.1 SC 4.1.2
+Route::get('/aksesibilitas', [AccessibilityController::class, 'index'])->name('accessibility');
 
 // Posts Routes
 Route::get('/berita', [PostController::class, 'index'])->name('posts.index');

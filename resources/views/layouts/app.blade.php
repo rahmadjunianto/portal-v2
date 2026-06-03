@@ -278,10 +278,105 @@
 
     <!-- Custom styles for portal -->
     @stack('styles')
+
+    <!-- Accessibility Styles - WCAG 2.1 AA Compliant -->
+    <style>
+        /* Enhanced Focus Indicators - Visible on all interactive elements */
+        :focus {
+            outline: 3px solid #059669;
+            outline-offset: 2px;
+        }
+        
+        :focus:not(:focus-visible) {
+            outline: none;
+        }
+        
+        :focus-visible {
+            outline: 3px solid #059669;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 6px rgba(5, 150, 105, 0.3);
+        }
+        
+        /* Skip Link - High visibility when focused */
+        .skip-link:focus,
+        a[href="#main-content"]:focus {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 1rem 1.5rem !important;
+            background-color: #059669 !important;
+            color: white !important;
+            font-weight: 600 !important;
+            text-decoration: none !important;
+            z-index: 9999 !important;
+            clip: auto !important;
+            border-radius: 0 0 0.5rem 0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        }
+        
+        /* Screen reader only class */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Form accessibility improvements */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 3px solid #059669;
+            outline-offset: 2px;
+            border-color: #059669;
+        }
+        
+        /* Button focus improvements */
+        button:focus,
+        [role="button"]:focus {
+            outline: 3px solid #059669;
+            outline-offset: 2px;
+        }
+        
+        /* Link focus improvements */
+        a:focus {
+            outline: 3px solid #059669;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+        
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        
+        /* High contrast mode support */
+        @media (forced-colors: active) {
+            a:focus,
+            button:focus,
+            input:focus {
+                outline: 3px solid CanvasText;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
-    <!-- Skip to Main Content Link for Accessibility -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-emerald-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400">
+    <!-- Skip to Main Content Link for Accessibility - WCAG 2.1 SC 2.4.1 -->
+    <a href="#main-content" class="skip-link sr-only focus:not-sr-only">
         Langsung ke konten utama
     </a>
 
@@ -435,27 +530,39 @@
 
             <!-- Input Area -->
             <div class="p-3 md:p-4 bg-white border-t border-gray-100">
-                <!-- User Info Form -->
-                <div x-show="!userInfoSubmitted" class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <!-- User Info Form - WCAG 2.1 SC 1.3.1, 3.3.2 -->
+                <div x-show="!userInfoSubmitted" class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg" role="form" aria-label="Form data pengguna">
                     <p class="text-xs text-amber-700 mb-2 font-medium">⚠️ Wajib diisi sebelum chat:</p>
                     <div class="grid grid-cols-1 gap-2">
                         <div>
-                            <input type="text" x-model="userInfo.name" placeholder="Nama lengkap *"
+                            <label for="chat-name" class="block text-xs font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span></label>
+                            <input type="text" id="chat-name" x-model="userInfo.name" placeholder="Nama lengkap *"
                                    class="px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
-                                   :class="nameError ? 'border-red-500 bg-red-50' : 'border-gray-300'">
-                            <p x-show="nameError" x-text="nameError" class="text-xs text-red-500 mt-1"></p>
+                                   :class="nameError ? 'border-red-500 bg-red-50' : 'border-gray-300'"
+                                   aria-required="true"
+                                   :aria-invalid="nameError ? 'true' : 'false'"
+                                   aria-describedby="chat-name-error">
+                            <p x-show="nameError" id="chat-name-error" x-text="nameError" class="text-xs text-red-500 mt-1" role="alert"></p>
                         </div>
                         <div>
-                            <input type="email" x-model="userInfo.email" placeholder="Email *"
+                            <label for="chat-email" class="block text-xs font-medium text-gray-700 mb-1">Email <span class="text-red-500" aria-hidden="true">*</span></label>
+                            <input type="email" id="chat-email" x-model="userInfo.email" placeholder="Email *"
                                    class="px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
-                                   :class="emailError ? 'border-red-500 bg-red-50' : 'border-gray-300'">
-                            <p x-show="emailError" x-text="emailError" class="text-xs text-red-500 mt-1"></p>
+                                   :class="emailError ? 'border-red-500 bg-red-50' : 'border-gray-300'"
+                                   aria-required="true"
+                                   :aria-invalid="emailError ? 'true' : 'false'"
+                                   aria-describedby="chat-email-error">
+                            <p x-show="emailError" id="chat-email-error" x-text="emailError" class="text-xs text-red-500 mt-1" role="alert"></p>
                         </div>
                         <div>
-                            <input type="tel" x-model="userInfo.phone" placeholder="No. WhatsApp *"
+                            <label for="chat-phone" class="block text-xs font-medium text-gray-700 mb-1">Nomor WhatsApp <span class="text-red-500" aria-hidden="true">*</span></label>
+                            <input type="tel" id="chat-phone" x-model="userInfo.phone" placeholder="No. WhatsApp *"
                                    class="px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 w-full"
-                                   :class="phoneError ? 'border-red-500 bg-red-50' : 'border-gray-300'">
-                            <p x-show="phoneError" x-text="phoneError" class="text-xs text-red-500 mt-1"></p>
+                                   :class="phoneError ? 'border-red-500 bg-red-50' : 'border-gray-300'"
+                                   aria-required="true"
+                                   :aria-invalid="phoneError ? 'true' : 'false'"
+                                   aria-describedby="chat-phone-error">
+                            <p x-show="phoneError" id="chat-phone-error" x-text="phoneError" class="text-xs text-red-500 mt-1" role="alert"></p>
                         </div>
                     </div>
                     <button type="button" @click="submitUserInfo()"
