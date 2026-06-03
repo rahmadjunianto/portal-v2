@@ -106,10 +106,24 @@ class Setting extends Model
             return self::$instance;
         }
         
-        $setting = static::firstOrCreate(
-            ['id' => 1],
-            ['site_name' => 'Portal Kemenag Nganjuk']
-        );
+        // First check if a setting record exists, create if not
+        $setting = static::first();
+        
+        if (!$setting) {
+            // Create new setting with defaults
+            $setting = static::create([
+                'site_name' => 'Portal Kemenag Nganjuk',
+                'site_url' => url('/'),
+                'email' => 'info@kemenagnganjuk.id',
+                'meta_description' => 'Portal Resmi Kementerian Agama Kabupaten Nganjuk',
+                'maps_embed' => '',
+                'footer_description' => 'Portal resmi Kantor Kementerian Agama Kabupaten Nganjuk',
+                'facebook_url' => '',
+                'instagram_url' => '',
+                'youtube_url' => '',
+                'twitter_url' => '',
+            ]);
+        }
         
         Cache::put(self::CACHE_KEY, $setting->toArray(), self::CACHE_TTL);
         self::$instance = $setting;

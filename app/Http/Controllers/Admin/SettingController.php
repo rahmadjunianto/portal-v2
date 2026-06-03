@@ -41,9 +41,32 @@ class SettingController extends Controller
             'footer_description' => 'nullable|string',
         ]);
 
-        $setting = Setting::getOrCreate();
-        $setting->fill($validated);
-        $setting->save();
+        // Get or create setting without relying on cached instance
+        $setting = Setting::first();
+        
+        if (!$setting) {
+            // Create new setting with defaults
+            $setting = Setting::create([
+                'site_name' => $validated['site_name'] ?? 'Portal Kemenag Nganjuk',
+                'site_url' => $validated['site_url'] ?? url('/'),
+                'email' => $validated['email'] ?? '',
+                'phone' => $validated['phone'] ?? '',
+                'logo' => $validated['logo'] ?? '',
+                'favicon' => $validated['favicon'] ?? '',
+                'meta_description' => $validated['meta_description'] ?? '',
+                'meta_keywords' => $validated['meta_keywords'] ?? '',
+                'maps_embed' => $validated['maps_embed'] ?? '',
+                'footer_description' => $validated['footer_description'] ?? '',
+                'facebook_url' => $validated['facebook_url'] ?? '',
+                'instagram_url' => $validated['instagram_url'] ?? '',
+                'youtube_url' => $validated['youtube_url'] ?? '',
+                'twitter_url' => $validated['twitter_url'] ?? '',
+            ]);
+        } else {
+            // Update existing setting
+            $setting->fill($validated);
+            $setting->save();
+        }
 
         return redirect()
             ->route('admin.settings.index')
