@@ -120,7 +120,7 @@
                                 @foreach($menuChildren as $child)
                                     @php $grandChildren = $child->children_collection ?? collect(); @endphp
                                     @if($grandChildren->count() > 0)
-                                        <li class="relative px-4 py-2 hover:bg-emerald-50 group/sub" role="none">
+                                        <li class="relative px-4 py-2 hover:bg-emerald-50 group-sub" role="none">
                                             <div class="flex items-center justify-between text-gray-700 hover:text-emerald-700">
                                                 <a href="{{ $child->url ?? '#' }}"
                                                    class="flex-1"
@@ -132,8 +132,8 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                                 </svg>
                                             </div>
-                                            {{-- Dropdown Level 2 - Uses group-hover/sub to show when hovering anywhere in the li --}}
-                                            <ul class="dropdown-menu-sub absolute left-full top-0 ml-0 min-w-[200px] flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2 hidden group-hover/sub:flex"
+                                            {{-- Dropdown Level 2 - Uses group-hover-sub to show when hovering anywhere in the li --}}
+                                            <ul class="dropdown-menu-sub absolute left-full top-0 ml-0 min-w-[200px] flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2 hidden group-hover:group-sub:flex"
                                                 role="menu"
                                                 aria-label="{{ $child->title }}">
                                                 @foreach($grandChildren as $grandChild)
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Submenu click toggle
-    document.querySelectorAll('.group/sub > div').forEach(function(div) {
+    document.querySelectorAll('.group-sub > div').forEach(function(div) {
         div.addEventListener('click', function(e) {
             e.stopPropagation();
             const submenu = this.parentElement.querySelector('.dropdown-menu-sub');

@@ -1,11 +1,15 @@
-<!-- Chat Widget Container -->
-<div x-data="chatWidget()" x-init="init()"
-     class="fixed z-50 {{ config('chatbot.ui.position', 'bottom-right') === 'bottom-right' ? 'right-4 md:right-6' : 'left-4 md:left-6' }} bottom-4 md:bottom-6"
-     @keydown.escape.window="isOpen = false">
+    <!-- Chat Widget Container -->
+    <div x-data="chatWidget()"
+         x-init="init()"
+         class="fixed z-50 {{ config('chatbot.ui.position', 'bottom-right') === 'bottom-right' ? 'right-4 md:right-6' : 'left-4 md:left-6' }} bottom-4 md:bottom-6"
+         @keydown.escape.window="closeChat()"
+         x-ref="widgetContainer">
 
     <!-- Chat Button (Always visible) -->
     <button
-            @click="openChat()"
+            @click="toggleChat()"
+            aria-label="Buka chat assistant"
+            :aria-expanded="isOpen"
             class="group relative w-16 h-16 md:w-18 md:h-18 bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 rounded-full shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 flex items-center justify-center ring-4 ring-emerald-300/30 hover:ring-emerald-400/50 hover:scale-110"
             :class="{'animate-bounce': hasUnread}">
         <!-- Unread Badge -->
@@ -16,18 +20,30 @@
               class="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg"
               x-text="unreadCount"></span>
 
-        <!-- Chat Icon -->
+        <!-- Chat Icon (show when closed) -->
         <svg x-show="!isOpen" class="w-8 h-8 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        
+        <!-- Close Icon (show when open) -->
+        <svg x-show="isOpen" class="w-8 h-8 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
     </button>
 
     <!-- Chat Window -->
     <div x-show="isOpen"
-         x-transition
-         @click.outside="closeOnOutside && closeChat()"
-         class="bg-white rounded-2xl shadow-2xl w-[calc(100vw-2rem)] md:w-96 max-h-[calc(100vh-8rem)] md:max-h-[600px] flex flex-col overflow-hidden"
-         :class="{{ config('chatbot.ui.position', 'bottom-right') === 'bottom-right' ? 'origin-bottom-right' : 'origin-bottom-left' }}">
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"
+         x-transition:enter-end="opacity-100 transform translate-y-0 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform translate-y-0 scale-100"
+         x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"
+         id="chat-window"
+         role="dialog"
+         aria-labelledby="chat-header-title"
+         aria-modal="true"
+         class="bg-white rounded-2xl shadow-2xl w-[calc(100vw-2rem)] md:w-96 max-h-[calc(100vh-8rem)] md:max-h-[600px] flex flex-col overflow-hidden origin-bottom-right">
 
         <!-- Header -->
         <div class="bg-emerald-700 text-white px-4 py-3 md:px-6 md:py-4 flex items-center justify-between">
@@ -38,7 +54,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-sm md:text-base">AI Assistant</h3>
+                    <h3 id="chat-header-title" class="font-semibold text-sm md:text-base">AI Assistant</h3>
                     <p class="text-xs text-emerald-200 flex items-center gap-1">
                         <span class="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></span>
                         Online
@@ -48,13 +64,16 @@
             <div class="flex items-center gap-2">
                 <button @click="clearChat()"
                         class="p-2 hover:bg-emerald-600 rounded-full transition-colors"
-                        title="Hapus riwayat chat">
+                        title="Hapus riwayat chat"
+                        aria-label="Hapus riwayat chat">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
                 </button>
                 <button @click="closeChat()"
-                        class="p-2 hover:bg-emerald-600 rounded-full transition-colors">
+                        class="p-2 hover:bg-emerald-600 rounded-full transition-colors"
+                        aria-label="Tutup chat"
+                        title="Tutup">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -204,6 +223,8 @@
 </div>
 
 <style>
+[x-cloak] { display: none !important; }
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -216,7 +237,7 @@
 <script>
 function chatWidget() {
     return {
-        isOpen: false,
+        isOpen: false, // Always start closed
         isTyping: false,
         hasUnread: false,
         unreadCount: 0,
@@ -234,6 +255,10 @@ function chatWidget() {
         phoneError: '',
 
         init() {
+            // CRITICAL: Always reset isOpen to false on every page load
+            this.isOpen = false;
+            console.log('[ChatBot] Init called, isOpen set to:', this.isOpen);
+            
             // Load user info from localStorage if exists and not expired
             const savedUserInfo = localStorage.getItem('chatbot_user_info');
             const userSubmitted = localStorage.getItem('chatbot_user_submitted');
@@ -244,28 +269,48 @@ function chatWidget() {
                 if (elapsed < this.userInfoExpiry) {
                     this.userInfo = JSON.parse(savedUserInfo);
                     this.userInfoSubmitted = true;
+                    console.log('[ChatBot] User info loaded from localStorage');
                 } else {
                     // Expired - clear storage
                     localStorage.removeItem('chatbot_user_info');
                     localStorage.removeItem('chatbot_user_submitted');
                     localStorage.removeItem('chatbot_user_time');
+                    console.log('[ChatBot] User info expired, cleared localStorage');
                 }
-            }
-
-            // Load messages from localStorage
-            const saved = localStorage.getItem('chatbot_messages');
-            if (saved) {
-                this.messages = JSON.parse(saved);
             }
 
             // Get placeholder from config
             this.placeholder = '{{ config("chatbot.ui.placeholder", "Ketik pertanyaan Anda...") }}';
+            
+            // Load messages with error handling
+            try {
+                const saved = localStorage.getItem('chatbot_messages');
+                if (saved) {
+                    this.messages = JSON.parse(saved);
+                    console.log('[ChatBot] Messages loaded:', this.messages.length);
+                }
+            } catch (e) {
+                console.error('[ChatBot] Error loading messages:', e);
+                localStorage.removeItem('chatbot_messages');
+                this.messages = [];
+            }
         },
 
         openChat() {
             this.isOpen = true;
             this.hasUnread = false;
             this.unreadCount = 0;
+            this.$nextTick(() => {
+                this.scrollToBottom();
+            });
+        },
+
+        toggleChat() {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen) {
+                this.hasUnread = false;
+                this.unreadCount = 0;
+            }
             this.$nextTick(() => {
                 this.scrollToBottom();
             });
