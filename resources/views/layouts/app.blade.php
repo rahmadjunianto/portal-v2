@@ -262,8 +262,8 @@
     <!-- Mobile Menu Overlay -->
     @include('partials.mobile-menu')
 
-    <!-- Main Content -->
-    <main id="main-content" class="flex-1" tabindex="-1">
+    <!-- Main Content - Fixed CLS dengan min-height yang stabil -->
+    <main id="main-content" class="flex-1 min-h-[50vh]" tabindex="-1">
         @yield('content')
     </main>
 

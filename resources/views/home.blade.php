@@ -24,18 +24,28 @@
                 x-transition:leave-end="opacity-0 transform -translate-x-full"
                 class="absolute inset-0"
             >
-                <!-- Image Background - Optimized for LCP -->
+                <!-- Image Background - Optimized for LCP with CLS prevention -->
                 @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
+                <!-- Placeholder untuk mencegah CLS -->
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-700 to-emerald-900 animate-pulse"></div>
                 <img 
                     src="{{ asset('storage/' . $post->thumbnail) }}" 
                     alt="{{ $post->title }}" 
-                    class="w-full h-full object-contain"
+                    width="1920"
+                    height="1080"
+                    class="w-full h-full object-cover"
                     @if($index === 0) fetchpriority="high" @endif
                     loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
                     decoding="{{ $index === 0 ? 'sync' : 'async' }}"
                 >
                 @else
-                <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Gambar berita {{ $post->title }}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <!-- Placeholder untuk mencegah CLS -->
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center">
+                    <svg class="w-24 h-24 text-emerald-500 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                </div>
+                <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Gambar berita {{ $post->title }}" width="1920" height="1080" class="w-full h-full object-cover" onerror="this.style.display='none';">
                 <div class="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center hidden">
                     <div class="text-center text-emerald-200">
                         <svg class="w-24 h-24 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,13 +112,14 @@
             </svg>
         </button>
 
-        <!-- Indicators -->
+        <!-- Indicators - Fixed CLS dengan min-width instead of changing width -->
         <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
             @foreach($headlinePosts as $index => $post)
             <button
                 @click="goTo({{ $index }})"
                 :class="active === {{ $index }} ? 'bg-white w-8' : 'bg-white/50 w-3'"
-                class="h-3 rounded-full transition-all duration-300"
+                class="h-3 rounded-full transition-all duration-300 flex-shrink-0"
+                :aria-label="'Slide ' + ({{ $index }} + 1)"
             ></button>
             @endforeach
         </div>
@@ -147,12 +158,14 @@
 
                     <!-- Main card -->
                     <div class="relative bg-gradient-to-br from-white to-emerald-50/50 rounded-xl md:rounded-[2rem] p-2 md:p-3 shadow-2xl shadow-emerald-200/50 border border-white/80 backdrop-blur-sm">
-                        <!-- Inner Image Container -->
+                        <!-- Inner Image Container with CLS prevention -->
                         <div class="relative aspect-[4/5] rounded-xl md:rounded-[1.5rem] overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-800">
+                            <!-- Placeholder untuk mencegah CLS -->
+                            <div class="absolute inset-0 bg-emerald-700 animate-pulse"></div>
                             @if($settings->logo_path && file_exists(public_path('storage/' . $settings->logo_path)))
-                            <img src="{{ asset('storage/' . $settings->logo_path) }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-4 md:p-8 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700">
+                            <img src="{{ asset('storage/' . $settings->logo_path) }}" alt="Logo Kemenag Nganjuk" width="400" height="500" class="w-full h-full object-contain p-4 md:p-8 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700">
                             @else
-                            <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kemenag Nganjuk" class="w-full h-full object-contain p-6 md:p-10 group-hover:scale-105 transition-transform duration-700">
+                            <img src="{{ asset('logo-kemenag.png') }}" alt="Logo Kemenag Nganjuk" width="400" height="500" class="w-full h-full object-contain p-6 md:p-10 group-hover:scale-105 transition-transform duration-700" style="aspect-ratio: 4/5;">
                             @endif
 
                             <!-- Overlay Gradient -->
@@ -543,7 +556,7 @@
                             }
                         @endphp
                         @if($thumbnailUrl)
-                        <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" width="400" height="300" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                         @else
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-emerald-600">
                             <svg class="w-10 h-10 text-white opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">

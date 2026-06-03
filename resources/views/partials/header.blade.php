@@ -84,8 +84,10 @@
                 <img
                     src="{{ asset('logo-kemenag.webp') }}"
                     alt="Logo Kementerian Agama Kabupaten Nganjuk"
-                    class="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform group-hover:scale-105"
-                    style="max-width: 70px;"
+                    width="70"
+                    height="56"
+                    class="h-10 sm:h-12 md:h-14 w-[70px] object-contain transition-transform group-hover:scale-105"
+                    style="aspect-ratio: 5/4;"
                 >
                 <div class="min-w-0 flex-1 sm:flex-none">
                     <h1 class="text-sm sm:text-base md:text-lg font-bold text-emerald-800 leading-tight truncate sm:whitespace-normal">{{ $settings->site_name ?? 'Kementerian Agama' }}</h1>
