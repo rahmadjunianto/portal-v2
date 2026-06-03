@@ -9,20 +9,15 @@
     </div>
 
     @if($headlinePosts->count() > 0)
-    <!-- Hero Carousel -->
-    <div x-data="heroSlider()" x-init="init()" class="relative w-full" style="aspect-ratio: 16/9; max-height: 70vh;">
-        <!-- Slides -->
+    <!-- Hero Carousel - CSS-only for LCP optimization (no JS blocking) -->
+    <div class="hero-carousel relative w-full" style="aspect-ratio: 16/9; max-height: 70vh;" data-total="{{ $headlinePosts->count() }}">
+        <!-- Slides - CSS animation handles auto-rotation, first slide visible immediately -->
         <div class="relative w-full h-full">
             @foreach($headlinePosts as $index => $post)
             <div
-                x-show="active === {{ $index }}"
-                x-transition:enter="transition ease-out duration-500"
-                x-transition:enter-start="opacity-0 transform translate-x-full"
-                x-transition:enter-end="opacity-100 transform translate-x-0"
-                x-transition:leave="transition ease-in duration-500"
-                x-transition:leave-start="opacity-100 transform translate-x-0"
-                x-transition:leave-end="opacity-0 transform -translate-x-full"
-                class="absolute inset-0"
+                class="hero-slide absolute inset-0 {{ $index === 0 ? 'hero-slide--first' : '' }}"
+                style="animation-delay: {{ $index * 5 }}s; --slide-index: {{ $index }};"
+                data-index="{{ $index }}"
             >
                 <!-- Image Background - Optimized for LCP with CLS prevention -->
                 @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
@@ -99,27 +94,27 @@
             @endforeach
         </div>
 
-        <!-- Navigation Arrows -->
+        <!-- Navigation Arrows - CSS-only carousel uses anchor links -->
         @if($headlinePosts->count() > 1)
-        <button @click="prev()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 rounded-full transition-all">
+        <button onclick="heroCarouselPrev()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 rounded-full transition-all z-10" aria-label="Slide sebelumnya">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
         </button>
-        <button @click="next()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 rounded-full transition-all">
+        <button onclick="heroCarouselNext()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 rounded-full transition-all z-10" aria-label="Slide berikutnya">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
         </button>
 
-        <!-- Indicators - Fixed CLS dengan min-width instead of changing width -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        <!-- Indicators - CSS-only with active state animation -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             @foreach($headlinePosts as $index => $post)
             <button
-                @click="goTo({{ $index }})"
-                :class="active === {{ $index }} ? 'bg-white w-8' : 'bg-white/50 w-3'"
-                class="h-3 rounded-full transition-all duration-300 flex-shrink-0"
-                :aria-label="'Slide ' + ({{ $index }} + 1)"
+                onclick="heroCarouselGoTo({{ $index }})"
+                class="hero-indicator h-3 rounded-full transition-all duration-300 flex-shrink-0 {{ $index === 0 ? 'hero-indicator--active bg-white w-8' : 'bg-white/50 w-3' }}"
+                data-index="{{ $index }}"
+                aria-label="Slide {{ $index + 1 }}"
             ></button>
             @endforeach
         </div>
@@ -757,37 +752,77 @@
 
 @push('scripts')
 <script>
-    // Hero Slider
-    function heroSlider() {
-        return {
-            active: 0,
-            interval: null,
-            init() {
-                this.startAutoplay();
-            },
-            startAutoplay() {
-                this.interval = setInterval(() => {
-                    this.next();
-                }, 5000);
-            },
-            stopAutoplay() {
-                clearInterval(this.interval);
-            },
-            next() {
-                const total = {{ $headlinePosts->count() }};
-                this.active = (this.active + 1) % total;
-            },
-            prev() {
-                const total = {{ $headlinePosts->count() }};
-                this.active = (this.active - 1 + total) % total;
-            },
-            goTo(index) {
-                this.active = index;
-                this.stopAutoplay();
-                this.startAutoplay();
-            }
+    // CSS-only Hero Carousel - Navigation controls (no Alpine.js dependency for LCP)
+    // First slide is visible immediately via CSS, JS only handles manual navigation
+    (function() {
+        const totalSlides = {{ $headlinePosts->count() }};
+        let currentSlide = 0;
+        let autoplayInterval = null;
+        
+        function updateCarousel(index) {
+            currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
+            const slides = document.querySelectorAll('.hero-slide');
+            const indicators = document.querySelectorAll('.hero-indicator');
+            
+            slides.forEach((slide, i) => {
+                if (i === currentSlide) {
+                    slide.classList.add('hero-slide--active');
+                    slide.style.zIndex = '2';
+                    slide.style.opacity = '1';
+                } else {
+                    slide.classList.remove('hero-slide--active');
+                    slide.style.zIndex = '1';
+                    slide.style.opacity = '0';
+                }
+            });
+            
+            indicators.forEach((indicator, i) => {
+                if (i === currentSlide) {
+                    indicator.classList.add('hero-indicator--active', 'bg-white', 'w-8');
+                    indicator.classList.remove('bg-white/50', 'w-3');
+                } else {
+                    indicator.classList.remove('hero-indicator--active', 'bg-white', 'w-8');
+                    indicator.classList.add('bg-white/50', 'w-3');
+                }
+            });
         }
-    }
+        
+        function startAutoplay() {
+            stopAutoplay();
+            autoplayInterval = setInterval(() => {
+                updateCarousel(currentSlide + 1);
+            }, 5000);
+        }
+        
+        function stopAutoplay() {
+            if (autoplayInterval) clearInterval(autoplayInterval);
+        }
+        
+        // Expose global functions for onclick handlers
+        window.heroCarouselNext = function() {
+            updateCarousel(currentSlide + 1);
+            stopAutoplay();
+            startAutoplay();
+        };
+        
+        window.heroCarouselPrev = function() {
+            updateCarousel(currentSlide - 1);
+            stopAutoplay();
+            startAutoplay();
+        };
+        
+        window.heroCarouselGoTo = function(index) {
+            updateCarousel(index);
+            stopAutoplay();
+            startAutoplay();
+        };
+        
+        // Initialize: first slide visible, start autoplay
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCarousel(0);
+            startAutoplay();
+        });
+    })();
 
     // Sekilas Kemenag Tabs
     function sekilasTabs() {

@@ -62,6 +62,35 @@
             outline-offset: 2px;
             border-radius: 4px;
         }
+        
+        /* Hero Carousel - CSS-only for instant LCP render (no JS blocking) */
+        .hero-carousel { position: relative; width: 100%; overflow: hidden; }
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            z-index: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* First slide visible IMMEDIATELY - critical for LCP */
+        .hero-slide--first {
+            opacity: 1;
+            z-index: 2;
+        }
+        /* Active slide (controlled by JS after load) */
+        .hero-slide--active {
+            opacity: 1;
+            z-index: 2;
+        }
+        /* Indicator styles */
+        .hero-indicator {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .hero-indicator--active {
+            background-color: white;
+            width: 2rem;
+        }
     </style>
 
     <!-- Tailwind CSS CDN with Typography plugin - loaded with defer for performance -->
