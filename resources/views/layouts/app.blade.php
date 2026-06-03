@@ -21,8 +21,8 @@
     <link rel="icon" type="image/png" href="{{ asset('logo-kemenag.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo-kemenag.png') }}">
 
-    <!-- Tailwind CSS CDN with Typography plugin -->
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <!-- Tailwind CSS CDN with Typography plugin - loaded with defer for performance -->
+    <script defer src="https://cdn.tailwindcss.com?plugins=typography"></script>
 
     <!-- Custom styles for legacy HTML content -->
     <style>
