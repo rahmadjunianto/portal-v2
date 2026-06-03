@@ -1,8 +1,8 @@
-<footer class="bg-emerald-900 text-gray-300">
+<footer class="bg-emerald-900 text-gray-300" role="contentinfo">
     <!-- Main Footer -->
     <div class="container mx-auto px-4 py-12">
         <!-- Desktop: 1 Row with 3 Columns -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" role="navigation" aria-label="Navigasi Footer">
             <!-- About Section -->
             <div>
                 <div class="flex items-center gap-3 mb-4">

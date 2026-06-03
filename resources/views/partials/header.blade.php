@@ -94,19 +94,21 @@
             </a>
 
             <!-- Desktop Navigation -->
-            <nav class="hidden lg:block">
-                <ul class="flex items-center gap-1">
+            <nav class="hidden lg:block" role="navigation" aria-label="Menu utama">
+                <ul class="flex items-center gap-1" role="menubar">
                     {{-- Menu dari database --}}
                     @forelse($headerMenuItems as $menuItem)
                     <li class="relative group/menu">
                         @php $menuChildren = $menuItem->children_collection; @endphp
                         @if($menuChildren->count() > 0)
-                            <div class="px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors flex items-center gap-1 cursor-pointer">
+                            <button type="button" class="px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors flex items-center gap-1 cursor-pointer w-full text-left"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
                                 {{ $menuItem->title }}
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
-                            </div>
+                            </button>
                             {{-- Dropdown Level 1 - hover dengan group-hover --}}
                             <ul class="absolute left-0 top-full pt-2 min-w-[220px] z-50 hidden group-hover/menu:flex flex-col bg-white rounded-lg shadow-xl border border-gray-100 py-2">
                                 @foreach($menuChildren as $child)
@@ -145,6 +147,7 @@
                         @else
                             <a href="{{ $menuItem->url ?? '#' }}"
                                @if($menuItem->open_in_new_tab) target="_blank" rel="noopener noreferrer" @endif
+                               role="menuitem"
                                class="px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors block">
                                 {{ $menuItem->title }}
                             </a>

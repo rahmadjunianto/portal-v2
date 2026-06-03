@@ -193,6 +193,41 @@
         .prose-emerald [style*="text-align:center"] {
             text-align: center;
         }
+
+        /* Global Focus Styles for Accessibility */
+        /* Ensure focus indicators are visible for keyboard navigation */
+        a:focus-visible,
+        button:focus-visible,
+        [tabindex]:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid #059669;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* High contrast focus for interactive elements */
+        .skip-link:focus,
+        [role="button"]:focus-visible {
+            outline: 3px solid #10b981;
+            outline-offset: 3px;
+            box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Ensure skip link is visible when focused */
+        .sr-only:focus {
+            position: absolute !important;
+            width: auto !important;
+            height: auto !important;
+            padding: 0.75rem 1rem !important;
+            margin: 0 !important;
+            overflow: visible !important;
+            clip: auto !important;
+            white-space: nowrap !important;
+            border-radius: 0.5rem !important;
+            z-index: 9999 !important;
+        }
     </style>
 
     <!-- Alpine.js -->
@@ -202,6 +237,10 @@
     @stack('styles')
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+    <!-- Skip to Main Content Link for Accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-emerald-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400">
+        Langsung ke konten utama
+    </a>
 
     <!-- Header -->
     @include('partials.header')
@@ -210,7 +249,7 @@
     @include('partials.mobile-menu')
 
     <!-- Main Content -->
-    <main class="flex-1">
+    <main id="main-content" class="flex-1" tabindex="-1">
         @yield('content')
     </main>
 
