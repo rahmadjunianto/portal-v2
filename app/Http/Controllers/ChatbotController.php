@@ -179,6 +179,15 @@ class ChatbotController extends Controller
     }
 
     /**
+     * Get chat widget HTML (for deferred loading)
+     */
+    public function widget()
+    {
+        return response(view('components.chat-widget')->render())
+            ->header('Content-Type', 'text/html');
+    }
+
+    /**
      * Show chat history (Admin page)
      */
     public function history(Request $request)

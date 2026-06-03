@@ -24,9 +24,16 @@
                 x-transition:leave-end="opacity-0 transform -translate-x-full"
                 class="absolute inset-0"
             >
-                <!-- Image Background -->
+                <!-- Image Background - Optimized for LCP -->
                 @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
-                <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full h-full object-contain">
+                <img 
+                    src="{{ asset('storage/' . $post->thumbnail) }}" 
+                    alt="{{ $post->title }}" 
+                    class="w-full h-full object-contain"
+                    @if($index === 0) fetchpriority="high" @endif
+                    loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                    decoding="{{ $index === 0 ? 'sync' : 'async' }}"
+                >
                 @else
                 <img src="{{ asset('images/placeholder-news.jpg') }}" alt="Gambar berita {{ $post->title }}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <div class="w-full h-full bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center hidden">
@@ -125,7 +132,7 @@
 </section>
 
 <!-- ===================== SEKILAS KEMENAG SECTION ===================== -->
-<section class="py-10 md:py-20 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-50 relative overflow-hidden">
+<section class="py-10 md:py-20 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-50 relative overflow-hidden" style="content-visibility: auto; contain-intrinsic-size: 0 800px;">
     <!-- Modern Decorative Elements (reduced on mobile) -->
     <div class="absolute top-0 right-0 w-64 h-64 md:w-[500px] md:h-[500px] bg-gradient-to-br from-emerald-200/30 to-teal-200/20 rounded-full blur-[80px] md:blur-[100px] pointer-events-none"></div>
     <div class="absolute bottom-0 left-0 w-48 h-48 md:w-[400px] md:h-[400px] bg-gradient-to-tr from-emerald-300/20 to-emerald-100/10 rounded-full blur-[60px] md:blur-[80px] pointer-events-none hidden sm:block"></div>
@@ -704,7 +711,7 @@
 </section>
 
 <!-- ===================== GOOGLE MAPS SECTION ===================== -->
-<section class="bg-emerald-900 py-8">
+<section class="bg-emerald-900 py-8" style="content-visibility: auto; contain-intrinsic-size: 0 400px;">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div class="lg:col-span-8">
