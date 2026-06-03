@@ -89,16 +89,19 @@ class DownloadController extends Controller
     /**
      * Show the form for editing the specified download.
      */
-    public function edit(Download $download)
+    public function edit(string $id)
     {
+        $download = Download::findOrFail($id);
         return view('admin.downloads.edit', compact('download'));
     }
 
     /**
      * Update the specified download.
      */
-    public function update(Request $request, Download $download)
+    public function update(Request $request, string $id)
     {
+        $download = Download::findOrFail($id);
+        
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -155,8 +158,11 @@ class DownloadController extends Controller
     /**
      * Remove the specified download.
      */
-    public function destroy(Download $download)
+    public function destroy(string $id)
     {
+        // Find download by ID
+        $download = Download::findOrFail($id);
+        
         // Delete file from public storage
         if ($download->file_path) {
             $fullPath = public_path('storage/' . $download->file_path);
