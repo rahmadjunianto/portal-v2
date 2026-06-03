@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccessibilityController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -50,7 +51,10 @@ Route::get('/halaman/{slug}', [PageController::class, 'show'])->name('pages.show
 
 // Static Pages
 Route::get('/profil', function () { return view('profil'); })->name('profil');
-Route::get('/kontak', function () { return view('kontak'); })->name('kontak');
+
+// Contact Form - CSRF Protected with Honeypot & Rate Limiting
+Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
+Route::post('/kontak', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Chatbot Routes
 Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.chat');
