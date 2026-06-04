@@ -5,6 +5,7 @@ use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
@@ -62,3 +63,7 @@ Route::get('/chatbot/info', [ChatbotController::class, 'info'])->name('chatbot.i
 Route::get('/chatbot/health', [ChatbotController::class, 'health'])->name('chatbot.health');
 Route::get('/chatbot/widget', [ChatbotController::class, 'widget'])->name('chatbot.widget');
 // Route::get('/admin/chat-history', [ChatbotController::class, 'history'])->name('chatbot.history');
+
+// Feed Routes - RSS/Atom for SEO and content distribution
+Route::get('/feed', [FeedController::class, 'rss'])->name('feed.rss');
+Route::get('/atom', [FeedController::class, 'atom'])->name('feed.atom');

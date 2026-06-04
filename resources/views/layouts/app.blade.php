@@ -21,6 +21,13 @@
     <link rel="icon" type="image/png" href="{{ asset('logo-kemenag.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo-kemenag.png') }}">
 
+    <!-- RSS/Atom Feeds -->
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed - {{ $settings->site_name ?? 'Kementerian Agama Kabupaten Nganjuk' }}" href="{{ url('/feed') }}">
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed - {{ $settings->site_name ?? 'Kementerian Agama Kabupaten Nganjuk' }}" href="{{ url('/atom') }}">
+
+    <!-- Schema.org Structured Data -->
+    @yield('schema')
+
     <!-- Preconnect to external domains for faster connection -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>

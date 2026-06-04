@@ -1,8 +1,49 @@
 @extends('layouts.app')
 
+@section('schema')
+@if(isset($post) && $post)
+<!-- Schema.org NewsArticle markup injected by JS -->
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": "{{ addslashes($post->title) }}",
+    "description": "{{ addslashes(Str::limit(strip_tags($post->subtitle ?? $post->content), 160)) }}",
+    @if($post->thumbnail)
+    "image": ["{{ asset('storage/' . $post->thumbnail) }}"],
+    @endif
+    "datePublished": "{{ $post->published_at?->toIso8601String() }}",
+    "dateModified": "{{ $post->updated_at?->toIso8601String() ?? $post->published_at?->toIso8601String() }}",
+    @if($post->author)
+    "author": {
+        "@type": "Person",
+        "name": "{{ addslashes($post->author->username) }}"
+    },
+    @endif
+    "publisher": {
+        "@type": "Organization",
+        "name": "Kementerian Agama Kabupaten Nganjuk",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "{{ asset('logo-kemenag.png') }}"
+        }
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ route('posts.show', $post->slug) }}"
+    },
+    @if($post->category)
+    "articleSection": "{{ addslashes($post->category->name) }}",
+    @endif
+    "url": "{{ route('posts.show', $post->slug) }}"
+}
+</script>
+@endif
+@endsection
+
 @section('content')
 <div class="container mx-auto px-4 py-12">
-    @if(isset($post) && $post)
+@if(isset($post) && $post)
     <!-- Breadcrumb -->
     <nav class="mb-6">
         <ol class="flex items-center gap-2 text-sm">
@@ -18,23 +59,17 @@
     <article class="bg-white rounded-xl shadow-sm overflow-hidden">
         <!-- Featured Image -->
         <div class="relative">
-            @php
-                $thumbnailUrl = null;
-                if (!empty($post->thumbnail)) {
-                    // Cek file baru (WebP variants)
-                    $imageProcessor = app(\App\Services\ImageProcessor::class);
-                    $thumbnailUrl = $imageProcessor->getLargestVariant($post->thumbnail, 'posts');
-                    // Fallback: cek file lama
-                    if (!$thumbnailUrl && file_exists(public_path('storage/' . $post->thumbnail))) {
-                        $thumbnailUrl = asset('storage/' . $post->thumbnail);
-                    }
-                }
-            @endphp
-
-            @if($thumbnailUrl)
-                <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" class="w-full aspect-video object-cover" loading="eager">
+            @if($post->thumbnail)
+                @if(file_exists(public_path('storage/' . $post->thumbnail)))
+                    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" class="w-full aspect-video object-cover" loading="eager">
+                @else
+                    <div class="w-full aspect-video bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
+                        <svg class="w-24 h-24 text-white opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                    </div>
+                @endif
             @else
-                <!-- Dummy placeholder -->
                 <div class="w-full aspect-video bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
                     <svg class="w-24 h-24 text-white opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
@@ -144,7 +179,7 @@
         </a>
     </div>
 
-    @else
+@else
     <!-- Empty State -->
     <div class="text-center py-16 bg-white rounded-xl">
         <svg class="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,6 +191,6 @@
             Kembali ke Daftar Berita
         </a>
     </div>
-    @endif
+@endif
 </div>
 @endsection
