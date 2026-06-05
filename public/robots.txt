@@ -1,2 +1,26 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://portal.kemenagnganjuk.com/sitemap.xml
+
+# Crawl-delay untuk mengurangi beban server
+Crawl-delay: 1
+
+# Block admin area
+Disallow: /admin/
+Disallow: /_debugbar/
+Disallow: /telescope/
+
+# Block login and auth pages
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+
+# Block API routes
+Disallow: /api/
+Disallow: /chatbot/
+
+# Block feed URLs (can be crawled but not essential)
+Disallow: /feed
+Disallow: /atom
