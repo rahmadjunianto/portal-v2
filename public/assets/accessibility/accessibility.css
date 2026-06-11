@@ -1,0 +1,702 @@
+/**
+ * Accessibility Widget Styles
+ * Preferensi Aksesibilitas Portal Kemenag
+ */
+
+/* ============================================
+   CSS Variables for Accessibility Settings
+   ============================================ */
+:root {
+    /* Default values - will be overridden by JS */
+    --a11y-font-size: 100%;
+    --a11y-line-height: 1.6;
+    --a11y-letter-spacing: 0em;
+    --a11y-content-scale: 1;
+    --a11y-cursor-size: 1;
+}
+
+/* ============================================
+   Accessibility Widget Container
+   ============================================ */
+.a11y-widget-fab {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.a11y-fab-button {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #003B5C, #004E7A);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 59, 92, 0.4);
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.a11y-fab-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(0, 59, 92, 0.5);
+}
+
+.a11y-fab-button svg {
+    width: 28px;
+    height: 28px;
+}
+
+.a11y-fab-button:focus {
+    outline: 3px solid #059669;
+    outline-offset: 3px;
+}
+
+/* Tooltip */
+.a11y-tooltip {
+    position: absolute;
+    left: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1E293B;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.a11y-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: #1E293B;
+    border-left: none;
+}
+
+.a11y-widget-fab:hover .a11y-tooltip,
+.a11y-widget-fab:focus-within .a11y-tooltip {
+    opacity: 1;
+    visibility: visible;
+    left: 65px;
+}
+
+/* ============================================
+   Accessibility Panel (Sidebar)
+   ============================================ */
+.a11y-panel {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 400px;
+    max-width: 100vw;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.a11y-panel.a11y-panel--open {
+    right: 0;
+}
+
+.a11y-panel-header {
+    background: linear-gradient(135deg, #003B5C, #004E7A);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.a11y-panel-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.a11y-panel-title svg {
+    width: 24px;
+    height: 24px;
+}
+
+.a11y-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.a11y-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.a11y-close-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ============================================
+   Panel Content
+   ============================================ */
+.a11y-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    scroll-behavior: smooth;
+}
+
+.a11y-panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.a11y-panel-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.a11y-panel-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+/* ============================================
+   Accessibility Statement Card
+   ============================================ */
+.a11y-statement-card {
+    background: linear-gradient(135deg, #003B5C, #004E7A);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.a11y-statement-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 59, 92, 0.3);
+}
+
+.a11y-statement-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.a11y-statement-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.a11y-statement-text h3 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.a11y-statement-text p {
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* ============================================
+   Feature Grid
+   ============================================ */
+.a11y-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.a11y-feature-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.a11y-feature-card:hover {
+    border-color: #003B5C;
+    box-shadow: 0 2px 8px rgba(0, 59, 92, 0.1);
+}
+
+.a11y-feature-card.a11y-feature-card--active {
+    background: #EFF6FF;
+    border-color: #003B5C;
+}
+
+.a11y-feature-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.a11y-feature-icon {
+    width: 32px;
+    height: 32px;
+    background: #003B5C;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.a11y-feature-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.a11y-feature-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1E293B;
+    line-height: 1.3;
+}
+
+/* Toggle Switch */
+.a11y-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    margin: 0 auto;
+}
+
+.a11y-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.a11y-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #CBD5E1;
+    border-radius: 24px;
+    transition: 0.3s;
+}
+
+.a11y-toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.a11y-toggle input:checked + .a11y-toggle-slider {
+    background: #059669;
+}
+
+.a11y-toggle input:checked + .a11y-toggle-slider::before {
+    transform: translateX(20px);
+}
+
+.a11y-toggle input:focus + .a11y-toggle-slider {
+    box-shadow: 0 0 0 3px rgba(0, 59, 92, 0.2);
+}
+
+/* Plus/Minus Controls */
+.a11y-control-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.a11y-btn-control {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #003B5C;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.a11y-btn-control:hover {
+    background: #004E7A;
+    transform: scale(1.05);
+}
+
+.a11y-btn-control:active {
+    transform: scale(0.95);
+}
+
+.a11y-btn-control:disabled {
+    background: #CBD5E1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.a11y-value-display {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #003B5C;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* ============================================
+   Reading Mask Overlay - DISABLED
+   Using CSS filter approach instead
+   ============================================ */
+body.a11y-reading-mask main,
+body.a11y-reading-mask #main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   Text Selection Styling
+   ============================================ */
+::selection {
+    background: #059669;
+    color: white;
+}
+
+/* ============================================
+   Accessibility Body Classes
+   ============================================ */
+
+/* High Contrast Mode */
+body.a11y-high-contrast {
+    --a11y-bg: #000000;
+    --a11y-text: #FFFFFF;
+    --a11y-link: #FFFF00;
+    --a11y-border: #FFFFFF;
+}
+
+body.a11y-high-contrast {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.a11y-high-contrast a {
+    color: #FFFF00 !important;
+    text-decoration: underline !important;
+}
+
+body.a11y-high-contrast a:visited {
+    color: #FF00FF !important;
+}
+
+body.a11y-high-contrast a:hover {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+}
+
+body.a11y-high-contrast button,
+body.a11y-high-contrast input,
+body.a11y-high-contrast select,
+body.a11y-high-contrast textarea {
+    border: 2px solid #FFFFFF !important;
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.a11y-high-contrast img {
+    filter: contrast(1.5);
+}
+
+body.a11y-high-contrast h1,
+body.a11y-high-contrast h2,
+body.a11y-high-contrast h3,
+body.a11y-high-contrast h4,
+body.a11y-high-contrast h5,
+body.a11y-high-contrast h6 {
+    color: #FFFF00 !important;
+}
+
+/* Text Alignment */
+body.a11y-text-right {
+    text-align: right !important;
+}
+
+body.a11y-text-right p,
+body.a11y-text-right div,
+body.a11y-text-right span,
+body.a11y-text-right li {
+    text-align: right !important;
+}
+
+body.a11y-text-center {
+    text-align: center !important;
+}
+
+body.a11y-text-center p,
+body.a11y-text-center div,
+body.a11y-text-center span,
+body.a11y-text-center li {
+    text-align: center !important;
+}
+
+/* Link Highlight */
+body.a11y-highlight-links a {
+    color: #DC2626 !important;
+    text-decoration: underline !important;
+    font-weight: 600 !important;
+}
+
+body.a11y-highlight-links a:hover {
+    background: #FEE2E2 !important;
+}
+
+/* Title Highlight */
+body.a11y-highlight-titles h1,
+body.a11y-highlight-titles h2,
+body.a11y-highlight-titles h3,
+body.a11y-highlight-titles h4,
+body.a11y-highlight-titles h5,
+body.a11y-highlight-titles h6 {
+    background: #FEF08A !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+}
+
+/* Large Cursor */
+body.a11y-large-cursor * {
+    cursor: zoom-in !important;
+}
+
+body.a11y-large-cursor a,
+body.a11y-large-cursor button,
+body.a11y-large-cursor [role="button"],
+body.a11y-large-cursor input,
+body.a11y-large-cursor select,
+body.a11y-large-cursor textarea {
+    cursor: zoom-in !important;
+}
+
+/* Stop Animations */
+body.a11y-stop-animations *,
+body.a11y-stop-animations *::before,
+body.a11y-stop-animations *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Dyslexic Font */
+body.a11y-dyslexic-font {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', 'Segoe UI', sans-serif !important;
+}
+
+/* Widget Enlargement - DISABLED to avoid conflict with fontSize control */
+body.a11y-widget-enlarge {
+    /* font-size handled by JS directly */
+}
+
+/* Content Scaling */
+body.a11y-content-scale {
+    transform: scale(var(--a11y-content-scale, 1));
+    transform-origin: top left;
+    width: calc(100% / var(--a11y-content-scale, 1));
+    min-height: calc(100vh / var(--a11y-content-scale, 1));
+}
+
+/* Line Height Control */
+body.a11y-line-height {
+    line-height: var(--a11y-line-height, 1.6) !important;
+}
+
+/* Letter Spacing Control */
+body.a11y-letter-spacing {
+    letter-spacing: var(--a11y-letter-spacing, 0em) !important;
+}
+
+/* ============================================
+   Page Reader UI
+   ============================================ */
+.a11y-reader-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.a11y-reader-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #003B5C;
+    background: white;
+    color: #003B5C;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.a11y-reader-btn:hover {
+    background: #003B5C;
+    color: white;
+}
+
+.a11y-reader-btn.a11y-active {
+    background: #059669;
+    border-color: #059669;
+    color: white;
+}
+
+.a11y-reader-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ============================================
+   Reset Button
+   ============================================ */
+.a11y-reset-btn {
+    width: 100%;
+    padding: 14px;
+    background: #EF4444;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    margin-top: 16px;
+}
+
+.a11y-reset-btn:hover {
+    background: #DC2626;
+    transform: translateY(-2px);
+}
+
+.a11y-reset-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ============================================
+   Overlay Background
+   ============================================ */
+.a11y-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.a11y-overlay.a11y-overlay--active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 480px) {
+    .a11y-widget-fab {
+        bottom: 16px;
+        left: 16px;
+    }
+    
+    .a11y-fab-button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .a11y-panel {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .a11y-features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+    .a11y-widget-fab,
+    .a11y-panel,
+    .a11y-overlay,
+    .a11y-reading-mask {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}

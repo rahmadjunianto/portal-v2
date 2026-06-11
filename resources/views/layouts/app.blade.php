@@ -441,5 +441,8 @@
     @if(config('chatbot.enabled', true))
     @include('components.chat-widget')
     @endif
+
+    <!-- Accessibility Widget Component -->
+    @include('components.accessibility-widget')
 </body>
 </html>
