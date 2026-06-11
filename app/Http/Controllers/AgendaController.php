@@ -31,7 +31,11 @@ class AgendaController extends Controller
      */
     public function show($slug)
     {
-        $agenda = Agenda::where('slug', $slug)->firstOrFail();
+        $agenda = Agenda::where('slug', $slug)->first();
+
+        if (!$agenda) {
+            abort(404);
+        }
 
         // Increment views
         $agenda->increment('views');

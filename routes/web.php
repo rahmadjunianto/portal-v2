@@ -11,6 +11,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\RegulasiController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,3 +72,7 @@ Route::get('/chatbot/widget', [ChatbotController::class, 'widget'])->name('chatb
 // Feed Routes - RSS/Atom for SEO and content distribution
 Route::get('/feed', [FeedController::class, 'rss'])->name('feed.rss');
 Route::get('/atom', [FeedController::class, 'atom'])->name('feed.atom');
+
+// Sitemap Routes - SEO optimization
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.xml');
+Route::get('/sitemap/clear-cache', [SitemapController::class, 'clearCache'])->name('sitemap.clear-cache');

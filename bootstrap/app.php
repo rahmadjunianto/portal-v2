@@ -17,15 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
-        
+
         // Register Security Headers middleware for all web routes
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Disable debugbar in production-like errors
-        if (config('app.debug') === false) {
-            $exceptions->shouldRenderJsonWhen(function () {
-                return true;
-            });
-        }
+        // Only render JSON for API routes or X-Requested-With: XMLHttpRequest
+        $exceptions->shouldRenderJsonWhen(function ($request, \Throwable $e) {
+            return $request->is('api/*') || $request->expectsJson();
+        });
     })->create();

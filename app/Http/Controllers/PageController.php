@@ -14,7 +14,11 @@ class PageController extends Controller
     {
         $page = Page::where('slug', $slug)
             ->whereNotNull('published_at')
-            ->firstOrFail();
+            ->first();
+
+        if (!$page) {
+            abort(404);
+        }
 
         return view('page-detail', compact('page'));
     }
