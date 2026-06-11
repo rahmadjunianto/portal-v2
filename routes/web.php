@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PrivacyController;
+use App\Http\Controllers\RegulasiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,9 @@ Route::get('/aksesibilitas', [AccessibilityController::class, 'index'])->name('a
 
 // Privacy Policy Page - UU PDP Compliance
 Route::get('/kebijakan-privasi', [PrivacyController::class, 'index'])->name('privacy');
+
+// Regulasi Page
+Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 
 // Posts Routes
 Route::get('/berita', [PostController::class, 'index'])->name('posts.index');
