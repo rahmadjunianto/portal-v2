@@ -24,7 +24,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group.
 |
 */
+Route::get('/check-storage', function () {
+    return [
+        'public_storage' => public_path('storage'),
+        'storage_public' => storage_path('app/public'),
+        'public_files' => scandir(public_path('storage')),
+        'storage_files' => scandir(storage_path('app/public')),
+    ];
+});
+Route::get('/check-storage-link', function () {
+    $publicStorage = public_path('storage');
 
+    return [
+        'exists' => File::exists($publicStorage),
+        'is_link' => is_link($publicStorage),
+        'real_path' => @realpath($publicStorage),
+        'target_exists' => File::exists(storage_path('app/public')),
+    ];
+});
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
