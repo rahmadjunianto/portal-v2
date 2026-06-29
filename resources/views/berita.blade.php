@@ -119,20 +119,8 @@
             <a href="{{ route('posts.show', $post->slug) }}" class="flex flex-row sm:flex-col">
                 <!-- Thumbnail - Square on mobile (left), Full width on desktop -->
                 <div class="relative w-28 sm:w-full h-28 sm:h-44 flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200">
-                    @php
-                        $thumbnailUrl = null;
-                        if (!empty($post->thumbnail)) {
-                            // Cek file baru (WebP variants)
-                            $imageProcessor = app(\App\Services\ImageProcessor::class);
-                            $thumbnailUrl = $imageProcessor->getLargestVariant($post->thumbnail, 'posts');
-                            // Fallback: cek file lama
-                            if (!$thumbnailUrl && file_exists(public_path('storage/' . $post->thumbnail))) {
-                                $thumbnailUrl = asset('storage/' . $post->thumbnail);
-                            }
-                        }
-                    @endphp
-                    @if($thumbnailUrl)
-                    <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    @if($post->thumbnail_url)
+                    <img src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     @else
                     <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-emerald-600">
                         <svg class="w-10 h-10 text-white opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">

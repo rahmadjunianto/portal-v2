@@ -69,7 +69,7 @@
             outline-offset: 2px;
             border-radius: 4px;
         }
-        
+
         /* Hero Carousel - CSS-only for instant LCP render (no JS blocking) */
         .hero-carousel { position: relative; width: 100%; overflow: hidden; }
         .hero-slide {
@@ -132,9 +132,22 @@
             max-width: 100%;
             height: auto;
             border-radius: 0.75rem;
-            margin: 1.5rem auto;
-            display: block;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: inline-block !important;
+            vertical-align: middle !important;
+            float: none !important;
+        }
+
+        .prose-emerald p img,
+        .prose-emerald div img {
+            margin: 0.25rem !important;
+        }
+
+        /* Force consecutive images to display side by side */
+        .prose-emerald p:has(img) + p:has(img),
+        .prose-emerald div:has(img) + div:has(img) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         .prose-emerald h2 {
@@ -293,17 +306,17 @@
             outline: 3px solid #059669;
             outline-offset: 2px;
         }
-        
+
         :focus:not(:focus-visible) {
             outline: none;
         }
-        
+
         :focus-visible {
             outline: 3px solid #059669;
             outline-offset: 2px;
             box-shadow: 0 0 0 6px rgba(5, 150, 105, 0.3);
         }
-        
+
         /* Skip Link - High visibility when focused */
         .skip-link:focus,
         a[href="#main-content"]:focus {
@@ -322,7 +335,7 @@
             border-radius: 0 0 0.5rem 0 !important;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
         }
-        
+
         /* Screen reader only class */
         .sr-only {
             position: absolute;
@@ -335,7 +348,7 @@
             white-space: nowrap;
             border: 0;
         }
-        
+
         /* Form accessibility improvements */
         input:focus,
         select:focus,
@@ -344,21 +357,21 @@
             outline-offset: 2px;
             border-color: #059669;
         }
-        
+
         /* Button focus improvements */
         button:focus,
         [role="button"]:focus {
             outline: 3px solid #059669;
             outline-offset: 2px;
         }
-        
+
         /* Link focus improvements */
         a:focus {
             outline: 3px solid #059669;
             outline-offset: 2px;
             border-radius: 2px;
         }
-        
+
         /* Reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
             *,
@@ -370,7 +383,7 @@
                 scroll-behavior: auto !important;
             }
         }
-        
+
         /* High contrast mode support */
         @media (forced-colors: active) {
             a:focus,

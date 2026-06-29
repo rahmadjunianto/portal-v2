@@ -16,9 +16,9 @@ $textSize = $size === 'large' ? 'text-xl' : 'text-base';
 <article class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow group">
     {{-- Thumbnail --}}
     <a href="{{ route('posts.show', $post->slug) }}" class="block relative overflow-hidden">
-        @if($post->thumbnail)
+        @if($post->thumbnail_url)
         <img
-            src="{{ asset('storage/' . $post->thumbnail) }}"
+            src="{{ $post->thumbnail_url }}"
             alt="{{ $post->title }}"
             class="w-full {{ $imageSize }} object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
