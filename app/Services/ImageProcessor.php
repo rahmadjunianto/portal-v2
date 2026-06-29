@@ -181,6 +181,7 @@ class ImageProcessor
         }
 
         // Generate WebP (EXIF metadata stripped by Intervention Image)
+        Storage::disk($this->disk)->makeDirectory($folder);
         $webpPath = "{$folder}/{$sizeName}-{$filename}.webp";
         $resized->encode(new WebpEncoder($this->webpQuality))->save(
             Storage::disk($this->disk)->path($webpPath)
