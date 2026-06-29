@@ -31,7 +31,7 @@
             <div class="card-header">
                 <h3 class="card-title">Post Content</h3>
             </div>
-            
+
             <form action="{{ route('admin.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -46,29 +46,29 @@
                             </ul>
                         </div>
                     @endif
-                    
+
                     <div class="form-group">
                         <label for="title">Title <span class="text-danger">*</span></label>
                         <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $post->title) }}" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="slug">Slug</label>
                         <input type="text" name="slug" id="slug" class="form-control" value="{{ old('slug', $post->slug) }}">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="content">Content <span class="text-danger">*</span></label>
                         <textarea name="content" id="content" class="form-control" rows="10">{{ old('content', $post->content) }}</textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="excerpt">Excerpt</label>
                         <textarea name="excerpt" id="excerpt" class="form-control" rows="3">{{ old('excerpt', $post->excerpt) }}</textarea>
                     </div>
                 </div>
         </div>
-        
+
         <div class="card card-secondary">
             <div class="card-header">
                 <h3 class="card-title">Thumbnail</h3>
@@ -76,14 +76,14 @@
             <div class="card-body">
                 @if($post->thumbnail)
                     <div class="mb-3">
-                        <img src="{{ Storage::url($post->thumbnail) }}" alt="Current thumbnail" class="img-thumbnail" style="max-height: 150px;">
+                        <img src="{{ $post->thumbnail_url }}" alt="Current thumbnail" class="img-thumbnail" style="max-height: 150px;">
                         <div class="form-check mt-2">
                             <input type="checkbox" name="remove_thumbnail" id="remove_thumbnail" class="form-check-input" value="1">
                             <label class="form-check-label text-danger" for="remove_thumbnail">Remove thumbnail</label>
                         </div>
                     </div>
                 @endif
-                
+
                 <div class="form-group">
                     <label for="thumbnail">{{ $post->thumbnail ? 'Replace Thumbnail' : 'Upload Thumbnail' }}</label>
                     <div class="input-group">
@@ -93,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="image_caption">Image Caption</label>
                     <input type="text" name="image_caption" id="image_caption" class="form-control" value="{{ old('image_caption', $post->image_caption) }}">
@@ -101,7 +101,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4">
         <div class="card card-info">
             <div class="card-header">
@@ -116,7 +116,7 @@
                         <option value="lowongan" {{ old('type', $post->type) === 'lowongan' ? 'selected' : '' }}>Lowongan</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="category_id">Category</label>
                     <select name="category_id" id="category_id" class="form-control">
@@ -126,7 +126,7 @@
                         @endforeach
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="status">Status <span class="text-danger">*</span></label>
                     <select name="status" id="status" class="form-control" required>
@@ -134,19 +134,19 @@
                         <option value="published" {{ old('status', $post->status) === 'published' ? 'selected' : '' }}>Published</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="published_at">Publish Date</label>
                     <input type="datetime-local" name="published_at" id="published_at" class="form-control" value="{{ old('published_at', $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}">
                 </div>
-                
+
                 <div class="form-group">
                     <div class="form-check">
                         <input type="checkbox" name="is_headline" id="is_headline" class="form-check-input" value="1" {{ old('is_headline', $post->is_headline) ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_headline">Set as Headline</label>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <div class="form-check">
                         <input type="checkbox" name="is_featured" id="is_featured" class="form-check-input" value="1" {{ old('is_featured', $post->is_featured) ? 'checked' : '' }}>
@@ -163,7 +163,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">Post Info</h3>
@@ -174,7 +174,7 @@
                 <p><small class="text-muted">Updated: {{ $post->updated_at->format('d M Y H:i') }}</small></p>
             </div>
         </div>
-        
+
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">Tags</h3>
@@ -225,12 +225,12 @@ $(function() {
             }
         }
     });
-    
+
     function uploadImage(file) {
         let formData = new FormData();
         formData.append('image', file);
         formData.append('_token', '{{ csrf_token() }}');
-        
+
         $.ajax({
             url: '{{ route('admin.upload.image') }}',
             type: 'POST',
@@ -245,11 +245,11 @@ $(function() {
             }
         });
     }
-    
+
     // Auto-generate slug from title
     var titleInput = document.getElementById('title');
     var slugInput = document.getElementById('slug');
-    
+
     function generateSlug(text) {
         return text.toLowerCase()
             .replace(/[^a-z0-9\s-]/g, '')
@@ -257,14 +257,14 @@ $(function() {
             .replace(/-+/g, '-')
             .trim();
     }
-    
+
     titleInput.addEventListener('input', function() {
         if (!slugInput.value || slugInput.dataset.auto === 'true') {
             slugInput.value = generateSlug(titleInput.value);
             slugInput.dataset.auto = 'true';
         }
     });
-    
+
     slugInput.addEventListener('input', function() {
         if (slugInput.value) {
             slugInput.dataset.auto = 'false';

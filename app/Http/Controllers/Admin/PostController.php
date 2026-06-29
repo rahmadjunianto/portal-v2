@@ -132,7 +132,6 @@ class PostController extends Controller
                 $result = $this->imageProcessor->processAndStore($request->file('thumbnail'), 'posts');
                 $validated['thumbnail'] = $result['filename'];
                 $validated['thumbnail_webp'] = $result['webp_path'];
-                $validated['thumbnail_avif'] = $result['avif_path'];
                 $validated['thumbnail_width'] = $result['original_width'];
                 $validated['thumbnail_height'] = $result['original_height'];
             } catch (\Exception $e) {
@@ -245,10 +244,10 @@ class PostController extends Controller
                 $result = $this->imageProcessor->processAndStore($request->file('thumbnail'), 'posts');
                 $validated['thumbnail'] = $result['filename'];
                 $validated['thumbnail_webp'] = $result['webp_path'];
-                $validated['thumbnail_avif'] = $result['avif_path'];
                 $validated['thumbnail_width'] = $result['original_width'];
                 $validated['thumbnail_height'] = $result['original_height'];
             } catch (\Exception $e) {
+                dd($e->getMessage());
                 return redirect()->back()->withInput()->with('error', 'Gagal memproses gambar: ' . $e->getMessage());
             }
         }

@@ -99,4 +99,31 @@ class Post extends Model
         }
         return substr($content, 0, 150) . '...';
     }
+
+    /**
+     * Get the thumbnail URL (handles both old and new format).
+     */
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        if (!$this->thumbnail) {
+            return null;
+        }
+
+        // Check for new format (WebP variants with size prefix)
+        foreach (['large', 'medium', 'small'] as $sizeName) {
+            $webpPath = "posts/{$sizeName}-{$this->thumbnail}.webp";
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($webpPath)) {
+                return asset('storage/' . $webpPath);
+            }
+        }
+
+        // Check old format (direct file in posts folder)
+        $oldPath = "posts/{$this->thumbnail}";
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
+            return asset('storage/' . $oldPath);
+        }
+
+        // Fallback to original behavior
+        return \Illuminate\Support\Facades\Storage::url($this->thumbnail);
+    }
 }

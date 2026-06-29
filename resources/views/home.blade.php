@@ -19,16 +19,14 @@
                 style="animation-delay: {{ $index * 5 }}s; --slide-index: {{ $index }};"
                 data-index="{{ $index }}"
             >
-                <!-- Image Background - Optimized for LCP with CLS prevention -->
-                @if($post->thumbnail && file_exists(public_path('storage/' . $post->thumbnail)))
-                <!-- Placeholder untuk mencegah CLS -->
-                <div class="absolute inset-0 bg-gradient-to-br from-emerald-700 to-emerald-900 animate-pulse"></div>
-                <img 
-                    src="{{ asset('storage/' . $post->thumbnail) }}" 
-                    alt="{{ $post->title }}" 
+                <!-- Image Background -->
+                @if($post->thumbnail_url)
+                <img
+                    src="{{ $post->thumbnail_url }}"
+                    alt="{{ $post->title }}"
                     width="1920"
                     height="1080"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover transition-opacity duration-500"
                     @if($index === 0) fetchpriority="high" @endif
                     loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
                     decoding="{{ $index === 0 ? 'sync' : 'async' }}"
@@ -538,20 +536,8 @@
                 <a href="{{ route('posts.show', $post->slug) }}" class="flex flex-row sm:flex-col">
                     <!-- Thumbnail - Square on mobile (left), Full width on desktop -->
                     <div class="relative w-28 sm:w-full h-28 sm:h-44 flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200">
-                        @php
-                            $thumbnailUrl = null;
-                            if (!empty($post->thumbnail)) {
-                                // Cek file baru (WebP variants)
-                                $imageProcessor = app(\App\Services\ImageProcessor::class);
-                                $thumbnailUrl = $imageProcessor->getLargestVariant($post->thumbnail, 'posts');
-                                // Fallback: cek file lama
-                                if (!$thumbnailUrl && file_exists(public_path('storage/' . $post->thumbnail))) {
-                                    $thumbnailUrl = asset('storage/' . $post->thumbnail);
-                                }
-                            }
-                        @endphp
-                        @if($thumbnailUrl)
-                        <img src="{{ $thumbnailUrl }}" alt="{{ $post->title }}" width="400" height="300" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                        @if($post->thumbnail_url)
+                        <img src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}" width="400" height="300" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                         @else
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-emerald-600">
                             <svg class="w-10 h-10 text-white opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -758,12 +744,12 @@
         const totalSlides = {{ $headlinePosts->count() }};
         let currentSlide = 0;
         let autoplayInterval = null;
-        
+
         function updateCarousel(index) {
             currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
             const slides = document.querySelectorAll('.hero-slide');
             const indicators = document.querySelectorAll('.hero-indicator');
-            
+
             slides.forEach((slide, i) => {
                 if (i === currentSlide) {
                     slide.classList.add('hero-slide--active');
@@ -775,7 +761,7 @@
                     slide.style.opacity = '0';
                 }
             });
-            
+
             indicators.forEach((indicator, i) => {
                 if (i === currentSlide) {
                     indicator.classList.add('hero-indicator--active', 'bg-white', 'w-8');
@@ -786,37 +772,37 @@
                 }
             });
         }
-        
+
         function startAutoplay() {
             stopAutoplay();
             autoplayInterval = setInterval(() => {
                 updateCarousel(currentSlide + 1);
-            }, 5000);
+            }, 10000); // 10 detik untuk transisi lebih lambat
         }
-        
+
         function stopAutoplay() {
             if (autoplayInterval) clearInterval(autoplayInterval);
         }
-        
+
         // Expose global functions for onclick handlers
         window.heroCarouselNext = function() {
             updateCarousel(currentSlide + 1);
             stopAutoplay();
             startAutoplay();
         };
-        
+
         window.heroCarouselPrev = function() {
             updateCarousel(currentSlide - 1);
             stopAutoplay();
             startAutoplay();
         };
-        
+
         window.heroCarouselGoTo = function(index) {
             updateCarousel(index);
             stopAutoplay();
             startAutoplay();
         };
-        
+
         // Initialize: first slide visible, start autoplay
         document.addEventListener('DOMContentLoaded', function() {
             updateCarousel(0);
