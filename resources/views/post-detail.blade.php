@@ -59,7 +59,7 @@
     <article class="bg-white rounded-xl shadow-sm overflow-hidden">
         <!-- Featured Image -->
         <div class="relative">
-            @if($post->thumbnail)
+            @if($post->thumbnail || $post->thumbnail_url )
                 <img src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}" class="w-full aspect-video object-cover" loading="eager">
             @else
                 <div class="w-full aspect-video bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
