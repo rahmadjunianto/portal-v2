@@ -40,7 +40,9 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => env('FILESYSTEM_PUBLIC_ROOT', base_path('storage')),
+            'root' => env('SHARED_HOSTING') === true
+                ? base_path(env('FILESYSTEM_PUBLIC_ROOT', '../public_html/test-portal/storage'))
+                : env('FILESYSTEM_PUBLIC_ROOT', public_path('storage')),
             'url' => rtrim(env('FILESYSTEM_PUBLIC_URL', env('APP_URL', 'http://localhost')), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
