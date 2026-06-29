@@ -536,7 +536,7 @@
                 <a href="{{ route('posts.show', $post->slug) }}" class="flex flex-row sm:flex-col">
                     <!-- Thumbnail - Square on mobile (left), Full width on desktop -->
                     <div class="relative w-28 sm:w-full h-28 sm:h-44 flex-shrink-0 overflow-hidden bg-gradient-to-br from-emerald-100 to-emerald-200">
-                        @if($post->thumbnail || $post->thumbnail_url )
+                        @if($post->thumbnail )
                         <img src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}" width="400" height="300" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                         @else
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-emerald-600">
