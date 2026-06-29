@@ -89,21 +89,21 @@ class SecurityHeaders
         $cspDirectives = [
             "default-src 'self'",
             // Allow inline styles for Tailwind CSS
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
             // Allow scripts from trusted CDN sources (Alpine.js, Tailwind)
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com",
             // Element-level script sources for script tags
-            "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com",
-            // Allow fonts from Google
-            "font-src 'self' https://fonts.gstatic.com data:",
+            "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://unpkg.com https://code.jquery.com",
+            // Allow fonts from Google and CDNs
+            "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data:",
             // Allow images from same origin and external trusted sources
             "img-src 'self' data: https: blob:",
             // Restrict frame sources
             "frame-src 'self' https://www.google.com https://www.youtube.com",
             // Restrict form action
             "form-action 'self'",
-            // Restrict connections to trusted APIs
-            "connect-src 'self' https://www.google.com https://www.recaptcha.com https://www.gstatic.com",
+            // Restrict connections to trusted APIs and CDNs
+            "connect-src 'self' https://www.google.com https://www.recaptcha.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://code.jquery.com",
             // Base URI restriction
             "base-uri 'self'",
             // Object/source restriction
