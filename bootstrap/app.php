@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'api.key' => \App\Http\Middleware\ApiKeyMiddleware::class,
         ]);
 
         // Register Security Headers middleware for all web routes

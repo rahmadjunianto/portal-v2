@@ -79,8 +79,10 @@ Route::get('/profil', function () { return view('profil'); })->name('profil');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
 Route::post('/kontak', [ContactController::class, 'submit'])->name('contact.submit');
 
-// Chatbot Routes
-Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.chat');
+// Chatbot Routes - CSRF protected for web, API key required for external access
+Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])
+    ->middleware('api.key')
+    ->name('chatbot.chat');
 Route::get('/chatbot/info', [ChatbotController::class, 'info'])->name('chatbot.info');
 Route::get('/chatbot/health', [ChatbotController::class, 'health'])->name('chatbot.health');
 Route::get('/chatbot/widget', [ChatbotController::class, 'widget'])->name('chatbot.widget');
