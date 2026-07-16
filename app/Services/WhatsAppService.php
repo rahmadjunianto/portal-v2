@@ -248,7 +248,7 @@ Selamat datang di WhatsAppBot *Kantor Kemenag Nganjuk*! 👋
 📞 (0358) 321085
 
 Ketik *menu* untuk lihat semua layanan
-Ketik *kat [nomor]* untuk lihat layanan per kategori
+Ketik *nomor kategori* untuk lihat layanan per kategori
 WELCOME;
     }
     
@@ -340,7 +340,7 @@ WELCOME;
         }
         
         $lines[] = "━━━━━━━━━━━━━━━━━━━━";
-        $lines[] = "Ketik *kat [nomor]* untuk detail kategori";
+        $lines[] = "Ketik *nomor kategori* untuk detail kategori";
         
         return implode("\n", $lines);
     }
