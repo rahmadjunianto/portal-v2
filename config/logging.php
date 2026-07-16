@@ -127,6 +127,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        // WhatsApp daily logging channel
+        'whatsapp' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/whatsapp.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('WHATSAPP_LOG_DAYS', 7),
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];

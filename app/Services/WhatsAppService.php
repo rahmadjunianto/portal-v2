@@ -30,7 +30,7 @@ class WhatsAppService
             $phone = $this->sanitizePhone($phone);
 
             // Log incoming message
-            Log::info('WhatsApp Processing', [
+            Log::channel('whatsapp')->info('WhatsApp Processing', [
                 'phone' => $phone,
                 'name' => $name,
                 'message' => $message,
@@ -71,7 +71,7 @@ class WhatsAppService
             $this->saveToHistory($phone, 'assistant', $response['message']);
 
             // Log interaction
-            Log::info('WhatsApp AI Response', [
+            Log::channel('whatsapp')->info('WhatsApp AI Response', [
                 'phone' => $phone,
                 'success' => $response['success'],
                 'response' => $response['message'],
@@ -83,7 +83,7 @@ class WhatsAppService
                 'timestamp' => now()->toISOString(),
             ];
         } catch (\Exception $e) {
-            Log::error('WhatsApp Process Error', [
+            Log::channel('whatsapp')->error('WhatsApp Process Error', [
                 'phone' => $phone,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -196,7 +196,7 @@ PROMPT;
         $requests = Cache::get($key, 0);
 
         if ($requests >= $this->rateLimitMaxRequests) {
-            Log::info('WhatsApp Rate Limited', ['phone' => $phone, 'requests' => $requests]);
+            Log::channel('whatsapp')->info('WhatsApp Rate Limited', ['phone' => $phone, 'requests' => $requests]);
             return false;
         }
 
