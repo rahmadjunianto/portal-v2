@@ -184,11 +184,53 @@ PROMPT;
 
     /**
      * Get conversation history from cache
+     * Auto-cleans corrupted entries (nested arrays, missing keys)
      */
     public function getConversationHistory(string $phone): array
     {
         $key = $this->getHistoryKey($phone);
-        return Cache::get($key, []);
+        $history = Cache::get($key, []);
+        
+        // Auto-clean corrupted entries
+        if (!empty($history)) {
+            $cleanHistory = [];
+            $hasCorruption = false;
+            
+            foreach ($history as $entry) {
+                // Skip if entry is an array with numeric keys (nested array from corruption)
+                if (is_array($entry) && !isset($entry['role']) && !isset($entry[0])) {
+                    $hasCorruption = true;
+                    continue;
+                }
+                
+                // Skip if entry is array of arrays (nested)
+                if (is_array($entry) && isset($entry[0]) && is_array($entry[0])) {
+                    $hasCorruption = true;
+                    continue;
+                }
+                
+                // Validate required keys
+                if (isset($entry['role']) && isset($entry['content'])) {
+                    $cleanHistory[] = $entry;
+                } else {
+                    $hasCorruption = true;
+                }
+            }
+            
+            // If corruption detected, save cleaned history back to cache
+            if ($hasCorruption) {
+                Log::channel('whatsapp')->warning('Auto-cleaned corrupted history', [
+                    'phone' => $phone,
+                    'original_count' => count($history),
+                    'cleaned_count' => count($cleanHistory),
+                ]);
+                Cache::put($key, $cleanHistory, Carbon::now()->addHours(24));
+            }
+            
+            return $cleanHistory;
+        }
+        
+        return [];
     }
 
     /**
