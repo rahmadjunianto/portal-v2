@@ -37,8 +37,25 @@ class WhatsAppService
                 'message' => $message,
             ]);
 
-            // Get conversation history for context
+            // Check if this is the first message (new conversation)
             $conversationHistory = $this->getConversationHistory($phone);
+            $isFirstMessage = empty($conversationHistory);
+
+            // If first message, send welcome + services list
+            if ($isFirstMessage) {
+                $welcomeMessage = $this->getWelcomeMessage($name);
+                
+                // Save welcome message to history
+                $this->saveToHistory($phone, 'assistant', $welcomeMessage, null);
+                
+                // Return welcome message
+                return [
+                    'success' => true,
+                    'message' => $welcomeMessage,
+                    'is_welcome' => true,
+                    'timestamp' => now()->toISOString(),
+                ];
+            }
 
             // Build messages array with system prompt
             $messages = [
@@ -131,6 +148,42 @@ class WhatsAppService
                 'error_type' => 'exception',
             ];
         }
+    }
+
+    /**
+     * Get welcome message with services list for first-time users
+     */
+    private function getWelcomeMessage(string $userName): string
+    {
+        $greeting = $userName ? "Assalamu'alaikum {$userName}," : "Assalamu'alaikum,";
+        
+        return <<<WELCOME
+{$greeting}
+
+Selamat datang di WhatsAppBot *Kantor Kementerian Agama Kabupaten Nganjuk*! 👋
+
+Saya asisten virtual yang siap membantu Anda. Berikut layanan kami:
+
+*LAYANAN KEMENAG NGANJUK:*
+
+1️⃣ *Layanan Nikah* - Pendaftaran & pengelolaan pernikahan
+2️⃣ *Pendidikan Madrasah* - PAUD, MI, MTs, MA
+3️⃣ *Zakat* - Zakat fitrah & zakat mal
+4️⃣ *Wakaf* - Pengurusan tanah wakaf
+5️⃣ *Bimas Islam* - Pembinaan agama Islam
+6️⃣ *Produk Halal* - Sertifikasi halal
+
+*JAM PELAYANAN:*
+🕐 Senin-Kamis: 08.00-15.30 WIB
+🕐 Jumat: 08.00-16.00 WIB
+🗓️ Sabtu-Minggu: Libur
+
+📞 *Kontak:*
+(0358) 321085
+kantor@nganjuk.kemenag.go.id
+
+Silakan ketik pertanyaan Anda! 😊
+WELCOME;
     }
 
     /**
