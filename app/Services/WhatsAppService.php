@@ -46,6 +46,11 @@ class WhatsAppService
 
             // Add conversation history
             foreach ($conversationHistory as $msg) {
+                // Skip invalid history entries
+                if (!isset($msg['role']) || !isset($msg['content'])) {
+                    Log::channel('whatsapp')->warning('Skipping invalid history entry', ['msg' => $msg]);
+                    continue;
+                }
                 $messages[] = [
                     'role' => $msg['role'],
                     'content' => $msg['content'],
