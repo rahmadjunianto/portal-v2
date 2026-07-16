@@ -38,9 +38,11 @@ class KnowledgeBankService
                 'query' => $query,
                 'matched_question' => $bestMatch->question,
                 'score' => $bestScore,
+                'source' => $bestMatch->answer ? 'direct' : 'generated',
             ]);
             
-            return $bestMatch->answer;
+            // Return resolved answer (direct or generated from service)
+            return $bestMatch->getResolvedAnswer();
         }
 
         return null;

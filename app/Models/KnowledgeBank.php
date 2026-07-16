@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class KnowledgeBank extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'service_id',
         'question',
         'answer',
         'category',
@@ -22,6 +24,14 @@ class KnowledgeBank extends Model
         'is_active' => 'boolean',
         'priority' => 'integer',
     ];
+
+    /**
+     * Get the service that owns this knowledge
+     */
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
 
     /**
      * Scope untuk data aktif
@@ -68,5 +78,23 @@ class KnowledgeBank extends Model
             'umum' => 'Informasi Umum',
             'kepegawaian' => 'Kepegawaian',
         ];
+    }
+
+    /**
+     * Get the resolved answer - either from answer field or generate from service
+     */
+    public function getResolvedAnswer(): ?string
+    {
+        // If answer exists, return it directly
+        if ($this->answer) {
+            return $this->answer;
+        }
+
+        // Otherwise, generate from service
+        if ($this->service) {
+            return $this->service->generateAnswer();
+        }
+
+        return null;
     }
 }
