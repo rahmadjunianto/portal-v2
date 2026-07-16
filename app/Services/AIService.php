@@ -28,15 +28,25 @@ class AIService
     public function sendMessage(array $messages): array
     {
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30)->post($this->baseUrl . '/chat/completions', [
+            // Log request for debugging
+            $requestPayload = [
                 'model' => $this->model,
                 'messages' => $messages,
                 'max_tokens' => $this->maxTokens,
                 'temperature' => $this->temperature,
+            ];
+            
+            Log::info('AI API Request', [
+                'url' => $this->baseUrl . '/chat/completions',
+                'model' => $this->model,
+                'message_count' => count($messages),
+                'api_key_prefix' => substr($this->apiKey, 0, 10) . '...',
             ]);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
+            ])->timeout(30)->post($this->baseUrl . '/chat/completions', $requestPayload);
 
             if ($response->successful()) {
                 $data = $response->json();

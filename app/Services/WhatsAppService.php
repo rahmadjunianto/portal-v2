@@ -63,6 +63,18 @@ class WhatsAppService
                 );
             }
 
+            // Log messages structure for debugging
+            Log::channel('whatsapp')->info('WhatsApp Messages Structure', [
+                'message_count' => count($messages),
+                'messages_preview' => array_map(function($m) {
+                    return [
+                        'role' => $m['role'],
+                        'content_length' => strlen($m['content']),
+                        'content_preview' => substr($m['content'], 0, 100) . '...'
+                    ];
+                }, $messages),
+            ]);
+
             // Send to AI
             $response = $this->aiService->sendMessage($messages);
 
