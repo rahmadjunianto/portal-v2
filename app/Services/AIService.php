@@ -54,24 +54,38 @@ class AIService
                 ];
             }
 
-            Log::error('OpenRouter API Error', [
-                'status' => $response->status(),
-                'body' => $response->body(),
+            $status = $response->status();
+            $body = $response->body();
+            $errorMsg = $this->getErrorMessage($status);
+
+            // Try to parse API error message from response body
+            $apiErrorDetail = $this->parseApiError($body);
+
+            Log::error('AI API Error', [
+                'status' => $status,
+                'body' => $body,
+                'api_error_detail' => $apiErrorDetail,
+                'model' => $this->model,
+                'base_url' => $this->baseUrl,
             ]);
 
             return [
                 'success' => false,
-                'message' => $this->getErrorMessage($response->status()),
+                'message' => $apiErrorDetail ?: $errorMsg,
+                'status_code' => $status,
             ];
         } catch (\Exception $e) {
-            Log::error('OpenRouter Exception', [
+            Log::error('AI Service Exception', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'base_url' => $this->baseUrl,
+                'model' => $this->model,
             ]);
 
             return [
                 'success' => false,
-                'message' => 'Mohon maaf, terjadi gangguan pada sistem. Silakan coba beberapa saat lagi.',
+                'message' => 'Connection Error: ' . $e->getMessage(),
             ];
         }
     }
@@ -177,5 +191,29 @@ PROMPT;
     {
         $maxLength = config('chatbot.max_characters', 500);
         return strlen($message) <= $maxLength;
+    }
+
+    /**
+     * Parse API error message from response body
+     */
+    private function parseApiError(string $body): ?string
+    {
+        try {
+            $data = json_decode($body, true);
+            if (isset($data['error']['message'])) {
+                return $data['error']['message'];
+            }
+            if (isset($data['error']['type'])) {
+                $type = $data['error']['type'];
+                $message = $data['error']['message'] ?? 'Unknown error';
+                return "API Error [{$type}]: {$message}";
+            }
+            if (isset($data['message'])) {
+                return $data['message'];
+            }
+        } catch (\Exception $e) {
+            // If JSON parse fails, return null
+        }
+        return null;
     }
 }

@@ -66,6 +66,21 @@ class WhatsAppService
             // Send to AI
             $response = $this->aiService->sendMessage($messages);
 
+            // Check if AI returned an error
+            if (!$response['success']) {
+                Log::channel('whatsapp')->warning('WhatsApp AI Error Response', [
+                    'phone' => $phone,
+                    'error_message' => $response['message'],
+                ]);
+
+                return [
+                    'success' => false,
+                    'message' => $response['message'], // Return actual error from AIService
+                    'error_type' => 'ai_error',
+                    'timestamp' => now()->toISOString(),
+                ];
+            }
+
             // Save conversation to history
             $this->saveToHistory($phone, 'user', $message);
             $this->saveToHistory($phone, 'assistant', $response['message']);
@@ -83,15 +98,17 @@ class WhatsAppService
                 'timestamp' => now()->toISOString(),
             ];
         } catch (\Exception $e) {
-            Log::channel('whatsapp')->error('WhatsApp Process Error', [
+            Log::channel('whatsapp')->error('WhatsApp Process Exception', [
                 'phone' => $phone,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ]);
 
             return [
                 'success' => false,
-                'message' => config('whatsapp.error_message', 'Mohon maaf, terjadi gangguan sistem. Silakan coba beberapa saat lagi.'),
+                'message' => 'Error: ' . $e->getMessage(),
+                'error_type' => 'exception',
             ];
         }
     }
