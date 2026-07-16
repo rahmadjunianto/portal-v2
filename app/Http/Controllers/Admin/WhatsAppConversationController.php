@@ -48,18 +48,20 @@ class WhatsAppConversationController extends Controller
      */
     public function show(string $phone): View
     {
+        $originalPhone = $phone; // Keep original for delete operations
+        
         $messages = WhatsAppConversation::where('phone', $phone)
             ->orderBy('created_at', 'asc')
             ->get();
 
-        $phone = $this->formatPhone($phone);
+        $phoneDisplay = $this->formatPhone($phone);
         
         // Get contact info
         $firstUser = $messages->where('role', 'user')->first();
-        $contactName = $firstUser->name ?? $phone;
+        $contactName = $firstUser->name ?? $phoneDisplay;
 
         return view('admin.whatsapp-conversations.show', 
-            compact('messages', 'phone', 'contactName'));
+            compact('messages', 'phone', 'phoneDisplay', 'contactName', 'originalPhone'));
     }
 
     /**

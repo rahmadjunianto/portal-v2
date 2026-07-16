@@ -110,11 +110,13 @@
                     <small class="text-muted">{{ $phone }} • {{ $messages->count() }} pesan</small>
                 </div>
                 <div class="chat-actions">
-                    <a href="{{ route('admin.whatsapp-conversations.destroy', $messages->first()->phone ?? $phone) }}" 
-                       class="btn btn-sm btn-danger"
-                       onclick="return confirm('Hapus semua percakapan dengan kontak ini?')">
-                        <i class="fas fa-trash"></i> Hapus
-                    </a>
+                    <form action="{{ route('admin.whatsapp-conversations.destroy', $originalPhone) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus semua percakapan dengan kontak ini?')">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </form>
                     <a href="{{ route('admin.whatsapp-conversations.index') }}" class="btn btn-sm btn-default">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>

@@ -103,11 +103,13 @@
                 <h3 class="card-title">Percakapan</h3>
                 <div class="card-tools">
                     @if($conversations->count() > 0)
-                    <button type="button" class="btn btn-tool" title="Hapus Semua" onclick="return confirm('Hapus semua percakapan?')">
-                        <a href="{{ route('admin.whatsapp-conversations.destroyAll') }}" class="text-danger">
+                    <form action="{{ route('admin.whatsapp-conversations.destroyAll') }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-tool text-danger" title="Hapus Semua" onclick="return confirm('Hapus semua percakapan?')">
                             <i class="fas fa-trash"></i>
-                        </a>
-                    </button>
+                        </button>
+                    </form>
                     @endif
                 </div>
             </div>
