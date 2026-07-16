@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatConversation;
 use App\Services\AIService;
+use App\Services\KnowledgeBankService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -12,10 +13,12 @@ use Carbon\Carbon;
 class ChatbotController extends Controller
 {
     private AIService $aiService;
+    private KnowledgeBankService $knowledgeBank;
 
-    public function __construct(AIService $aiService)
+    public function __construct(AIService $aiService, KnowledgeBankService $knowledgeBank)
     {
         $this->aiService = $aiService;
+        $this->knowledgeBank = $knowledgeBank;
     }
 
     /**
@@ -53,9 +56,6 @@ class ChatbotController extends Controller
             ], 422);
         }
 
-        // Sanitize input
-        $message = $this->aiService->sanitizeInput($message);
-
         if (empty($message)) {
             return response()->json([
                 'success' => false,
@@ -64,7 +64,43 @@ class ChatbotController extends Controller
             ], 422);
         }
 
-        // Build conversation messages
+        // Check Knowledge Bank FIRST before using AI
+        $kbAnswer = $this->knowledgeBank->findAnswer($message);
+        
+        if ($kbAnswer) {
+            Log::info('Chatbot Knowledge Bank Response', [
+                'ip' => $ip,
+                'query' => $message,
+                'source' => 'knowledge_bank',
+            ]);
+
+            // Log to database
+            try {
+                ChatConversation::create([
+                    'ip_address' => $ip,
+                    'user_name' => $validated['user_name'] ?? null,
+                    'user_email' => $validated['user_email'] ?? null,
+                    'user_phone' => $validated['user_phone'] ?? null,
+                    'user_agent' => $request->userAgent(),
+                    'role' => 'user',
+                    'message' => $message,
+                    'response' => $kbAnswer,
+                    'tokens_used' => 0,
+                    'is_success' => true,
+                    'error_message' => null,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to log chat conversation', ['error' => $e->getMessage()]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $kbAnswer,
+                'source' => 'knowledge_bank',
+            ]);
+        }
+
+        // Build conversation messages for AI
         $messages = [
             ['role' => 'system', 'content' => $this->aiService->getSystemPrompt()],
         ];
