@@ -11,7 +11,7 @@ class WhatsAppService
 {
     private AIService $aiService;
     private int $maxHistoryMessages = 10;
-    private int $rateLimitMaxRequests = 5;
+    private int $rateLimitMaxRequests = 25;
     private int $rateLimitWindowSeconds = 60;
 
     public function __construct(AIService $aiService)
@@ -72,6 +72,9 @@ class WhatsAppService
             Log::channel('whatsapp')->info('WhatsApp Messages Structure', [
                 'message_count' => count($messages),
                 'messages_preview' => array_map(function($m) {
+                    if (!isset($m['role']) || !isset($m['content'])) {
+                        return ['invalid_entry' => true, 'data' => $m];
+                    }
                     return [
                         'role' => $m['role'],
                         'content_length' => strlen($m['content']),
