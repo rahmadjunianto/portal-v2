@@ -140,5 +140,13 @@ Route::middleware(['web'])->group(function () {
         Route::get('/whatsapp-conversations/{phone}', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'show'])->name('whatsapp-conversations.show');
         Route::delete('/whatsapp-conversations/{phone}', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'destroy'])->name('whatsapp-conversations.destroy');
         Route::delete('/whatsapp-conversations', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'destroyAll'])->name('whatsapp-conversations.destroyAll');
+        
+        // Knowledge Bank
+        Route::get('/knowledge-bank', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'index'])->name('knowledge-bank.index');
+        Route::get('/knowledge-bank/create', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'create'])->name('knowledge-bank.create');
+        Route::post('/knowledge-bank', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'store'])->name('knowledge-bank.store');
+        Route::get('/knowledge-bank/{knowledgeBank}/edit', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'edit'])->name('knowledge-bank.edit');
+        Route::put('/knowledge-bank/{knowledgeBank}', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'update'])->name('knowledge-bank.update');
+        Route::delete('/knowledge-bank/{knowledgeBank}', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'destroy'])->name('knowledge-bank.destroy');
     });
 });

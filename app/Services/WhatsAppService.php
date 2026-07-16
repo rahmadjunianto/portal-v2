@@ -11,13 +11,15 @@ use App\Models\WhatsAppConversation;
 class WhatsAppService
 {
     private AIService $aiService;
+    private KnowledgeBankService $knowledgeBank;
     private int $maxHistoryMessages = 10;
     private int $rateLimitMaxRequests = 25;
     private int $rateLimitWindowSeconds = 60;
 
-    public function __construct(AIService $aiService)
+    public function __construct(AIService $aiService, KnowledgeBankService $knowledgeBank)
     {
         $this->aiService = $aiService;
+        $this->knowledgeBank = $knowledgeBank;
     }
 
     /**
@@ -53,6 +55,27 @@ class WhatsAppService
                     'success' => true,
                     'message' => $welcomeMessage,
                     'is_welcome' => true,
+                    'timestamp' => now()->toISOString(),
+                ];
+            }
+
+            // Check Knowledge Bank FIRST before using AI
+            $kbAnswer = $this->knowledgeBank->findAnswer($message);
+            
+            if ($kbAnswer) {
+                Log::channel('whatsapp')->info('Knowledge Bank Response', [
+                    'phone' => $phone,
+                    'query' => $message,
+                ]);
+                
+                // Save to history
+                $this->saveToHistory($phone, 'user', $message, $name);
+                $this->saveToHistory($phone, 'assistant', $kbAnswer, null);
+                
+                return [
+                    'success' => true,
+                    'message' => $kbAnswer,
+                    'source' => 'knowledge_bank',
                     'timestamp' => now()->toISOString(),
                 ];
             }

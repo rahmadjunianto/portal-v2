@@ -140,6 +140,12 @@
                                 <p>WhatsApp</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.knowledge-bank.index') }}" class="nav-link {{ request()->is('admin/knowledge-bank*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-database text-info"></i>
+                                <p>Bank Data AI</p>
+                            </a>
+                        </li>
                         
                         <li class="nav-header text-muted">PENGATURAN</li>
                         <li class="nav-item">
