@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use App\Models\WhatsAppConversation;
+use App\Models\Service;
 
 class WhatsAppService
 {
@@ -59,6 +60,38 @@ class WhatsAppService
                 ];
             }
 
+            // Check for menu command
+            if (strtolower($message) === 'menu') {
+                $allServices = $this->getAllServicesMessage();
+                $this->saveToHistory($phone, 'user', $message, $name);
+                $this->saveToHistory($phone, 'assistant', $allServices, null);
+                return [
+                    'success' => true,
+                    'message' => $allServices,
+                    'source' => 'menu',
+                    'timestamp' => now()->toISOString(),
+                ];
+            }
+            
+            // Check for category command: "kat 1" or "kategori 1"
+            if (preg_match('/^(kat|kategori)\s*(\d+)$/i', $message, $matches)) {
+                $index = (int) $matches[2];
+                $categoryServices = $this->getServicesByCategoryIndex($index);
+                
+                if ($categoryServices === null) {
+                    $categoryServices = "Kategori tidak ditemukan. Ketik *menu* untuk lihat daftar kategori.";
+                }
+                
+                $this->saveToHistory($phone, 'user', $message, $name);
+                $this->saveToHistory($phone, 'assistant', $categoryServices, null);
+                return [
+                    'success' => true,
+                    'message' => $categoryServices,
+                    'source' => 'category',
+                    'timestamp' => now()->toISOString(),
+                ];
+            }
+            
             // Check Knowledge Bank FIRST before using AI
             $kbAnswer = $this->knowledgeBank->findAnswer($message);
             
@@ -180,33 +213,136 @@ class WhatsAppService
     {
         $greeting = $userName ? "Assalamu'alaikum {$userName}," : "Assalamu'alaikum,";
         
+        // Get categories from services table
+        $categories = Service::active()
+            ->select('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->toArray();
+        
+        $categoryList = [];
+        $number = 1;
+        foreach ($categories as $cat) {
+            $shortName = $this->getCategoryShortName($cat);
+            $count = Service::active()->where('category', $cat)->count();
+            $categoryList[] = "{$number}️⃣ *{$shortName}* ({$count} layanan)";
+            $number++;
+        }
+        
+        $categoriesText = implode("\n", $categoryList);
+        
         return <<<WELCOME
 {$greeting}
 
-Selamat datang di WhatsAppBot *Kantor Kementerian Agama Kabupaten Nganjuk*! 👋
+Selamat datang di WhatsAppBot *Kantor Kemenag Nganjuk*! 👋
 
-Saya asisten virtual yang siap membantu Anda. Berikut layanan kami:
-
-*LAYANAN KEMENAG NGANJUK:*
-
-1️⃣ *Layanan Nikah* - Pendaftaran & pengelolaan pernikahan
-2️⃣ *Pendidikan Madrasah* - PAUD, MI, MTs, MA
-3️⃣ *Zakat* - Zakat fitrah & zakat mal
-4️⃣ *Wakaf* - Pengurusan tanah wakaf
-5️⃣ *Bimas Islam* - Pembinaan agama Islam
-6️⃣ *Produk Halal* - Sertifikasi halal
+*KATEGORI LAYANAN:*
+{$categoriesText}
 
 *JAM PELAYANAN:*
 🕐 Senin-Kamis: 08.00-15.30 WIB
 🕐 Jumat: 08.00-16.00 WIB
 🗓️ Sabtu-Minggu: Libur
 
-📞 *Kontak:*
-(0358) 321085
-kantor@nganjuk.kemenag.go.id
+📞 (0358) 321085
 
-Silakan ketik pertanyaan Anda! 😊
+Ketik *menu* untuk lihat semua layanan
+Ketik *kat [nomor]* untuk lihat layanan per kategori
 WELCOME;
+    }
+    
+    /**
+     * Get short name for category
+     */
+    private function getCategoryShortName(string $category): string
+    {
+        $shortNames = [
+            'Kepegawaian' => 'Kepegawaian',
+            'Umum & FKUB' => 'Umum & FKUB',
+            'Pendidikan Madrasah' => 'Pend. Madrasah',
+            'Pendidikan Diniyah dan Pondok Pesantren' => 'Pontren',
+            'Pendidikan Agama Islam' => 'PAI',
+            'Bimbingan Masyarakat Islam' => 'Bimas Islam',
+            'Zakat dan Wakaf' => 'Zakat & Wakaf',
+            'Kearsipan' => 'Kearsipan',
+            'Pembinaan Agama Kristen' => 'Agama Kristen',
+            'Kehumasan' => 'Kehumasan',
+        ];
+        
+        return $shortNames[$category] ?? $category;
+    }
+    
+    /**
+     * Get services by category index (1-based)
+     */
+    public function getServicesByCategoryIndex(int $index): ?string
+    {
+        $categories = Service::active()
+            ->select('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->toArray();
+        
+        if (!isset($categories[$index - 1])) {
+            return null;
+        }
+        
+        $category = $categories[$index - 1];
+        $services = Service::active()->where('category', $category)->get();
+        
+        $lines = [];
+        $lines[] = "📋 *LAYANAN {$category}:*";
+        $lines[] = "";
+        
+        foreach ($services as $i => $service) {
+            $num = $i + 1;
+            $lines[] = "{$num}. *{$service->name}*";
+            if ($service->description) {
+                $lines[] = "   📝 {$service->description}";
+            }
+            $lines[] = "";
+        }
+        
+        $lines[] = "━━━━━━━━━━━━━━━━━━━━";
+        $lines[] = "Ketik pertanyaan untuk info detail!";
+        
+        return implode("\n", $lines);
+    }
+    
+    /**
+     * Get all services grouped by category
+     */
+    private function getAllServicesMessage(): string
+    {
+        $categories = Service::active()
+            ->select('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->toArray();
+        
+        $lines = [];
+        $lines[] = "📋 *SEMUA LAYANAN KEMENAG:*";
+        $lines[] = "";
+        
+        foreach ($categories as $catIndex => $category) {
+            $shortName = $this->getCategoryShortName($category);
+            $catNum = $catIndex + 1;
+            $lines[] = "{$catNum}️⃣ *{$shortName}*";
+            
+            $services = Service::active()->where('category', $category)->get();
+            foreach ($services as $service) {
+                $lines[] = "   • {$service->name}";
+            }
+            $lines[] = "";
+        }
+        
+        $lines[] = "━━━━━━━━━━━━━━━━━━━━";
+        $lines[] = "Ketik *kat [nomor]* untuk detail kategori";
+        
+        return implode("\n", $lines);
     }
 
     /**
