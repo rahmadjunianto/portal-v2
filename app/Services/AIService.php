@@ -44,12 +44,12 @@ class AIService
             ]);
 
             // Log curl command for debugging
-            $jsonPayload = json_encode($requestPayload, JSON_UNESCAPED_UNICODE);
-            $curlCmd = "curl -X POST '{$this->baseUrl}/chat/completions' -H 'Authorization: Bearer {$this->apiKey}' -H 'Content-Type: application/json' -d '" . addslashes($jsonPayload) . "'";
-            Log::info('AI API Curl Command', [
-                'curl' => $curlCmd,
-                'json_payload' => $jsonPayload,
-            ]);
+            // $jsonPayload = json_encode($requestPayload, JSON_UNESCAPED_UNICODE);
+            // $curlCmd = "curl -X POST '{$this->baseUrl}/chat/completions' -H 'Authorization: Bearer {$this->apiKey}' -H 'Content-Type: application/json' -d '" . addslashes($jsonPayload) . "'";
+            // Log::info('AI API Curl Command', [
+            //     'curl' => $curlCmd,
+            //     'json_payload' => $jsonPayload,
+            // ]);
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
