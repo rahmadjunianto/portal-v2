@@ -134,5 +134,11 @@ Route::middleware(['web'])->group(function () {
         // Chat Conversations
         Route::get('/chat-conversations', [\App\Http\Controllers\Admin\ChatConversationController::class, 'index'])->name('chat-conversations.index');
         Route::delete('/chat-conversations/{id}', [\App\Http\Controllers\Admin\ChatConversationController::class, 'destroy'])->name('chat-conversations.destroy');
+        
+        // WhatsApp Conversations
+        Route::get('/whatsapp-conversations', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'index'])->name('whatsapp-conversations.index');
+        Route::get('/whatsapp-conversations/{phone}', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'show'])->name('whatsapp-conversations.show');
+        Route::delete('/whatsapp-conversations/{phone}', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'destroy'])->name('whatsapp-conversations.destroy');
+        Route::delete('/whatsapp-conversations', [\App\Http\Controllers\Admin\WhatsAppConversationController::class, 'destroyAll'])->name('whatsapp-conversations.destroyAll');
     });
 });

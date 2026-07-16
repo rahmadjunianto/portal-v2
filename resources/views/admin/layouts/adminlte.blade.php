@@ -134,6 +134,13 @@
                             </a>
                         </li>
                         
+                        <li class="nav-item">
+                            <a href="{{ route('admin.whatsapp-conversations.index') }}" class="nav-link {{ request()->is('admin/whatsapp-conversations*') ? 'active' : '' }}">
+                                <i class="nav-icon fab fa-whatsapp" style="color: #25d366;"></i>
+                                <p>WhatsApp</p>
+                            </a>
+                        </li>
+                        
                         <li class="nav-header text-muted">PENGATURAN</li>
                         <li class="nav-item">
                             <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}">

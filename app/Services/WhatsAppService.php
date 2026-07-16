@@ -102,8 +102,8 @@ class WhatsAppService
             }
 
             // Save conversation to history
-            $this->saveToHistory($phone, 'user', $message);
-            $this->saveToHistory($phone, 'assistant', $response['message']);
+            $this->saveToHistory($phone, 'user', $message, $name);
+            $this->saveToHistory($phone, 'assistant', $response['message'], null);
 
             // Log interaction
             Log::channel('whatsapp')->info('WhatsApp AI Response', [
@@ -193,12 +193,13 @@ PROMPT;
     /**
      * Save message to conversation history (database)
      */
-    private function saveToHistory(string $phone, string $role, string $content): void
+    private function saveToHistory(string $phone, string $role, string $content, ?string $name = null): void
     {
         WhatsAppConversation::create([
             'phone' => $phone,
             'role' => $role,
             'content' => $content,
+            'name' => $name,
         ]);
     }
 
