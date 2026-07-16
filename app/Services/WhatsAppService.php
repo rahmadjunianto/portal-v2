@@ -60,12 +60,11 @@ class WhatsAppService
             // Add current message
             $messages[] = ['role' => 'user', 'content' => $message];
 
-            // Limit conversation context
+            // Limit conversation context - keep system prompt + recent messages
             if (count($messages) > $this->maxHistoryMessages + 1) {
-                $messages = array_merge(
-                    [array_slice($messages, 0, 1)], // Keep system prompt
-                    array_slice($messages, -$this->maxHistoryMessages)
-                );
+                $systemPrompt = array_slice($messages, 0, 1); // Returns [[system]]
+                $recentMessages = array_slice($messages, -$this->maxHistoryMessages);
+                $messages = array_merge($systemPrompt, $recentMessages);
             }
 
             // Log messages structure for debugging
