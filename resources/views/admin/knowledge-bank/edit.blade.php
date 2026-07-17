@@ -1,93 +1,139 @@
 @extends('admin.layouts.adminlte')
 
-@section('title', 'Edit Bank Data - Chatbot AI')
+@section('title', 'Edit Knowledge Bank')
 
 @section('content_header')
-    <div class="row mb-2">
-        <div class="col-sm-6">
-            <h1><i class="fas fa-edit text-warning"></i> Edit Data</h1>
-        </div>
-        <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('admin.knowledge-bank.index') }}">Bank Data</a></li>
-                <li class="breadcrumb-item active">Edit</li>
-            </ol>
-        </div>
+<div class="row mb-2">
+    <div class="col-sm-6">
+        <h1>Edit Knowledge Bank</h1>
     </div>
+    <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.knowledge-bank.index') }}">Knowledge Bank</a></li>
+            <li class="breadcrumb-item active">Edit</li>
+        </ol>
+    </div>
+</div>
 @endsection
 
 @section('content')
 <div class="card">
-    <div class="card-body">
-        <form action="{{ route('admin.knowledge-bank.update', $knowledgeBank->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+    <div class="card-header">
+        <h3 class="card-title">Form Pertanyaan</h3>
+    </div>
+    
+    <form action="{{ route('admin.knowledge-bank.update', $knowledgeBank->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="card-body">
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h5><i class="icon fas fa-ban"></i> Error!</h5>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             
-            <div class="form-group">
-                <label for="question">Pertanyaan <span class="text-danger">*</span></label>
-                <input type="text" name="question" id="question" class="form-control @error('question') is-invalid @enderror" 
-                    value="{{ old('question', $knowledgeBank->question) }}" required>
-                @error('question')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="answer">Jawaban <span class="text-danger">*</span></label>
-                <textarea name="answer" id="answer" class="form-control @error('answer') is-invalid @enderror" 
-                    rows="5" required>{{ old('answer', $knowledgeBank->answer) }}</textarea>
-                @error('answer')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="form-group">
-                        <label for="category">Kategori</label>
-                        <select name="category" id="category" class="form-control">
-                            <option value="">- Pilih Kategori -</option>
-                            @foreach($categories as $key => $name)
-                                <option value="{{ $key }}" {{ old('category', $knowledgeBank->category) == $key ? 'selected' : '' }}>{{ $name }}</option>
+                        <label for="service_id">Layanan</label>
+                        <select name="service_id" id="serviceSelect" class="form-control">
+                            <option value="">-- Tidak terkait layanan (FAQ Umum) --</option>
+                            @foreach($services as $service)
+                                <option value="{{ $service->id }}" {{ old('service_id', $knowledgeBank->service_id) == $service->id ? 'selected' : '' }}>
+                                    {{ $service->name }}
+                                    @if($service->category)
+                                        ({{ $service->category->name }})
+                                    @endif
+                                </option>
                             @endforeach
                         </select>
+                        <small class="text-muted">Pilih layanan jika pertanyaan terkait layanan tertentu</small>
                     </div>
-                </div>
-                <div class="col-md-6">
+                    
                     <div class="form-group">
-                        <label for="priority">Prioritas (0-100)</label>
-                        <input type="number" name="priority" id="priority" class="form-control" 
-                            value="{{ old('priority', $knowledgeBank->priority) }}" min="0" max="100">
-                        <small class="text-muted">Prioritas lebih tinggi = dicek lebih dulu</small>
+                        <label for="question">Pertanyaan <span class="text-danger">*</span></label>
+                        <input type="text" name="question" id="question" class="form-control" 
+                               value="{{ old('question', $knowledgeBank->question) }}" required>
+                    </div>
+                    
+                    <div class="form-group" id="answerField">
+                        <label for="answer">Jawaban</label>
+                        <textarea name="answer" id="answer" class="form-control" rows="4">{{ old('answer', $knowledgeBank->answer) }}</textarea>
+                        <small class="text-muted">Kosongkan jika memilih layanan. Jawaban akan digenerate otomatis.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" name="tags" id="tags" class="form-control" 
+                               value="{{ old('tags', $knowledgeBank->tags) }}" placeholder="Contoh: cuti, izin, surat">
+                        <small class="text-muted">Pisahkan dengan koma</small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="priority">Priority</label>
+                                <input type="number" name="priority" id="priority" class="form-control" 
+                                       value="{{ old('priority', $knowledgeBank->priority) }}" min="0" max="100">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" name="is_active" class="form-check-input" id="is_active" value="1" 
+                                           {{ old('is_active', $knowledgeBank->is_active) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_active">Aktif</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="callout callout-info">
+                        <h5><i class="icon fas fa-info"></i> Tips:</h5>
+                        <ul class="mb-0">
+                            <li>Jika pertanyaan terkait <strong>layanan tertentu</strong>, pilih layanan.</li>
+                            <li>Jawaban akan <strong>di-generate otomatis</strong> dari data layanan.</li>
+                            <li>Jika <strong>FAQ umum</strong>, kosongkan layanan dan isi jawaban manual.</li>
+                            <li>Tag membantu chatbot menemukan jawaban.</li>
+                            <li>Priority lebih tinggi = dicocokkan lebih dulu.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="tags">Tags</label>
-                <input type="text" name="tags" id="tags" class="form-control" 
-                    value="{{ old('tags', $knowledgeBank->tags) }}" placeholder="nikah, daftar, izin (pisahkan dengan koma)">
-                <small class="text-muted">Kata kunci pencarian, pisahkan dengan koma</small>
-            </div>
-
-            <div class="form-group">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" name="is_active" id="is_active" class="custom-control-input" value="1" 
-                        {{ old('is_active', $knowledgeBank->is_active) ? 'checked' : '' }}>
-                    <label for="is_active" class="custom-control-label">Aktif</label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Update
-                </button>
-                <a href="{{ route('admin.knowledge-bank.index') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
-            </div>
-        </form>
-    </div>
+        </div>
+        
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-1"></i> Update
+            </button>
+            <a href="{{ route('admin.knowledge-bank.index') }}" class="btn btn-secondary">
+                Batal
+            </a>
+        </div>
+    </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.getElementById('serviceSelect').addEventListener('change', function() {
+    const answerField = document.getElementById('answerField');
+    if (this.value) {
+        answerField.style.opacity = '0.5';
+    } else {
+        answerField.style.opacity = '1';
+    }
+});
+document.getElementById('serviceSelect').dispatchEvent(new Event('change'));
+</script>
+@endpush

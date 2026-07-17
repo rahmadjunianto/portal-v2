@@ -1,16 +1,16 @@
 @extends('admin.layouts.adminlte')
 
-@section('title', 'Tambah Knowledge Bank')
+@section('title', 'Tambah ke Knowledge Bank')
 
 @section('content_header')
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1>Tambah Knowledge Bank</h1>
+        <h1>Tambah ke Knowledge Bank</h1>
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.knowledge-bank.index') }}">Knowledge Bank</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.unknown-questions.index') }}">Unknown Questions</a></li>
             <li class="breadcrumb-item active">Tambah</li>
         </ol>
     </div>
@@ -18,12 +18,23 @@
 @endsection
 
 @section('content')
+<div class="alert alert-info">
+    <div class="d-flex">
+        <i class="fas fa-info-circle mr-2" style="font-size: 20px;"></i>
+        <div>
+            <strong>Pertanyaan dari pengguna:</strong>
+            <p class="mb-0 mt-1" style="font-size: 18px;">"{{ $unknownQuestion->question }}"</p>
+            <small>Ditanyakan {{ $unknownQuestion->count }}x</small>
+        </div>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Form Pertanyaan</h3>
+        <h3 class="card-title">Form Knowledge Bank</h3>
     </div>
     
-    <form action="{{ route('admin.knowledge-bank.store') }}" method="POST">
+    <form action="{{ route('admin.unknown-questions.add-to-knowledge', $unknownQuestion->id) }}" method="POST">
         @csrf
         <div class="card-body">
             @if($errors->any())
@@ -59,7 +70,7 @@
                     <div class="form-group">
                         <label for="question">Pertanyaan <span class="text-danger">*</span></label>
                         <input type="text" name="question" id="question" class="form-control" 
-                               value="{{ old('question') }}" placeholder="Contoh: Apa syarat cuti?" required>
+                               value="{{ old('question', $unknownQuestion->question) }}" required>
                     </div>
                     
                     <div class="form-group" id="answerField">
@@ -113,9 +124,9 @@
         
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save mr-1"></i> Simpan
+                <i class="fas fa-save mr-1"></i> Simpan ke Knowledge Bank
             </button>
-            <a href="{{ route('admin.knowledge-bank.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.unknown-questions.index') }}" class="btn btn-secondary">
                 Batal
             </a>
         </div>

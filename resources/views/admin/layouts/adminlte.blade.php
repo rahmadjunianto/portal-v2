@@ -140,10 +140,42 @@
                                 <p>WhatsApp</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="{{ route('admin.knowledge-bank.index') }}" class="nav-link {{ request()->is('admin/knowledge-bank*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-database text-info"></i>
                                 <p>Bank Data AI</p>
+                            </a>
+                        </li> -->
+                        
+                        <li class="nav-header text-muted">AI CHATBOT</li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-concierge-bell"></i>
+                                <p>Services</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.service-categories.index') }}" class="nav-link {{ request()->is('admin/service-categories*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tags"></i>
+                                <p>Categories</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.knowledge-bank.index') }}" class="nav-link {{ request()->is('admin/knowledge-bank*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-brain"></i>
+                                <p>Knowledge Bank</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.unknown-questions.index') }}" class="nav-link {{ request()->is('admin/unknown-questions*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-question-circle"></i>
+                                <p>Unknown Questions</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.chatbot.logs') }}" class="nav-link {{ request()->is('admin/chatbot*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-comment-dots"></i>
+                                <p>Chat Logs</p>
                             </a>
                         </li>
                         

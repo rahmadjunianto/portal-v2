@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Service;
+use App\Models\ServiceCategory;
 use Illuminate\Database\Seeder;
 
 class ServiceSeeder extends Seeder
@@ -12,11 +13,14 @@ class ServiceSeeder extends Seeder
      */
     public function run(): void
     {
+        // Get category ID mapping
+        $categories = ServiceCategory::pluck('id', 'name');
+
         $services = [
             // ==================== KEPEGAWAIAN ====================
             [
                 'name' => 'Surat Pernyataan Tidak Pernah Dikenakan Hukuman Disiplin Sedang/Berat',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan penerbitan surat pernyataan tidak pernah dikenakan hukuman disiplin sedang atau berat untuk keperluan administrasi kepegawaian.',
                 'requirements' => "- Fotokopi SK terakhir\n- Surat pengantar dari kepala sekolah/ satuan kerja\n- Kartu Pegawai (KARPEG)\n-Fotokopi KTP",
                 'workflow' => "1. Pemohon mengajukan surat pengantar dari satuan kerja\n2. Petugas memproses verifikasi data\n3. Kepala Kantor menandatangani surat\n4. Surat siap diambil",
@@ -28,7 +32,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Tanda Kehormatan Satyalancana Karya Satya',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan tanda kehormatan Satyalancana Karya Satya untuk PNS yang telah mengabdi 10, 20, atau 30 tahun.',
                 'requirements' => "- Fotokopi SK pengangkatan pertama\n- Fotokopi SK terakhir\n- Daftar hadir 10 tahun terakhir\n- Pas foto 3x4 (2 lembar)\n- Fotokopi KARPEG",
                 'workflow' => "1. Pemohon melengkapi berkas\n2. Verifikasi masa kerja\n3. Pengajuan ke Kanwil Kemenang\n4. Proses di tingkat provinsi\n5. Penyerahan tanda kehormatan",
@@ -40,7 +44,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Surat Pengantar Usul Ijin Belajar',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan penerbitan surat pengantar untuk mengajukan ijin belajar bagi PNS yang ingin melanjutkan pendidikan.',
                 'requirements' => "- Surat permohonan dari PNS\n- Fotokopi SK pengangkatan\n- Surat rekomendasi dari kepala sekolah\n- Kartu Pegawai\n- Proposed study/rencana pendidikan",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan surat pengantar\n4. Penyerahan ke pemohon",
@@ -52,7 +56,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Surat Izin Cuti',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan dan penerbitan surat izin cuti bagi PNS.',
                 'requirements' => "- Surat permohonan cuti\n- SK cuti tahun sebelumnya (bagi cuti tahunan)\n- Daftar hadir\n- Approved dari atasan\n- Fotokopi KTP",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi hak cuti\n3. Persetujuan atasan\n4. Penerbitan SK cuti\n5. Penyerahan ke pemohon",
@@ -64,7 +68,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Kenaikan Pangkat',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan kenaikan pangkat regular bagi PNS yang memenuhi persyaratan.',
                 'requirements' => "- SK pangkat terakhir\n- SKP 2 tahun terakhir\n- PAK (Penetapan Angka Kredit) bagi fungsional\n- Pas foto 3x4 (2 lembar)\n- Daftar hadir\n- Fotokopi KARPEG",
                 'workflow' => "1. Pemohon melengkapi berkas\n2. Verifikasi kelengkapan oleh kasubag\n3. Proses di bidang kepegawaian\n4. Pengajuan ke Kanwil\n5. Penetapan kenaikan pangkat",
@@ -76,7 +80,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Pencantuman Gelar Pendidikan Pegawai',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan pencantuman gelar pendidikan pada dokumen kepegawaian.',
                 'requirements' => "- Fotokopi ijazah yang telah dilegalisir\n- Transkrip nilai\n- SK pengangkatan\n- Surat pernyataan kebenaran dokumen\n- Pas foto 3x4",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi ijazah\n3. Proses administrasi\n4. Penetapan pencantuman gelar\n5. Pemberitahuan ke pemohon",
@@ -88,7 +92,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Pensiun',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan pensiun PNS karena mencapai batas usia pensiun atau atas permintaan sendiri.',
                 'requirements' => "- SK terakhir\n- Fotokopi KTP\n- Fotokopi KK\n- Akta nikah (bagi yang sudah menikah)\n- SK pangkat terakhir\n- Daftar gaji terakhir",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kelengkapan berkas\n3. Proses di bidang kepegawaian\n4. Pengajuan ke Kanwil untuk persetujuan\n5. Penerbitan SK pensiun",
@@ -100,7 +104,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Pensiun Dini',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan pensiun dini bagi PNS yang memenuhi persyaratan.',
                 'requirements' => "- SK terakhir\n- Fotokopi KTP\n- Surat alasan pensiun dini\n- Persetujuan keluarga (bagi yang sudah menikah)\n- SK pangkat terakhir",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Proses di bidang kepegawaian\n4. Pengajuan ke Kanwil\n5. Penetapan pensiun dini",
@@ -112,7 +116,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Surat Pengantar Ijin Tugas Belajar',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan penerbitan surat pengantar untuk ijin tugas belajar bagi PNS.',
                 'requirements' => "- Surat permohonan dari PNS\n- Fotokopi SK pengangkatan\n- Fotokopi ijazah terakhir\n- Rekomendasi dari kepala sekolah\n- Proposed study",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan surat pengantar\n4. Penyerahan ke pemohon",
@@ -124,7 +128,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Mutasi Pegawai PNS',
-                'category' => 'Kepegawaian',
+                'service_category_id' => $categories['Kepegawaian'],
                 'description' => 'Layanan pengajuan mutasi/antarkan pegawai PNS antar satuan kerja.',
                 'requirements' => "- Surat permohonan mutasi\n- SK terakhir\n- Persetujuan dari satuan kerja asal dan tujuan\n- Alasan mutasi\n- Fotokopi KTP",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kelengkapan\n3. Proses di bidang kepegawaian\n4. Pengajuan ke Kanwil\n5. Penetapan mutasi",
@@ -138,7 +142,7 @@ class ServiceSeeder extends Seeder
             // ==================== UMUM & FKUB ====================
             [
                 'name' => 'Permohonan Rohaniawan Pembaca Doa',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan rohaniawan untuk pembaca doa dalam acara resmi.',
                 'requirements' => "- Surat permohonan resmi\n- Detail acara\n- Tanggal dan waktu acara\n- Tempat acara\n- Jumlah peserta",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kebutuhan\n3. Penunjukan rohaniawan\n4. Konfirmasi ke pemohon",
@@ -150,7 +154,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Persetujuan Penelitian',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan penerbitan rekomendasi untuk penelitian di lingkungan Kementerian Agama Kabupaten Nganjuk.',
                 'requirements' => "- Surat pengantar dari lembaga/institusi\n- Proposal penelitian\n- Fotokopi KTP pemohon\n- Jadwal penelitian\n- Surat ethical clearance (jika diperlukan)",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi proposal\n3. Review kelayakan\n4. Penerbitan rekomendasi\n5. Penyerahan ke pemohon",
@@ -162,7 +166,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Studi Banding/Studi Lapangan/Kunjungan Kerja',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan untuk melakukan studi banding atau kunjungan kerja.',
                 'requirements' => "- Surat permohonan resmi\n- Proposal/struktur kunjungan\n- Jumlah peserta\n- Tanggal dan durasi\n- Tujuan kunjungan",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kelengkapan\n3. Penjadwalan\n4. Konfirmasi ke pemohon\n5. Pelaksanaan kunjungan",
@@ -174,7 +178,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Magang/PPL/PKL',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan magang, PPL, atau PKL untuk mahasiswa dari berbagai jenjang pendidikan.',
                 'requirements' => "- Surat pengantar dari kampus/sekolah\n- Proposal magang\n- Daftar nama peserta\n- Fotokopi KTP setiap peserta\n- Jadwal magang",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kelengkapan\n3. Penempatan di unit kerja\n4. Penyerahan Surat Tugas\n5. Pelaksanaan magang",
@@ -186,7 +190,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Kegiatan',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan penerbitan rekomendasi untuk kegiatan keagamaan atau pendidikan.',
                 'requirements' => "- Surat permohonan\n- Proposal kegiatan\n- Susunan panitia\n- Jadwal kegiatan\n- Surat dukungan dari desa/kelurahan",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Review proposal\n3. Verifikasi kelengkapan\n4. Penerbitan rekomendasi\n5. Penyerahan",
@@ -198,7 +202,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Audiensi',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan audiensi dengan pejabat Kantor Kementerian Agama.',
                 'requirements' => "- Surat permohonan audiensi\n- Agenda/tema audiensi\n- Jumlah peserta\n- Identitas penanggung jawab\n- Waktu yang diinginkan",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kebutuhan\n3. Penjadwalan audiensi\n4. Konfirmasi ke pemohon\n5. Pelaksanaan audiensi",
@@ -210,7 +214,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan MOU',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan kerja sama melalui Memorandum of Understanding.',
                 'requirements' => "- Surat permohonan kerja sama\n- Draft MOU\n- Profil institusi\n- Legalitas lembaga\n- Tujuan kerja sama",
                 'workflow' => "1. Pengajuan permohonan\n2. Review draft MOU\n3. Negosiasi (jika perlu)\n4. Penetapan MOU\n5. Penandatanganan",
@@ -222,7 +226,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Narasumber Kegiatan',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan narasumber untuk kegiatan pelatihan atau seminar.',
                 'requirements' => "- Surat permohonan\n- Proposal kegiatan\n- Tema yang dibahas\n- Jadwal kegiatan\n- Target peserta",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kebutuhan\n3. Penunjukan narasumber\n4. Konfirmasi ke pemohon\n5. Pelaksanaan kegiatan",
@@ -234,7 +238,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Penawaran/Promosi',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan untuk mengajukan penawaran atau promosi kegiatan/informasi.',
                 'requirements' => "- Surat penawaran resmi\n- Materi/informasi yang dipromosikan\n- Target audiensi\n- Jadwal promosi\n- Legalitas lembaga",
                 'workflow' => "1. Pengajuan surat penawaran\n2. Review materi\n3. Verifikasi kelayakan\n4. Persetujuan\n5. Konfirmasi ke pemohon",
@@ -246,7 +250,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Data Informasi',
-                'category' => 'Umum & FKUB',
+                'service_category_id' => $categories['Umum & FKUB'],
                 'description' => 'Layanan permohonan data atau informasi dari Kantor Kemenag.',
                 'requirements' => "- Surat permohonan resmi\n- Identitas pemohon\n- Jenis data yang diperlukan\n- Tujuan penggunaan data\n- Tanda tangan pemohon",
                 'workflow' => "1. Pengajuan surat permohonan\n2. Verifikasi kelengkapan\n3. Pencarian data\n4. Persetujuan atasan\n5. Penyerahan data",
@@ -260,7 +264,7 @@ class ServiceSeeder extends Seeder
             // ==================== PENDIDIKAN MADRASAH ====================
             [
                 'name' => 'Rekomendasi Melanjutkan Sekolah/Kuliah ke Luar Negeri',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi untuk melanjutkan pendidikan ke luar negeri.',
                 'requirements' => "- Surat permohonan\n- Fotokopi rapor/ijazah\n- Paspor\n- Surat diterima dari sekolah luar negeri\n- Pas foto",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -272,7 +276,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Bantuan Sarana/Prasarana',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan pengajuan rekomendasi untuk bantuan sarana dan prasarana pendidikan.',
                 'requirements' => "- Surat permohonan\n- Proposal bantuan\n- Data sekolah\n- Kebutuhan sarana/prasarana\n- RAB",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Survey lapangan\n4. Penerbitan rekomendasi\n5. Proses lebih lanjut di tingkat provinsi",
@@ -284,7 +288,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Kepala Madrasah Baru',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan pengajuan dan penetapan kepala madrasah baru.',
                 'requirements' => "- Surat pengantar kepala sekolah lama\n- SK pengangkatan terakhir\n- Fotokopi ijazah\n- SK tugas mengajar\n- Daftar hadir",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Proses di bidang pendidikan\n4. Penetapan\n5. Penerbitan SK",
@@ -296,7 +300,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Mutasi Siswa Dalam Provinsi',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi mutasi siswa dalam provinsi Jawa Timur.',
                 'requirements' => "- Surat permohonan orang tua\n- SKHU/Surat keterangan lulus\n- Pas foto\n- Fotokopi KTP orang tua\n- Surat keterangan layak pindahan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -308,7 +312,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Penelitian di Madrasah',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi untuk melakukan penelitian di madrasah.',
                 'requirements' => "- Surat pengantar lembaga\n- Proposal penelitian\n- Fotokopi KTP peneliti\n- Jadwal penelitian\n- Ethical clearance (jika perlu)",
                 'workflow' => "1. Pengajuan permohonan\n2. Review proposal\n3. Verifikasi kelengkapan\n4. Penerbitan rekomendasi\n5. Penyerahan",
@@ -320,7 +324,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Lomba di Madrasah',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi untuk mengikuti lomba di tingkat yang lebih tinggi.',
                 'requirements' => "- Surat permohonan sekolah\n- Pengumuman lomba\n- Daftar peserta\n- Fasilitas pendukung\n- Jadwal lomba",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -332,7 +336,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Akreditasi',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi akreditasi madrasah.',
                 'requirements' => "- Surat permohonan\n- Data madrasah\n- Portofolio sekolah\n- SK operasional\n- Dokumen pendukung",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Proses BAN-PM\n4. Penetapan hasil\n5. Penerbitan sertifikat",
@@ -344,7 +348,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Surat Pengantar Kurikulum MA',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan surat pengantar terkait kurikulum Madrasah Aliyah.',
                 'requirements' => "- Surat permohonan sekolah\n- Detail kebutuhan kurikulum\n- Kelas yang terlibat\n- Jadwal implementasi",
                 'workflow' => "1. Pengajuan surat\n2. Verifikasi\n3. Penerbitan surat\n4. Penyerahan",
@@ -356,7 +360,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi PPDB',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi PPDB untuk penerimaan peserta didik baru.',
                 'requirements' => "- Surat permohonan\n- Ketentuan PPDB\n- Data calon peserta\n- Berkas pendukung",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -368,7 +372,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengesahan RKTM dan RKJM',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan pengesahan Rencana Kerja Tahunan Madrasah dan Rencana Kerja Madrasah.',
                 'requirements' => "- Draft RKTM/RKJM\n- Data madrasah\n- Program kerja\n- Pertimbangan dewan guru",
                 'workflow' => "1. Pengajuan draft\n2. Review\n3. Revisi (jika perlu)\n4. Pengesahan\n5. Penyerahan",
@@ -380,7 +384,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi IKM',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi Implementasi Kurikulum Merdeka.',
                 'requirements' => "- Surat permohonan\n- Profil madrasah\n- Rencana implementasi\n- Daftar guru",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -392,7 +396,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Mutasi Siswa ke Luar Provinsi',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi mutasi siswa ke luar provinsi.',
                 'requirements' => "- Surat permohonan orang tua\n- SKHU\n- Pas foto\n- Fotokopi KTP orang tua\n- Surat keterangan layak pindahan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -404,7 +408,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengesahan Kurikulum',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan pengesahan kurikulum yang digunakan madrasah.',
                 'requirements' => "- Draft kurikulum\n- Silabus\n- RPP\n- SK operasional madrasah",
                 'workflow' => "1. Pengajuan draft\n2. Review kurikulum\n3. Revisi (jika perlu)\n4. Pengesahan\n5. Penyerahan",
@@ -416,7 +420,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Paspor Belajar',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan rekomendasi untuk pengurusan paspor belajar ke luar negeri.',
                 'requirements' => "- Surat permohonan\n- Fotokopi ijazah\n- Surat diterima dari luar negeri\n- Pas foto\n- Fotokopi KTP",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -428,7 +432,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Kegiatan Pendidikan',
-                'category' => 'Pendidikan Madrasah',
+                'service_category_id' => $categories['Pendidikan Madrasah'],
                 'description' => 'Layanan penerbitan rekomendasi untuk kegiatan pendidikan seperti diklat, seminar, workshop.',
                 'requirements' => "- Surat permohonan\n- Proposal kegiatan\n- Jadwal\n- Target peserta\n- Narasumber",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -442,7 +446,7 @@ class ServiceSeeder extends Seeder
             // ==================== PENDIDIKAN DINIYAH & PONDOK PESANTREN ====================
             [
                 'name' => 'Rekomendasi Izin Tinggal/Belajar Terbatas (ITAS) Asing',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi untuk izin tinggal/belajar terbatas bagi warga asing.',
                 'requirements' => "- Surat permohonan\n- Paspor\n- Fotokopi KTP sponsor\n- Surat keterangan belajar\n- Pas foto",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Proses di Imigrasi",
@@ -454,7 +458,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Izin Operasional Madrasah Diniyah Takmiliyah Ulya',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi izin operasional untuk Madrasah Diniyah tingkat Ulya.',
                 'requirements' => "- Surat permohonan\n- Akta yayasan\n- SK operasional\n- Daftar guru\n- Kurikulum",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey lapangan\n3. Verifikasi kelayakan\n4. Penerbitan rekomendasi\n5. Proses di Kanwil",
@@ -466,7 +470,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Izin Operasional Pendidikan Diniyah Formal',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi izin operasional pendidikan diniyah formal.',
                 'requirements' => "- Surat permohonan\n- Akta yayasan\n- SK operasional\n- Data pengajar\n- Kurikulum",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey\n3. Verifikasi\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -478,7 +482,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Bantuan Pondok Pesantren',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi untuk bantuan ke lembaga pondok pesantren.',
                 'requirements' => "- Surat permohonan\n- Proposal bantuan\n- Data pesantren\n- Legalitas yayasan\n- RAB",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey lapangan\n3. Verifikasi kelayakan\n4. Penerbitan rekomendasi\n5. Proses di tingkat pusat",
@@ -490,7 +494,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Izin Penelitian Pondok Pesantren',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi untuk melakukan penelitian di pondok pesantren.',
                 'requirements' => "- Surat pengantar\n- Proposal penelitian\n- Fotokopi KTP\n- Jadwal penelitian",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -502,7 +506,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Izin Operasional Pendidikan Kesetaraan Pondok Pesantren',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi izin operasional pendidikan kesetaraan pada Pondok Pesantren Salafiyah.',
                 'requirements' => "- Surat permohonan\n- Akta yayasan\n- SK operasional pesantren\n- Data peserta\n- Kurikulum",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey\n3. Verifikasi\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -513,9 +517,9 @@ class ServiceSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Rekomendasi Izin Operasional Ma\'had Aly',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
-                'description' => 'Layanan rekomendasi izin operasional Ma\'had Aly.',
+                'name' => "Rekomendasi Izin Operasional Ma'had Aly",
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
+                'description' => "Layanan rekomendasi izin operasional Ma'had Aly.",
                 'requirements' => "- Surat permohonan\n- Akta pondok\n- Data pengajar\n- Kurikulum\n- Fasilitas",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey lapangan\n3. Verifikasi kelayakan\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil/Pusat",
                 'processing_time' => '30-60 hari kerja',
@@ -526,7 +530,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Izin Operasional Satuan Pendidikan Muadalah',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi izin operasional satuan pendidikan muadalah.',
                 'requirements' => "- Surat permohonan\n- Akta yayasan\n- SK operasional\n- Kurikulum\n- Data guru",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey\n3. Verifikasi\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -538,7 +542,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Melanjutkan Studi ke Luar Negeri',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan rekomendasi untuk santri yang ingin melanjutkan studi ke luar negeri.',
                 'requirements' => "- Surat permohonan\n- Surat keterangan pesantren\n- Fotokopi ijazah\n- Pas foto\n- Surat diterima dari luar negeri",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -550,7 +554,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Rekomendasi Paspor Belajar Santri',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
                 'description' => 'Layanan pengajuan rekomendasi paspor belajar untuk santri.',
                 'requirements' => "- Surat permohonan\n- Surat keterangan pesantren\n- Fotokopi ijazah\n- Pas foto\n- Fotokopi KTP",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Penerbitan rekomendasi\n4. Penyerahan",
@@ -561,9 +565,9 @@ class ServiceSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Permohonan Rekomendasi Tahfidz Al-Qur\'an',
-                'category' => 'Pendidikan Diniyah dan Pondok Pesantren',
-                'description' => 'Layanan penerbitan rekomendasi program tahfidz Al-Qur\'an.',
+                'name' => "Permohonan Rekomendasi Tahfidz Al-Qur'an",
+                'service_category_id' => $categories['Pendidikan Diniyah dan Pondok Pesantren'],
+                'description' => "Layanan penerbitan rekomendasi program tahfidz Al-Qur'an.",
                 'requirements' => "- Surat permohonan\n- Data lembaga\n- Program tahfidz\n- Jumlah penghafal\n- Sertifikat (jika ada)",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Penerbitan rekomendasi\n4. Penyerahan",
                 'processing_time' => '5-10 hari kerja',
@@ -576,7 +580,7 @@ class ServiceSeeder extends Seeder
             // ==================== PENDIDIKAN AGAMA ISLAM ====================
             [
                 'name' => 'Dispensasi Kelayakan Tunjangan PAI',
-                'category' => 'Pendidikan Agama Islam',
+                'service_category_id' => $categories['Pendidikan Agama Islam'],
                 'description' => 'Layanan dispensasi kelayakan untuk pengajuan tunjangan khusus guru PAI.',
                 'requirements' => "- SK pengangkatan\n- Fotokopi ijazah\n- Sertifikat pendidik\n- Daftar hadir\n- Data sekolah",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Proses kelayakan\n4. Penerbitan dispensasi",
@@ -588,7 +592,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pembuatan Akun SIAGA',
-                'category' => 'Pendidikan Agama Islam',
+                'service_category_id' => $categories['Pendidikan Agama Islam'],
                 'description' => 'Layanan pembuatan dan aktivasi akun SIAGA untuk guru PAI.',
                 'requirements' => "- Fotokopi SK\n- Fotokopi ijazah\n- Pas foto\n- Data sekolah\n- NUPTK (jika ada)",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi data\n3. Pembuatan akun\n4. Konfirmasi ke pemohon",
@@ -600,7 +604,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pengajuan Akun Emis',
-                'category' => 'Pendidikan Agama Islam',
+                'service_category_id' => $categories['Pendidikan Agama Islam'],
                 'description' => 'Layanan pengajuan akun EMIS untuk lembaga pendidikan agama.',
                 'requirements' => "- Surat permohonan\n- Data lembaga\n- SK operasional\n- Fotokopi KTP penanggung jawab",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi data\n3. Pembuatan akun\n4. Konfirmasi",
@@ -612,7 +616,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Pendataan Sertifikasi Guru PAI',
-                'category' => 'Pendidikan Agama Islam',
+                'service_category_id' => $categories['Pendidikan Agama Islam'],
                 'description' => 'Layanan pendataan dan verifikasi sertifikasi guru PAI.',
                 'requirements' => "- Fotokopi Sertifikat Pendidik\n- Fotokopi ijazah\n- SK pengangkatan\n- Data diri guru",
                 'workflow' => "1. Pengajuan pendataan\n2. Verifikasi dokumen\n3. Entry data\n4. Konfirmasi",
@@ -624,7 +628,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Penerbitan NUPTK',
-                'category' => 'Pendidikan Agama Islam',
+                'service_category_id' => $categories['Pendidikan Agama Islam'],
                 'description' => 'Layanan permohonan penerbitan Nomor Unik Pendidik dan Tenaga Kependidikan.',
                 'requirements' => "- Fotokopi SK\n- Fotokopi ijazah\n- Pas foto\n- Data diri lengkap\n- Surat keterangan sekolah",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi data\n3. Proses ke Pusat\n4. Penerbitan NUPTK",
@@ -636,7 +640,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Perubahan Data Personal SIAGA',
-                'category' => 'Pendidikan Agama Islam',
+                'service_category_id' => $categories['Pendidikan Agama Islam'],
                 'description' => 'Layanan permohonan perubahan data personal di akun SIAGA.',
                 'requirements' => "- Surat permohonan\n- Data lama\n- Data baru\n- Dokumen pendukung\n- Fotokopi KTP",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi perubahan\n3. Update data\n4. Konfirmasi",
@@ -649,9 +653,9 @@ class ServiceSeeder extends Seeder
 
             // ==================== BIMBINGAN MASYARAKAT ISLAM ====================
             [
-                'name' => 'Permohonan Surat Keterangan Majelis Ta\'lim Terdaftar',
-                'category' => 'Bimbingan Masyarakat Islam',
-                'description' => 'Layanan penerbitan surat keterangan pendaftaran majelis ta\'lim.',
+                'name' => "Permohonan Surat Keterangan Majelis Ta'lim Terdaftar",
+                'service_category_id' => $categories['Bimbingan Masyarakat Islam'],
+                'description' => "Layanan penerbitan surat keterangan pendaftaran majelis ta'lim.",
                 'requirements' => "- Surat permohonan\n- Data majelis ta'lim\n- Susunan kepengurusan\n- Jadwal kegiatan\n- Daftar hadir anggota",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi data\n3. Survey (jika perlu)\n4. Penerbitan surat\n5. Penyerahan",
                 'processing_time' => '7-14 hari kerja',
@@ -662,7 +666,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Piagam Masjid',
-                'category' => 'Bimbingan Masyarakat Islam',
+                'service_category_id' => $categories['Bimbingan Masyarakat Islam'],
                 'description' => 'Layanan penerbitan piagam pengukuhan/pengelolaan masjid.',
                 'requirements' => "- Surat permohonan\n- Data masjid\n- Luas tanah\n- Denah lokasi\n- SKT dari desa",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey lokasi\n3. Verifikasi kelayakan\n4. Penerbitan piagam\n5. Penyerahan",
@@ -674,7 +678,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Piagam Mushola',
-                'category' => 'Bimbingan Masyarakat Islam',
+                'service_category_id' => $categories['Bimbingan Masyarakat Islam'],
                 'description' => 'Layanan penerbitan piagam pengukuhan/pengelolaan mushola.',
                 'requirements' => "- Surat permohonan\n- Data mushola\n- Luas tanah\n- Denah lokasi\n- SKT dari desa",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey lokasi\n3. Verifikasi kelayakan\n4. Penerbitan piagam\n5. Penyerahan",
@@ -686,7 +690,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Penelitian di KUA',
-                'category' => 'Bimbingan Masyarakat Islam',
+                'service_category_id' => $categories['Bimbingan Masyarakat Islam'],
                 'description' => 'Layanan rekomendasi untuk penelitian di KUA Kecamatan.',
                 'requirements' => "- Surat pengantar\n- Proposal penelitian\n- Fotokopi KTP\n- Jadwal penelitian",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Koordinasi dengan KUA\n4. Penerbitan rekomendasi\n5. Penyerahan",
@@ -698,7 +702,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Sertifikat Arah Kiblat',
-                'category' => 'Bimbingan Masyarakat Islam',
+                'service_category_id' => $categories['Bimbingan Masyarakat Islam'],
                 'description' => 'Layanan penerbitan sertifikat arah kiblat untuk masjid/mushola.',
                 'requirements' => "- Surat permohonan\n- Data masjid/mushola\n- Koordinat lokasi\n- Foto bangunan",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey kiblat\n3. Pengukuran arah\n4. Penerbitan sertifikat\n5. Penyerahan",
@@ -710,7 +714,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Bantuan Masjid/Musholla',
-                'category' => 'Bimbingan Masyarakat Islam',
+                'service_category_id' => $categories['Bimbingan Masyarakat Islam'],
                 'description' => 'Layanan rekomendasi untuk pengajuan bantuan masjid/musholla.',
                 'requirements' => "- Surat permohonan\n- Data masjid/musholla\n- Proposal bantuan\n- RAB\n- Foto kondisi",
                 'workflow' => "1. Pengajuan permohonan\n2. Survey lapangan\n3. Verifikasi kelayakan\n4. Penerbitan rekomendasi\n5. Proses ke tingkat pusat",
@@ -724,7 +728,7 @@ class ServiceSeeder extends Seeder
             // ==================== ZAKAT DAN WAKAF ====================
             [
                 'name' => 'Sertifikasi Tanah Wakaf',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan bantuan pengurusan sertifikasi tanah wakaf.',
                 'requirements' => "- Surat permohonan\n- Akta ikrar wakaf\n- Sertifikat tanah asli\n- KTP wakif\n- KTP nazir\n- Peta lokasi",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi dokumen\n3. Pendampingan ke BPN\n4. Proses sertifikasi\n5. Penyerahan sertifikat",
@@ -736,7 +740,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Pembentukan Lembaga Amil Zakat',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan rekomendasi pembentukan Lembaga Amil Zakat (LAZ).',
                 'requirements' => "- Surat permohonan\n- Akta notaris\n- AD/ART\n- Struktur organisasi\n- Proposal program",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Survey\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil/Pusat",
@@ -748,7 +752,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Pergantian Nadzir Perseorangan',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan rekomendasi pergantian nadzir wakaf perseorangan.',
                 'requirements' => "- Surat permohonan\n- SK nadzir lama\n- KTP nadzir baru\n- Akta ikrar wakaf\n- Surat persetujuan wakif",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Survey\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -760,7 +764,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Perubahan Nadzir Perseorangan',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan perubahan nadzir untuk wakaf perseorangan.',
                 'requirements' => "- Surat permohonan\n- Data nadzir lama dan baru\n- Akta ikrar\n- KTP\n- Surat persetujuan wakif",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi data\n3. Penerbitan SK perubahan\n4. Penyerahan",
@@ -772,7 +776,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Pergantian Nadzir Organisasi',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan rekomendasi pergantian nadzir organisasi/badan hukum.',
                 'requirements' => "- Surat permohonan\n- SK nadzir lama\n- Akta pendirian\n- KTP penanggung jawab baru\n- Akta ikrar wakaf",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Survey\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -784,7 +788,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Izin Tukar Menukar Harta Benda Wakaf',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan rekomendasi tukar menukar harta benda wakaf.',
                 'requirements' => "- Surat permohonan\n- Akta ikrar wakaf\n- Sertifikat tanah\n- Proposal tukar menukar\n- Persetujuan nazir",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Survey lokasi\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -796,7 +800,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Rekomendasi Perubahan Peruntukan Wakaf',
-                'category' => 'Zakat dan Wakaf',
+                'service_category_id' => $categories['Zakat dan Wakaf'],
                 'description' => 'Layanan rekomendasi perubahan peruntukan tanah wakaf.',
                 'requirements' => "- Surat permohonan\n- Akta ikrar wakaf\n- Sertifikat tanah\n- Alasan perubahan\n- Persetujuan wakif dan nazir",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Survey\n4. Penerbitan rekomendasi\n5. Proses ke Kanwil",
@@ -810,7 +814,7 @@ class ServiceSeeder extends Seeder
             // ==================== KEARSIPAN ====================
             [
                 'name' => 'Permohonan Pengelolaan Arsip Dinamis',
-                'category' => 'Kearsipan',
+                'service_category_id' => $categories['Kearsipan'],
                 'description' => 'Layanan permohonan pengelolaan arsip dinamis (penciptaan, penggunaan, pemeliharaan, dan disposition).',
                 'requirements' => "- Surat permohonan\n- Daftar arsip\n- Klasifikasi keamanan\n- Jadwal retensi",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Review klasifikasi\n4. Penerbitan persetujuan\n5. Penyerahan",
@@ -822,7 +826,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Pengelolaan Arsip Statis',
-                'category' => 'Kearsipan',
+                'service_category_id' => $categories['Kearsipan'],
                 'description' => 'Layanan permohonan pengelolaan arsip statis (penyerahan, pemindahan, dan pemanfaatan).',
                 'requirements' => "- Surat permohonan\n- Daftar arsip yang diajukan\n- Berita acara serah terima\n- Deskripsi arsip",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Seleksi arsip\n4. Penyerahan ke balai arsip\n5. Penerbitan berita acara",
@@ -834,7 +838,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Pembinaan Kearsipan',
-                'category' => 'Kearsipan',
+                'service_category_id' => $categories['Kearsipan'],
                 'description' => 'Layanan permohonan pembinaan kearsipan untuk satuan kerja.',
                 'requirements' => "- Surat permohonan\n- Data satuan kerja\n- Permasalahan kearsipan\n- Jadwal yang diinginkan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kebutuhan\n3. Penjadwalan\n4. Pelaksanaan Pembinaan\n5. Evaluasi",
@@ -846,7 +850,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Pengolahan Arsip menjadi Informasi',
-                'category' => 'Kearsipan',
+                'service_category_id' => $categories['Kearsipan'],
                 'description' => 'Layanan permohonan pengolahan dan penyajian arsip menjadi informasi.',
                 'requirements' => "- Surat permohonan\n- Daftar arsip yang diperlukan\n- Formulir permintaan informasi\n- Tujuan penggunaan",
                 'workflow' => "1. Pengajuan permohonan\n2. Identifikasi arsip\n3. Pengolahan data\n4. Penyajian informasi\n5. Penyerahan informasi",
@@ -860,7 +864,7 @@ class ServiceSeeder extends Seeder
             // ==================== PEMBINAAN AGAMA KRISTEN ====================
             [
                 'name' => 'Permohonan Data Umat Kristen',
-                'category' => 'Pembinaan Agama Kristen',
+                'service_category_id' => $categories['Pembinaan Agama Kristen'],
                 'description' => 'Layanan permohonan data umat beragama Kristen di wilayah Nganjuk.',
                 'requirements' => "- Surat permohonan resmi\n- Identitas pemohon\n- Tujuan penggunaan data\n- Komitmen kerahasiaan data",
                 'workflow' => "1. Pengajuan surat\n2. Verifikasi kelengkapan\n3. Proses pencarian data\n4. Persetujuan atasan\n5. Penyerahan data",
@@ -872,7 +876,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Penyuluhan Online Umat Kristen',
-                'category' => 'Pembinaan Agama Kristen',
+                'service_category_id' => $categories['Pembinaan Agama Kristen'],
                 'description' => 'Layanan permohonan penyuluhan keagamaan secara online.',
                 'requirements' => "- Surat permohonan\n- Tema penyuluhan\n- Target peserta\n- Jadwal yang diinginkan\n- Platform yang digunakan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Penjadwalan\n4. Pelaksanaan\n5. Laporan",
@@ -884,7 +888,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Konseling Penyuluh Agama Kristen',
-                'category' => 'Pembinaan Agama Kristen',
+                'service_category_id' => $categories['Pembinaan Agama Kristen'],
                 'description' => 'Layanan permohonan konseling oleh penyuluh agama Kristen.',
                 'requirements' => "- Surat permohonan\n- Identitas pemohon\n- Topik/isu yang dikonselingkan\n- Jadwal yang diinginkan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kebutuhan\n3. Penjadwalan konseling\n4. Pelaksanaan\n5. Tindak lanjut",
@@ -896,7 +900,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Pendampingan Mediasi',
-                'category' => 'Pembinaan Agama Kristen',
+                'service_category_id' => $categories['Pembinaan Agama Kristen'],
                 'description' => 'Layanan permohonan pendampingan mediasi oleh penyuluh agama Kristen.',
                 'requirements' => "- Surat permohonan\n- Kronologi permasalahan\n- Data pihak terkait\n- Usulan solusi",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi permasalahan\n3. Penjadwalan mediasi\n4. Pelaksanaan\n5. Kesepakatan bersama",
@@ -908,7 +912,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Bimbingan Penyuluhan Agama Kristen',
-                'category' => 'Pembinaan Agama Kristen',
+                'service_category_id' => $categories['Pembinaan Agama Kristen'],
                 'description' => 'Layanan permohonan bimbingan dan penyuluhan agama Kristen.',
                 'requirements' => "- Surat permohonan\n- Topik bimbingan\n- Target kelompok\n- Jadwal yang diinginkan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kebutuhan\n3. Penjadwalan\n4. Pelaksanaan\n5. Evaluasi",
@@ -920,7 +924,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Pembinaan Umat Kristen',
-                'category' => 'Pembinaan Agama Kristen',
+                'service_category_id' => $categories['Pembinaan Agama Kristen'],
                 'description' => 'Layanan permohonan pembinaan umat beragama Kristen.',
                 'requirements' => "- Surat permohonan\n- Jenis kegiatan\n- Target peserta\n- Jadwal\n- Fasilitas yang diperlukan",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelayakan\n3. Penjadwalan\n4. Pelaksanaan\n5. Laporan hasil",
@@ -934,7 +938,7 @@ class ServiceSeeder extends Seeder
             // ==================== KEHUMASAN ====================
             [
                 'name' => 'Permohonan Informasi',
-                'category' => 'Kehumasan',
+                'service_category_id' => $categories['Kehumasan'],
                 'description' => 'Layanan permohonan informasi publik sesuai UU KIP.',
                 'requirements' => "- Surat permohonan informasi\n- Identitas pemohon\n- Rincian informasi yang dimohon\n- Tujuan penggunaan informasi",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kelengkapan\n3. Pencarian informasi\n4. Persetujuan PPID\n5. Penyerahan informasi",
@@ -946,7 +950,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Permohonan Media Relation',
-                'category' => 'Kehumasan',
+                'service_category_id' => $categories['Kehumasan'],
                 'description' => 'Layanan permohonan liputan dan hubungan dengan media.',
                 'requirements' => "- Surat permohonan liputan\n- Topic/kegiatan\n- Jadwal\n- Data kontak media",
                 'workflow' => "1. Pengajuan permohonan\n2. Verifikasi kegiatan\n3. Penjadwalan liputan\n4. Koordinasi dengan media\n5. Pelaksanaan",
@@ -958,7 +962,7 @@ class ServiceSeeder extends Seeder
             ],
             [
                 'name' => 'Layanan Pengaduan dan Aspirasi',
-                'category' => 'Kehumasan',
+                'service_category_id' => $categories['Kehumasan'],
                 'description' => 'Layanan penyampaian pengaduan dan aspirasi masyarakat.',
                 'requirements' => "- Identitas pengadu\n- Kronologi pengaduan\n- Bukti/dokumen pendukung\n- Usulan perbaikan",
                 'workflow' => "1. Penyampaian pengaduan\n2. Verifikasi pengaduan\n3. Investigasi\n4. Tindak lanjut\n5. Pemberitahuan hasil",

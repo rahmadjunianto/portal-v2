@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
@@ -12,7 +13,7 @@ class Service extends Model
 
     protected $fillable = [
         'name',
-        'category',
+        'service_category_id',
         'description',
         'requirements',
         'workflow',
@@ -28,6 +29,14 @@ class Service extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Get the category for this service
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ServiceCategory::class, 'service_category_id');
+    }
 
     /**
      * Get the knowledge banks for this service
@@ -48,9 +57,9 @@ class Service extends Model
     /**
      * Scope berdasarkan kategori
      */
-    public function scopeCategory($query, string $category)
+    public function scopeByCategory($query, $categoryId)
     {
-        return $query->where('category', $category);
+        return $query->where('service_category_id', $categoryId);
     }
 
     /**

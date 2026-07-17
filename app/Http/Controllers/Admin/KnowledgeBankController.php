@@ -4,20 +4,28 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\KnowledgeBank;
+use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class KnowledgeBankController extends Controller
 {
     /**
      * Display a listing of knowledge bank entries.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        $query = KnowledgeBank::query();
+        $query = KnowledgeBank::with('service');
 
-        // Filter by category
-        if ($request->category) {
-            $query->where('category', $request->category);
+        // Filter by service
+        if ($request->service) {
+            $query->where('service_id', $request->service);
+        }
+
+        // Filter general FAQ (no service)
+        if ($request->filled('general_faq')) {
+            $query->whereNull('service_id');
         }
 
         // Search
@@ -32,29 +40,33 @@ class KnowledgeBankController extends Controller
         }
 
         $entries = $query->orderByDesc('priority')->orderByDesc('created_at')->paginate(20);
-        $categories = KnowledgeBank::getCategories();
+        $services = Service::active()->with('category')->orderBy('name')->get();
 
-        return view('admin.knowledge-bank.index', compact('entries', 'categories'));
+        return view('admin.knowledge-bank.index', compact('entries', 'services'));
     }
 
     /**
      * Show the form for creating a new entry.
      */
-    public function create()
+    public function create(): View
     {
-        $categories = KnowledgeBank::getCategories();
-        return view('admin.knowledge-bank.create', compact('categories'));
+        $services = Service::active()
+            ->with('category')
+            ->orderBy('service_category_id')
+            ->orderBy('name')
+            ->get();
+        return view('admin.knowledge-bank.create', compact('services'));
     }
 
     /**
      * Store a newly created entry.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'service_id' => 'nullable|exists:services,id',
             'question' => 'required|string|max:500',
-            'answer' => 'required|string',
-            'category' => 'nullable|string',
+            'answer' => 'nullable|required_without:service_id|string',
             'tags' => 'nullable|string|max:255',
             'priority' => 'nullable|integer|min:0|max:100',
             'is_active' => 'nullable|boolean',
@@ -62,6 +74,11 @@ class KnowledgeBankController extends Controller
 
         $validated['is_active'] = $request->has('is_active');
         $validated['priority'] = $validated['priority'] ?? 0;
+
+        // If service is selected, answer is not required (will be generated from service)
+        if ($request->filled('service_id')) {
+            unset($validated['answer']);
+        }
 
         KnowledgeBank::create($validated);
 
@@ -73,21 +90,25 @@ class KnowledgeBankController extends Controller
     /**
      * Show the form for editing an entry.
      */
-    public function edit(KnowledgeBank $knowledgeBank)
+    public function edit(KnowledgeBank $knowledgeBank): View
     {
-        $categories = KnowledgeBank::getCategories();
-        return view('admin.knowledge-bank.edit', compact('knowledgeBank', 'categories'));
+        $services = Service::active()
+            ->with('category')
+            ->orderBy('service_category_id')
+            ->orderBy('name')
+            ->get();
+        return view('admin.knowledge-bank.edit', compact('knowledgeBank', 'services'));
     }
 
     /**
      * Update an entry.
      */
-    public function update(Request $request, KnowledgeBank $knowledgeBank)
+    public function update(Request $request, KnowledgeBank $knowledgeBank): RedirectResponse
     {
         $validated = $request->validate([
+            'service_id' => 'nullable|exists:services,id',
             'question' => 'required|string|max:500',
-            'answer' => 'required|string',
-            'category' => 'nullable|string',
+            'answer' => 'nullable|required_without:service_id|string',
             'tags' => 'nullable|string|max:255',
             'priority' => 'nullable|integer|min:0|max:100',
             'is_active' => 'nullable|boolean',
@@ -95,6 +116,11 @@ class KnowledgeBankController extends Controller
 
         $validated['is_active'] = $request->has('is_active');
         $validated['priority'] = $validated['priority'] ?? 0;
+
+        // If service is selected, clear answer (will be generated from service)
+        if ($request->filled('service_id')) {
+            unset($validated['answer']);
+        }
 
         $knowledgeBank->update($validated);
 
@@ -106,7 +132,7 @@ class KnowledgeBankController extends Controller
     /**
      * Remove an entry.
      */
-    public function destroy(KnowledgeBank $knowledgeBank)
+    public function destroy(KnowledgeBank $knowledgeBank): RedirectResponse
     {
         $knowledgeBank->delete();
 

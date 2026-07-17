@@ -14,7 +14,6 @@ class KnowledgeBank extends Model
         'service_id',
         'question',
         'answer',
-        'category',
         'tags',
         'is_active',
         'priority',
@@ -42,11 +41,19 @@ class KnowledgeBank extends Model
     }
 
     /**
-     * Scope berdasarkan kategori
+     * Scope berdasarkan service
      */
-    public function scopeCategory($query, $category)
+    public function scopeByService($query, $serviceId)
     {
-        return $query->where('category', $category);
+        return $query->where('service_id', $serviceId);
+    }
+
+    /**
+     * Scope untuk FAQ umum (tanpa service)
+     */
+    public function scopeGeneralFaq($query)
+    {
+        return $query->whereNull('service_id');
     }
 
     /**
@@ -58,26 +65,8 @@ class KnowledgeBank extends Model
         
         return $query->where(function($q) use ($search) {
             $q->whereRaw('LOWER(question) LIKE ?', ["%{$search}%"])
-              ->orWhereRaw('LOWER(tags) LIKE ?', ["%{$search}%"])
-              ->orWhereRaw('LOWER(answer) LIKE ?', ["%{$search}%"]);
+              ->orWhereRaw('LOWER(tags) LIKE ?', ["%{$search}%"]);
         });
-    }
-
-    /**
-     * Get categories list
-     */
-    public static function getCategories(): array
-    {
-        return [
-            'nikah' => 'Layanan Nikah',
-            'pendidikan' => 'Pendidikan Madrasah',
-            'zakat' => 'Zakat',
-            'wakaf' => 'Wakaf',
-            'bimas' => 'Bimas Islam',
-            'halal' => 'Produk Halal',
-            'umum' => 'Informasi Umum',
-            'kepegawaian' => 'Kepegawaian',
-        ];
     }
 
     /**
@@ -96,5 +85,13 @@ class KnowledgeBank extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Check if this is a service-linked question
+     */
+    public function isServiceLinked(): bool
+    {
+        return $this->service_id !== null;
     }
 }

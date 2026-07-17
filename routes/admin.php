@@ -148,5 +148,31 @@ Route::middleware(['web'])->group(function () {
         Route::get('/knowledge-bank/{knowledgeBank}/edit', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'edit'])->name('knowledge-bank.edit');
         Route::put('/knowledge-bank/{knowledgeBank}', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'update'])->name('knowledge-bank.update');
         Route::delete('/knowledge-bank/{knowledgeBank}', [\App\Http\Controllers\Admin\KnowledgeBankController::class, 'destroy'])->name('knowledge-bank.destroy');
+        
+        // Service Categories
+        Route::get('/service-categories', [\App\Http\Controllers\Admin\ServiceCategoryController::class, 'index'])->name('service-categories.index');
+        Route::get('/service-categories/create', [\App\Http\Controllers\Admin\ServiceCategoryController::class, 'create'])->name('service-categories.create');
+        Route::post('/service-categories', [\App\Http\Controllers\Admin\ServiceCategoryController::class, 'store'])->name('service-categories.store');
+        Route::get('/service-categories/{serviceCategory}/edit', [\App\Http\Controllers\Admin\ServiceCategoryController::class, 'edit'])->name('service-categories.edit');
+        Route::put('/service-categories/{serviceCategory}', [\App\Http\Controllers\Admin\ServiceCategoryController::class, 'update'])->name('service-categories.update');
+        Route::delete('/service-categories/{serviceCategory}', [\App\Http\Controllers\Admin\ServiceCategoryController::class, 'destroy'])->name('service-categories.destroy');
+        
+        // Services
+        Route::get('/services', [\App\Http\Controllers\Admin\ServiceController::class, 'index'])->name('services.index');
+        Route::get('/services/create', [\App\Http\Controllers\Admin\ServiceController::class, 'create'])->name('services.create');
+        Route::post('/services', [\App\Http\Controllers\Admin\ServiceController::class, 'store'])->name('services.store');
+        Route::get('/services/{service}/edit', [\App\Http\Controllers\Admin\ServiceController::class, 'edit'])->name('services.edit');
+        Route::put('/services/{service}', [\App\Http\Controllers\Admin\ServiceController::class, 'update'])->name('services.update');
+        Route::delete('/services/{service}', [\App\Http\Controllers\Admin\ServiceController::class, 'destroy'])->name('services.destroy');
+        
+        // Unknown Questions
+        Route::get('/unknown-questions', [\App\Http\Controllers\Admin\UnknownQuestionController::class, 'index'])->name('unknown-questions.index');
+        Route::get('/unknown-questions/create/{id?}', [\App\Http\Controllers\Admin\UnknownQuestionController::class, 'create'])->name('unknown-questions.create');
+        Route::post('/unknown-questions/add-to-knowledge/{id}', [\App\Http\Controllers\Admin\UnknownQuestionController::class, 'addToKnowledge'])->name('unknown-questions.add-to-knowledge');
+        Route::delete('/unknown-questions/{id}', [\App\Http\Controllers\Admin\UnknownQuestionController::class, 'destroy'])->name('unknown-questions.destroy');
+        
+        // Chatbot
+        Route::get('/chatbot/logs', [\App\Http\Controllers\Admin\ChatbotController::class, 'logs'])->name('chatbot.logs');
+        Route::get('/chatbot/{id}', [\App\Http\Controllers\Admin\ChatbotController::class, 'show'])->name('chatbot.show');
     });
 });

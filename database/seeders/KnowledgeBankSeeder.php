@@ -14,13 +14,13 @@ class KnowledgeBankSeeder extends Seeder
     public function run(): void
     {
         // Get all services
-        $services = Service::all();
+        $services = Service::with('category')->get();
 
         $knowledgeEntries = [];
 
         foreach ($services as $service) {
             $serviceName = $service->name;
-            $category = $this->mapCategoryToSlug($service->category);
+            $categorySlug = $service->category ? strtolower(str_replace(' ', '-', $service->category->name)) : 'umum';
             $tags = $this->generateTags($serviceName);
 
             // Generate 5 question variations for each service
@@ -42,10 +42,9 @@ class KnowledgeBankSeeder extends Seeder
                 $knowledgeEntries[] = [
                     'service_id' => $service->id,
                     'question' => $question,
-                    'answer' => $service->generateAnswer(),
-                    'category' => $category,
+                    'answer' => null, // Will be generated dynamically from service
                     'tags' => $tags,
-                    'priority' => 50 - $index * 5, // Higher priority for first questions
+                    'priority' => 100 - $index * 10, // Higher priority for first questions
                     'is_active' => true,
                 ];
             }
@@ -57,27 +56,6 @@ class KnowledgeBankSeeder extends Seeder
     }
 
     /**
-     * Map category to slug
-     */
-    private function mapCategoryToSlug(string $category): string
-    {
-        $mapping = [
-            'Kepegawaian' => 'kepegawaian',
-            'Umum & FKUB' => 'umum',
-            'Pendidikan Madrasah' => 'pendidikan',
-            'Pendidikan Diniyah dan Pondok Pesantren' => 'pontren',
-            'Pendidikan Agama Islam' => 'pai',
-            'Bimbingan Masyarakat Islam' => 'bimas',
-            'Zakat dan Wakaf' => 'zakat',
-            'Kearsipan' => 'kearsipan',
-            'Pembinaan Agama Kristen' => 'kristen',
-            'Kehumasan' => 'kehumasan',
-        ];
-
-        return $mapping[$category] ?? 'umum';
-    }
-
-    /**
      * Generate tags from service name
      */
     private function generateTags(string $serviceName): string
@@ -86,7 +64,7 @@ class KnowledgeBankSeeder extends Seeder
 
         // Extract keywords from service name
         $words = explode(' ', strtolower($serviceName));
-        $stopWords = ['surat', 'rekomendasi', 'izin', 'permohonan', 'penerbitan', 'pengajuan', 'perubahan', 'pengesahan', 'pembinaan', 'dan', 'di', 'untuk', 'bagi'];
+        $stopWords = ['surat', 'rekomendasi', 'izin', 'permohonan', 'penerbitan', 'pengajuan', 'perubahan', 'pengesahan', 'pembinaan', 'dan', 'di', 'untuk', 'bagi', 'dengan'];
 
         foreach ($words as $word) {
             if (strlen($word) > 3 && !in_array($word, $stopWords)) {
