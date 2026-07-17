@@ -60,8 +60,10 @@ class WhatsAppService
                 ];
             }
 
-            // Check for menu command
-            if (strtolower($message) === 'menu') {
+            // Check for menu command or services inquiry
+            $lowerMessage = strtolower($message);
+            if ($lowerMessage === 'menu' || 
+                preg_match('/^(layanan|service|services|daftar\s*layanan|apa\s*aja\s*layanan|list\s*service)/i', $message)) {
                 $allServices = $this->getAllServicesMessage();
                 $this->saveToHistory($phone, 'user', $message, $name);
                 $this->saveToHistory($phone, 'assistant', $allServices, null);
@@ -213,19 +215,22 @@ class WhatsAppService
     {
         $greeting = $userName ? "Assalamu'alaikum {$userName}," : "Assalamu'alaikum,";
         
-        // Get categories from services table
+        // Get categories from services table (through service_category relationship)
         $categories = Service::active()
-            ->select('category')
+            ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->select('service_categories.name')
             ->distinct()
-            ->orderBy('category')
-            ->pluck('category')
+            ->orderBy('service_categories.name')
+            ->pluck('name')
             ->toArray();
         
         $categoryList = [];
         $number = 1;
         foreach ($categories as $cat) {
             $shortName = $this->getCategoryShortName($cat);
-            $count = Service::active()->where('category', $cat)->count();
+            $count = Service::active()
+                ->whereHas('category', fn($q) => $q->where('name', $cat))
+                ->count();
             $categoryList[] = "{$number}️⃣ *{$shortName}* ({$count} layanan)";
             $number++;
         }
@@ -279,21 +284,24 @@ WELCOME;
     public function getServicesByCategoryIndex(int $index): ?string
     {
         $categories = Service::active()
-            ->select('category')
+            ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->select('service_categories.name')
             ->distinct()
-            ->orderBy('category')
-            ->pluck('category')
+            ->orderBy('service_categories.name')
+            ->pluck('name')
             ->toArray();
         
         if (!isset($categories[$index - 1])) {
             return null;
         }
         
-        $category = $categories[$index - 1];
-        $services = Service::active()->where('category', $category)->get();
+        $categoryName = $categories[$index - 1];
+        $services = Service::active()
+            ->whereHas('category', fn($q) => $q->where('name', $categoryName))
+            ->get();
         
         $lines = [];
-        $lines[] = "📋 *LAYANAN {$category}:*";
+        $lines[] = "📋 *LAYANAN {$categoryName}:*";
         $lines[] = "";
         
         foreach ($services as $i => $service) {
@@ -317,22 +325,25 @@ WELCOME;
     private function getAllServicesMessage(): string
     {
         $categories = Service::active()
-            ->select('category')
+            ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->select('service_categories.name')
             ->distinct()
-            ->orderBy('category')
-            ->pluck('category')
+            ->orderBy('service_categories.name')
+            ->pluck('name')
             ->toArray();
         
         $lines = [];
         $lines[] = "📋 *SEMUA LAYANAN KEMENAG:*";
         $lines[] = "";
         
-        foreach ($categories as $catIndex => $category) {
-            $shortName = $this->getCategoryShortName($category);
+        foreach ($categories as $catIndex => $categoryName) {
+            $shortName = $this->getCategoryShortName($categoryName);
             $catNum = $catIndex + 1;
             $lines[] = "{$catNum}️⃣ *{$shortName}*";
             
-            $services = Service::active()->where('category', $category)->get();
+            $services = Service::active()
+                ->whereHas('category', fn($q) => $q->where('name', $categoryName))
+                ->get();
             foreach ($services as $service) {
                 $lines[] = "   • {$service->name}";
             }
