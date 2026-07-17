@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\WhatsAppConversation;
+use App\Models\WhatsappConversation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +36,7 @@ class WhatsAppConversationController extends Controller
             return $item;
         });
 
-        $totalMessages = WhatsAppConversation::count();
+        $totalMessages = WhatsappConversation::count();
         $totalContacts = DB::table('whatsapp_conversations')->distinct('phone')->count('phone');
 
         return view('admin.whatsapp-conversations.index', 
@@ -50,7 +50,7 @@ class WhatsAppConversationController extends Controller
     {
         $originalPhone = $phone; // Keep original for delete operations
         
-        $messages = WhatsAppConversation::where('phone', $phone)
+        $messages = WhatsappConversation::where('phone', $phone)
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -69,7 +69,7 @@ class WhatsAppConversationController extends Controller
      */
     public function destroy(string $phone)
     {
-        WhatsAppConversation::where('phone', $phone)->delete();
+        WhatsappConversation::where('phone', $phone)->delete();
 
         return redirect()
             ->route('admin.whatsapp-conversations.index')
@@ -81,7 +81,7 @@ class WhatsAppConversationController extends Controller
      */
     public function destroyAll()
     {
-        WhatsAppConversation::truncate();
+        WhatsappConversation::truncate();
 
         return redirect()
             ->route('admin.whatsapp-conversations.index')
