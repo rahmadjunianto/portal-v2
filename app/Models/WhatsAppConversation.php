@@ -3,14 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class WhatsAppConversation extends Model
+class WhatsappConversation extends Model
 {
-    use HasFactory;
-
-    protected $table = 'whatsapp_conversations';
-
     protected $fillable = [
         'phone',
         'session_id',
@@ -24,48 +19,23 @@ class WhatsAppConversation extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Scope for phone number
-     */
-    public function scopeForPhone($query, string $phone)
+    public function scopeByPhone($query, $phone)
     {
         return $query->where('phone', $phone);
     }
 
-    /**
-     * Scope for session
-     */
-    public function scopeForSession($query, string $sessionId)
+    public function scopeUserMessages($query)
     {
-        return $query->where('session_id', $sessionId);
+        return $query->where('role', 'user');
     }
 
-    /**
-     * Get recent messages for a phone (for AI context)
-     */
-    public static function getRecentMessages(string $phone, int $limit = 10): array
+    public function scopeAssistantMessages($query)
     {
-        $messages = self::forPhone($phone)
-            ->where('role', '!=', 'system')
-            ->orderBy('created_at', 'desc')
-            ->limit($limit)
-            ->get()
-            ->reverse()
-            ->values();
-
-        return $messages->map(function ($msg) {
-            return [
-                'role' => $msg->role,
-                'content' => $msg->content,
-            ];
-        })->toArray();
+        return $query->where('role', 'assistant');
     }
 
-    /**
-     * Clear old conversations (cleanup)
-     */
-    public static function clearOldConversations(int $days = 30): int
+    public function scopeDateRange($query, $start, $end)
     {
-        return self::where('created_at', '<', now()->subDays($days))->delete();
+        return $query->whereBetween('created_at', [$start, $end]);
     }
 }

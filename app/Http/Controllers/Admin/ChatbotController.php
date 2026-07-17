@@ -6,34 +6,87 @@ use App\Http\Controllers\Controller;
 use App\Models\ChatConversation;
 use App\Models\KnowledgeBankFeedback;
 use App\Models\UnknownQuestion;
+use App\Models\WhatsappConversation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class ChatbotController extends Controller
 {
     /**
-     * Display chat logs.
+     * Display chat logs (combined from chatbot & whatsapp).
      */
     public function logs(Request $request): View
     {
-        $query = ChatConversation::query();
-
-        // Filter by user name (stored in user_name field, not relation)
-        if ($request->user_name) {
-            $query->where('user_name', 'like', '%' . $request->user_name . '%');
+        $type = $request->get('type', 'all');
+        $search = $request->get('search');
+        $dateFrom = $request->get('date_from');
+        $dateTo = $request->get('date_to');
+        
+        $conversations = collect();
+        
+        // Get chatbot conversations
+        if ($type === 'all' || $type === 'chatbot') {
+            $chatQuery = ChatConversation::query()
+                ->select('id', 'user_name as name', 'user_email as email', 'user_phone as phone', 
+                         'message', 'response', 'is_success', 'created_at')
+                ->addSelect(DB::raw("'chatbot' as source"));
+            
+            if ($search) {
+                $chatQuery->where(function($q) use ($search) {
+                    $q->where('user_name', 'like', "%{$search}%")
+                      ->orWhere('user_email', 'like', "%{$search}%")
+                      ->orWhere('user_phone', 'like', "%{$search}%")
+                      ->orWhere('message', 'like', "%{$search}%");
+                });
+            }
+            if ($dateFrom) {
+                $chatQuery->whereDate('created_at', '>=', $dateFrom);
+            }
+            if ($dateTo) {
+                $chatQuery->whereDate('created_at', '<=', $dateTo);
+            }
+            
+            $conversations = $chatQuery->orderByDesc('created_at');
+        }
+        
+        // Get whatsapp conversations
+        if ($type === 'all' || $type === 'whatsapp') {
+            $waQuery = WhatsappConversation::query()
+                ->select('id', 'name', 'phone', 'content as message', 'created_at')
+                ->addSelect(DB::raw("'whatsapp' as source"))
+                ->addSelect(DB::raw("NULL as email"))
+                ->addSelect(DB::raw("NULL as response"))
+                ->addSelect(DB::raw("NULL as is_success"));
+            
+            if ($search) {
+                $waQuery->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('phone', 'like', "%{$search}%")
+                      ->orWhere('content', 'like', "%{$search}%");
+                });
+            }
+            if ($dateFrom) {
+                $waQuery->whereDate('created_at', '>=', $dateFrom);
+            }
+            if ($dateTo) {
+                $waQuery->whereDate('created_at', '<=', $dateTo);
+            }
+            
+            if ($type === 'whatsapp') {
+                $conversations = $waQuery->orderByDesc('created_at');
+            } else {
+                $conversations = $conversations->union($waQuery);
+            }
+        }
+        
+        if ($type === 'all') {
+            $conversations = $conversations->orderByDesc('created_at')->paginate(25);
+        } else {
+            $conversations = $conversations->paginate(25);
         }
 
-        // Filter by date range
-        if ($request->date_from) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-        if ($request->date_to) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        $conversations = $query->latest()->paginate(25);
-
-        return view('admin.chatbot.logs', compact('conversations'));
+        return view('admin.chatbot.logs', compact('conversations', 'type'));
     }
 
     /**

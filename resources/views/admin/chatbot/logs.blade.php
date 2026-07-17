@@ -20,7 +20,43 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Daftar Percakapan</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="card-title">Daftar Percakapan</h3>
+            </div>
+            <div class="col-md-6">
+                <form method="GET" class="float-right">
+                    <input type="hidden" name="type" value="{{ $type ?? 'all' }}">
+                    <div class="input-group input-group-sm" style="width: 300px;">
+                        <input type="text" name="search" class="form-control float-right" 
+                               placeholder="Cari nama, email, pertanyaan..." 
+                               value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link {{ ($type ?? 'all') === 'all' ? 'active' : '' }}" 
+                   href="{{ route('admin.chatbot.logs', ['type' => 'all']) }}">Semua</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ ($type ?? 'all') === 'chatbot' ? 'active' : '' }}" 
+                   href="{{ route('admin.chatbot.logs', ['type' => 'chatbot']) }}">Chatbot</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ ($type ?? 'all') === 'whatsapp' ? 'active' : '' }}" 
+                   href="{{ route('admin.chatbot.logs', ['type' => 'whatsapp']) }}">WhatsApp</a>
+            </li>
+        </ul>
     </div>
     
     <div class="card-body">
@@ -28,7 +64,9 @@
             <thead>
                 <tr>
                     <th width="50">No</th>
-                    <th>User</th>
+                    <th width="80">Source</th>
+                    <th>Nama</th>
+                    <th>Kontak</th>
                     <th>Pertanyaan</th>
                     <th>Waktu</th>
                     <th width="100">Aksi</th>
@@ -39,14 +77,23 @@
                     <tr>
                         <td>{{ $conversations->firstItem() + $index }}</td>
                         <td>
-                            @if($conversation->user)
-                                {{ $conversation->user->name }}
+                            @if($conversation->source === 'whatsapp')
+                                <span class="badge badge-success">WhatsApp</span>
                             @else
-                                <span class="text-muted">Anonim</span>
+                                <span class="badge badge-primary">Chatbot</span>
                             @endif
                         </td>
-                        <td>{{ Str::limit($conversation->first_message, 80) }}</td>
-                        <td>{{ $conversation->created_at->format('d/m/Y H:i') }}</td>
+                        <td>{{ $conversation->name ?? '-' }}</td>
+                        <td>
+                            @if($conversation->phone)
+                                <small>{{ $conversation->phone }}</small><br>
+                            @endif
+                            @if($conversation->email)
+                                <small class="text-muted">{{ $conversation->email }}</small>
+                            @endif
+                        </td>
+                        <td>{{ Str::limit($conversation->message, 80) }}</td>
+                        <td>{{ $conversation->created_at ? $conversation->created_at->format('d/m/Y H:i') : '-' }}</td>
                         <td>
                             <a href="{{ route('admin.chatbot.show', $conversation->id) }}" 
                                class="btn btn-info btn-xs">
@@ -56,7 +103,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">Belum ada chat logs</td>
+                        <td colspan="7" class="text-center">Belum ada chat logs</td>
                     </tr>
                 @endforelse
             </tbody>
