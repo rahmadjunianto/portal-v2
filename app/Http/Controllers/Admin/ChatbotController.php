@@ -16,11 +16,11 @@ class ChatbotController extends Controller
      */
     public function logs(Request $request): View
     {
-        $query = ChatConversation::with('user');
+        $query = ChatConversation::query();
 
-        // Filter by user
-        if ($request->user_id) {
-            $query->where('user_id', $request->user_id);
+        // Filter by user name (stored in user_name field, not relation)
+        if ($request->user_name) {
+            $query->where('user_name', 'like', '%' . $request->user_name . '%');
         }
 
         // Filter by date range
@@ -41,8 +41,7 @@ class ChatbotController extends Controller
      */
     public function show(ChatConversation $conversation): View
     {
-        $conversation->load(['messages', 'user']);
-        
+        // ChatConversation stores all data in its own fields, not in relations
         return view('admin.chatbot.show', compact('conversation'));
     }
 
@@ -56,29 +55,23 @@ class ChatbotController extends Controller
             'comment' => 'nullable|string|max:500',
         ]);
 
-        // Determine what to link feedback to
-        $lastAssistantMessage = $conversation->messages()
-            ->where('sender', 'assistant')
-            ->latest()
-            ->first();
-
         $feedbackData = [
             'chat_conversation_id' => $conversation->id,
             'rating' => $validated['rating'],
             'comment' => $validated['comment'] ?? null,
         ];
 
-        // If there's a knowledge bank answer, link to it
-        if ($lastAssistantMessage && $lastAssistantMessage->metadata) {
-            $metadata = is_string($lastAssistantMessage->metadata) 
-                ? json_decode($lastAssistantMessage->metadata, true) 
-                : $lastAssistantMessage->metadata;
-            
-            if (isset($metadata['knowledge_bank_id'])) {
-                $feedbackData['knowledge_bank_id'] = $metadata['knowledge_bank_id'];
-            }
-            if (isset($metadata['service_id'])) {
-                $feedbackData['service_id'] = $metadata['service_id'];
+        // Store response metadata if available (ChatConversation stores response directly)
+        if ($conversation->response) {
+            // Try to extract IDs from response if it's JSON
+            $decoded = json_decode($conversation->response, true);
+            if ($decoded && is_array($decoded)) {
+                if (isset($decoded['knowledge_bank_id'])) {
+                    $feedbackData['knowledge_bank_id'] = $decoded['knowledge_bank_id'];
+                }
+                if (isset($decoded['service_id'])) {
+                    $feedbackData['service_id'] = $decoded['service_id'];
+                }
             }
         }
 
