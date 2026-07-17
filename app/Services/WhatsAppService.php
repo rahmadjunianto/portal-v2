@@ -64,6 +64,9 @@ class WhatsAppService
             $lowerMessage = strtolower($message);
             if ($lowerMessage === 'menu' || 
                 preg_match('/^(layanan|service|services|daftar\s*layanan|apa\s*aja\s*layanan|list\s*service)/i', $message)) {
+                // Clear selected category context
+                $this->clearSelectedCategory($phone);
+                
                 $allServices = $this->getAllServicesMessage();
                 $this->saveToHistory($phone, 'user', $message, $name);
                 $this->saveToHistory($phone, 'assistant', $allServices, null);
@@ -75,9 +78,55 @@ class WhatsAppService
                 ];
             }
             
+            // Check for combined "X.Y" pattern: "1.2" = category 1, service 2
+            if (preg_match('/^(\d+)\.(\d+)$/', $message, $dotMatches)) {
+                $categoryIndex = (int) $dotMatches[1];
+                $serviceIndex = (int) $dotMatches[2];
+                
+                $serviceDetail = $this->getServiceDetailByIndexes($categoryIndex, $serviceIndex);
+                
+                if ($serviceDetail === null) {
+                    $serviceDetail = "Layanan tidak ditemukan. Ketik *menu* untuk lihat daftar.";
+                }
+                
+                $this->saveToHistory($phone, 'user', $message, $name);
+                $this->saveToHistory($phone, 'assistant', $serviceDetail, null);
+                return [
+                    'success' => true,
+                    'message' => $serviceDetail,
+                    'source' => 'service_detail',
+                    'timestamp' => now()->toISOString(),
+                ];
+            }
+            
             // Check for category command: "kat 1", "kategori 1", or just "1"
             if (preg_match('/^(kat|kategori)?\s*(\d+)$/i', $message, $matches)) {
                 $index = (int) $matches[2];
+                
+                // Check if this is a service selection (user previously selected a category)
+                $selectedCategory = $this->getSelectedCategory($phone);
+                
+                if ($selectedCategory !== null) {
+                    // User selected a service number from current category
+                    $serviceDetail = $this->getServiceDetailByIndexes($selectedCategory, $index);
+                    
+                    if ($serviceDetail === null) {
+                        $serviceDetail = "Layanan tidak ditemukan. Ketik *menu* untuk lihat daftar.";
+                    }
+                    
+                    $this->saveToHistory($phone, 'user', $message, $name);
+                    $this->saveToHistory($phone, 'assistant', $serviceDetail, null);
+                    return [
+                        'success' => true,
+                        'message' => $serviceDetail,
+                        'source' => 'service_detail',
+                        'timestamp' => now()->toISOString(),
+                    ];
+                }
+                
+                // Otherwise, treat as category selection
+                $this->saveSelectedCategory($phone, $index);
+                
                 $categoryServices = $this->getServicesByCategoryIndex($index);
                 
                 if ($categoryServices === null) {
@@ -541,5 +590,141 @@ PROMPT;
         $key = $this->getRateLimitKey($phone);
         $requests = Cache::get($key, 0);
         return max(0, $this->rateLimitMaxRequests - $requests);
+    }
+
+    /**
+     * Get cache key for selected category context
+     */
+    private function getSelectedCategoryKey(string $phone): string
+    {
+        return 'whatsapp_selected_category_' . md5($phone);
+    }
+
+    /**
+     * Save selected category to cache
+     */
+    private function saveSelectedCategory(string $phone, int $categoryIndex): void
+    {
+        $key = $this->getSelectedCategoryKey($phone);
+        Cache::put($key, $categoryIndex, 300); // 5 minutes expiry
+    }
+
+    /**
+     * Get selected category from cache
+     */
+    private function getSelectedCategory(string $phone): ?int
+    {
+        $key = $this->getSelectedCategoryKey($phone);
+        return Cache::get($key);
+    }
+
+    /**
+     * Clear selected category context
+     */
+    private function clearSelectedCategory(string $phone): void
+    {
+        $key = $this->getSelectedCategoryKey($phone);
+        Cache::forget($key);
+    }
+
+    /**
+     * Get service detail by category and service index
+     */
+    private function getServiceDetailByIndexes(int $categoryIndex, int $serviceIndex): ?string
+    {
+        // Get all categories
+        $categories = Service::query()
+            ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->where('services.is_active', true)
+            ->select('service_categories.name')
+            ->distinct()
+            ->orderBy('service_categories.name')
+            ->pluck('name')
+            ->toArray();
+
+        if (!isset($categories[$categoryIndex - 1])) {
+            return null;
+        }
+
+        $categoryName = $categories[$categoryIndex - 1];
+
+        // Get services in this category
+        $services = Service::query()
+            ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->where('services.is_active', true)
+            ->where('service_categories.name', $categoryName)
+            ->select('services.*')
+            ->get();
+
+        if (!isset($services[$serviceIndex - 1])) {
+            return null;
+        }
+
+        $service = $services[$serviceIndex - 1];
+
+        return $this->formatServiceDetail($service);
+    }
+
+    /**
+     * Format service detail for WhatsApp message
+     */
+    private function formatServiceDetail(Service $service): string
+    {
+        $lines = [];
+        $lines[] = "📋 *{$service->name}*";
+        $lines[] = "";
+
+        if ($service->description) {
+            $lines[] = "📝 {$service->description}";
+            $lines[] = "";
+        }
+
+        if ($service->requirements) {
+            $lines[] = "📌 *Persyaratan:*";
+            $lines[] = $service->requirements;
+            $lines[] = "";
+        }
+
+        if ($service->workflow) {
+            $lines[] = "📝 *Alur/Langkah:*";
+            $lines[] = $service->workflow;
+            $lines[] = "";
+        }
+
+        if ($service->processing_time) {
+            $lines[] = "⏱️ *Waktu Proses:* {$service->processing_time}";
+            $lines[] = "";
+        }
+
+        if ($service->cost) {
+            $lines[] = "💰 *Biaya:* {$service->cost}";
+            $lines[] = "";
+        }
+
+        if ($service->contact) {
+            $lines[] = "📞 *Kontak:* {$service->contact}";
+            $lines[] = "";
+        }
+
+        if ($service->office) {
+            $lines[] = "📍 *Lokasi:* {$service->office}";
+            $lines[] = "";
+        }
+
+        if ($service->website) {
+            $lines[] = "🌐 *Website:* {$service->website}";
+            $lines[] = "";
+        }
+
+        if ($service->download_link) {
+            $lines[] = "📥 *Download:* {$service->download_link}";
+            $lines[] = "";
+        }
+
+        $lines[] = "━━━━━━━━━━━━━━━━━━━━";
+        $lines[] = "📞 (0358) 321085";
+        $lines[] = "Jl. Ahmad Yani No. 17, Nganjuk";
+
+        return implode("\n", $lines);
     }
 }
