@@ -216,8 +216,9 @@ class WhatsAppService
         $greeting = $userName ? "Assalamu'alaikum {$userName}," : "Assalamu'alaikum,";
         
         // Get categories from services table (through service_category relationship)
-        $categories = Service::active()
+        $categories = Service::query()
             ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->where('services.is_active', true)
             ->select('service_categories.name')
             ->distinct()
             ->orderBy('service_categories.name')
@@ -228,8 +229,10 @@ class WhatsAppService
         $number = 1;
         foreach ($categories as $cat) {
             $shortName = $this->getCategoryShortName($cat);
-            $count = Service::active()
-                ->whereHas('category', fn($q) => $q->where('name', $cat))
+            $count = Service::query()
+                ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+                ->where('services.is_active', true)
+                ->where('service_categories.name', $cat)
                 ->count();
             $categoryList[] = "{$number}️⃣ *{$shortName}* ({$count} layanan)";
             $number++;
@@ -283,8 +286,9 @@ WELCOME;
      */
     public function getServicesByCategoryIndex(int $index): ?string
     {
-        $categories = Service::active()
+        $categories = Service::query()
             ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->where('services.is_active', true)
             ->select('service_categories.name')
             ->distinct()
             ->orderBy('service_categories.name')
@@ -296,8 +300,11 @@ WELCOME;
         }
         
         $categoryName = $categories[$index - 1];
-        $services = Service::active()
-            ->whereHas('category', fn($q) => $q->where('name', $categoryName))
+        $services = Service::query()
+            ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->where('services.is_active', true)
+            ->where('service_categories.name', $categoryName)
+            ->select('services.*')
             ->get();
         
         $lines = [];
@@ -324,8 +331,9 @@ WELCOME;
      */
     private function getAllServicesMessage(): string
     {
-        $categories = Service::active()
+        $categories = Service::query()
             ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+            ->where('services.is_active', true)
             ->select('service_categories.name')
             ->distinct()
             ->orderBy('service_categories.name')
@@ -341,8 +349,11 @@ WELCOME;
             $catNum = $catIndex + 1;
             $lines[] = "{$catNum}️⃣ *{$shortName}*";
             
-            $services = Service::active()
-                ->whereHas('category', fn($q) => $q->where('name', $categoryName))
+            $services = Service::query()
+                ->join('service_categories', 'services.service_category_id', '=', 'service_categories.id')
+                ->where('services.is_active', true)
+                ->where('service_categories.name', $categoryName)
+                ->select('services.*')
                 ->get();
             foreach ($services as $service) {
                 $lines[] = "   • {$service->name}";

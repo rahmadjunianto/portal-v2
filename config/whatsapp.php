@@ -80,7 +80,7 @@ return [
     */
     'logging' => [
         'enabled' => env('WHATSAPP_LOGGING_ENABLED', true),
-        'channel' => env('WHATSAPP_LOG_CHANNEL', 'single'),
+        'channel' => env('WHATSAPP_LOG_CHANNEL', 'daily'),
     ],
 
     /*
