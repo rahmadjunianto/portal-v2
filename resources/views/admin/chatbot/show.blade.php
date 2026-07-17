@@ -34,7 +34,7 @@
                                 </tr>
                                 <tr>
                                     <th>Tanggal</th>
-                                    <td>{{ $conversation->created_at->format('d/m/Y H:i:s') }}</td>
+                                    <td>{{ $conversation->created_at ? $conversation->created_at->format('d/m/Y H:i:s') : '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Status</th>
