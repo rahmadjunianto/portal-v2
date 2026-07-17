@@ -75,8 +75,8 @@ class WhatsAppService
                 ];
             }
             
-            // Check for category command: "kat 1" or "kategori 1"
-            if (preg_match('/^(kat|kategori)\s*(\d+)$/i', $message, $matches)) {
+            // Check for category command: "kat 1", "kategori 1", or just "1"
+            if (preg_match('/^(kat|kategori)?\s*(\d+)$/i', $message, $matches)) {
                 $index = (int) $matches[2];
                 $categoryServices = $this->getServicesByCategoryIndex($index);
                 
