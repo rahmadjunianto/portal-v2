@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ChatConversation;
 use App\Models\KnowledgeBankFeedback;
 use App\Models\UnknownQuestion;
-use App\Models\WhatsAppConversation;
+use App\Models\WhatsappConversation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +52,7 @@ class ChatbotController extends Controller
         
         // Get whatsapp conversations
         if ($type === 'all' || $type === 'whatsapp') {
-            $waQuery = WhatsAppConversation::query()
+            $waQuery = WhatsappConversation::query()
                 ->select('id', 'name', 'phone', 'content as message', 'created_at')
                 ->addSelect(DB::raw("'whatsapp' as source"))
                 ->addSelect(DB::raw("NULL as email"))

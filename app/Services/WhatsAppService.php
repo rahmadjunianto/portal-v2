@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
-use App\Models\WhatsAppConversation;
+use App\Models\WhatsappConversation;
 use App\Models\Service;
 
 class WhatsAppService
@@ -399,7 +399,7 @@ PROMPT;
      */
     public function getConversationHistory(string $phone): array
     {
-        return WhatsAppConversation::getRecentMessages($phone, $this->maxHistoryMessages);
+        return WhatsappConversation::getRecentMessages($phone, $this->maxHistoryMessages);
     }
 
     /**
@@ -407,7 +407,7 @@ PROMPT;
      */
     private function saveToHistory(string $phone, string $role, string $content, ?string $name = null): void
     {
-        WhatsAppConversation::create([
+        WhatsappConversation::create([
             'phone' => $phone,
             'role' => $role,
             'content' => $content,
@@ -420,7 +420,7 @@ PROMPT;
      */
     public function clearConversationHistory(string $phone): void
     {
-        WhatsAppConversation::forPhone($phone)->delete();
+        WhatsappConversation::forPhone($phone)->delete();
     }
 
     /**
