@@ -72,10 +72,12 @@ class KnowledgeBankService
             }
         }
         
-        // Check answer match (lowest weight)
-        $answer = $this->normalizeText($entry->answer);
-        if ($this->contains($answer, $query)) {
-            $score += 15;
+        // Check answer match (lowest weight) - only if answer exists
+        if ($entry->answer) {
+            $answer = $this->normalizeText($entry->answer);
+            if ($this->contains($answer, $query)) {
+                $score += 15;
+            }
         }
 
         return min($score, 100);
