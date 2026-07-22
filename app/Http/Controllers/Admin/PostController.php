@@ -75,13 +75,16 @@ class PostController extends Controller
      */
     public function create(): View
     {
+        $user = auth()->user();
+        $isAdmin = $user->role_name === 'admin';
+
         $categories = PostCategory::where('is_active', true)
             ->orderBy('name')
             ->get();
 
         $tags = Tag::orderBy('name')->get();
 
-        return view('admin.posts.create', compact('categories', 'tags'));
+        return view('admin.posts.create', compact('categories', 'tags', 'isAdmin'));
     }
 
     /**
@@ -171,7 +174,9 @@ class PostController extends Controller
 
         // Non-admin can only edit their own posts
         $user = auth()->user();
-        if ($user->role_name !== 'admin' && $post->author_id !== $user->id) {
+        $isAdmin = $user->role_name === 'admin';
+        
+        if (!$isAdmin && $post->author_id !== $user->id) {
             return redirect()->route('admin.posts.index')->with('error', 'Anda tidak memiliki akses ke post ini.');
         }
 
@@ -180,7 +185,7 @@ class PostController extends Controller
             ->get();
         $tags = Tag::orderBy('name')->get();
 
-        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
+        return view('admin.posts.edit', compact('post', 'categories', 'tags', 'isAdmin'));
     }
 
     /**

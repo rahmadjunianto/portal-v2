@@ -131,8 +131,13 @@
                     <label for="status">Status <span class="text-danger">*</span></label>
                     <select name="status" id="status" class="form-control" required>
                         <option value="draft" {{ old('status', $post->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+                        @if($isAdmin)
                         <option value="published" {{ old('status', $post->status) === 'published' ? 'selected' : '' }}>Published</option>
+                        @endif
                     </select>
+                    @if(!$isAdmin)
+                    <small class="text-muted"><i class="fas fa-info-circle"></i> Hanya admin yang dapat mempublish post</small>
+                    @endif
                 </div>
 
                 <div class="form-group">
